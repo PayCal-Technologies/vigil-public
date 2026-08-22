@@ -32,6 +32,12 @@ commands you already run.
 
 ![Vigil terminal showing ready project status and verify JSON evidence](help/assets/vigil-terminal.png)
 
+## Watch The Overview
+
+[![Watch the Vigil overview video](https://img.youtube.com/vi/BA4IEErrQ9o/maxresdefault.jpg)](https://www.youtube.com/watch?v=BA4IEErrQ9o)
+
+Video: [Watch Vigil on YouTube](https://www.youtube.com/watch?v=BA4IEErrQ9o)
+
 > `v0.2.0-beta.1` is the current public prerelease candidate. `v0.1.0` remains
 > the legacy bootstrap release and does not include every command, help page,
 > completion target, or plugin/distribution workflow documented here.
