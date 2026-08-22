@@ -10,6 +10,13 @@ contracts, mutation guards, output schemas, release artifacts, plugin trust,
 configuration migration, process cancellation, performance budgets, and
 cross-platform behavior.
 
+## Official Resources
+
+- Vigil homepage: [paycaltech.com/vigil](https://paycaltech.com/vigil/)
+- Vigil help: [paycaltech.com/vigil/help](https://paycaltech.com/vigil/help/)
+- GitHub repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
+- Created by [PayCal Technologies](https://paycaltech.com/)
+
 ## Quick Start
 
 Run the default test suite from the repository root:
