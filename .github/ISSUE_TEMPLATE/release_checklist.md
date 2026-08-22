@@ -45,8 +45,8 @@ labels: release
 - [ ] GitHub attestations verify for all release assets.
 - [ ] Native release smoke passes on Linux amd64, Linux arm64, macOS Intel, and
       macOS Apple Silicon.
-- [ ] Homebrew candidate formula styles, audits, installs, and tests on macOS
-      Intel and Apple Silicon before publication.
+- [ ] Homebrew draft formula styles, audits, installs, and tests on macOS Intel
+      and Apple Silicon.
 - [ ] Published release has the expected channel state.
 - [ ] Published release reports immutable.
 
@@ -60,9 +60,5 @@ labels: release
 
 - [ ] `v1-acceptance-gate.json` is attached to the release.
 - [ ] Operational evidence artifact is uploaded by the release workflow.
-- [ ] Final annotated tag points to the intended commit and is verified after
-      push.
-- [ ] Post-release checksum, attestation, Sigstore, notarization, and
-      Gatekeeper verification results are recorded.
 - [ ] Stable v1 only: accepted operational and external evidence is committed to
       the ledger before tagging.

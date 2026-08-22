@@ -1,9 +1,9 @@
 # Security Policy
 
 Please report suspected security issues privately. Vigil executes local
-commands, loads repository policy, and supports plugin/publisher workflows, so
-command execution boundaries, supply-chain integrity, secret handling, and
-trust prompts are in scope for coordinated disclosure.
+commands, evaluates repository mutation policy, and can run digest-bound
+plugins, so security reports should assume command execution and supply-chain
+impact are in scope when supported by a concrete path.
 
 Email: info@paycaltech.com
 
@@ -12,8 +12,11 @@ Email: info@paycaltech.com
 | Version | Security support |
 | --- | --- |
 | `main` | Supported for coordinated reports against unreleased code. |
-| `v0.2.0-beta.1` | Planned beta. Supported after publication for release workflow, archive, signing, attestation, Homebrew-candidate, command-boundary, and beta-contract issues. |
-| `v0.1.0` | Unsupported legacy bootstrap release. Reports are triaged, but fixes normally target `main` and the next beta/stable release unless there is immediate user risk in the published artifact. |
+| `v0.2.0-beta.1` | Planned beta; supported after publication for release-workflow and beta-contract issues. |
+| `v0.1.0` | Unsupported legacy bootstrap release; reports are triaged, but fixes target a newer release unless immediate user risk requires otherwise. |
+
+No stable v1 release exists yet. Stable support windows are defined in
+`docs/support-policy.md` after a supported stable line is published.
 
 ## Reporting
 
@@ -25,43 +28,72 @@ Include:
 - expected impact;
 - any relevant logs or redacted configuration.
 
-Do not include live secrets, private keys, access tokens, or third-party data in
-reports. If a proof of concept needs sensitive material, describe the minimum
-shape of the input and wait for maintainer guidance.
-
-Do not open public issues for vulnerabilities until a maintainer has reviewed
-the report.
-
-When GitHub private vulnerability reporting is enabled for this repository, you
-may also use the repository's **Security** tab to submit a private vulnerability
-report. Email remains the current private contact.
+Do not include live secrets, private keys, access tokens, or unredacted
+customer data. If a proof of concept requires sensitive material, describe the
+shape of the data and wait for maintainer guidance.
 
 ## Response Targets
 
-Maintainers aim to acknowledge new reports within 3 business days, provide an
-initial severity assessment within 7 business days after enough information is
-available, and send status updates at least every 14 days while a coordinated
-fix is in progress.
+- Initial human acknowledgement: within 3 business days.
+- Initial severity assessment: within 7 business days after enough information
+  is available to reproduce or reason about the report.
+- Status updates: at least every 14 days while a validated report remains open.
 
-Severity is assessed from practical impact, exploitability, affected versions,
-and whether the issue can cause unintended command execution, policy bypass,
-secret exposure, artifact substitution, trust-boundary confusion, or misleading
-release evidence.
+These are targets, not guarantees. Reports involving active exploitation,
+credential exposure, or release integrity may be prioritized immediately.
 
-## Disclosure Timeline
+## Severity
 
-The default coordinated-disclosure window is 90 days from maintainer
-acknowledgement. Shorter timelines may be appropriate for actively exploited
-issues or low-risk documentation fixes. Longer timelines may be appropriate
-when users need migration time or when the fix depends on upstream platform
-changes. Public disclosure should wait until a fix, mitigation, or explicit
-maintainer status note is available.
+Maintainers assess severity from impact, exploitability, affected versions, and
+whether the issue can cross repository, plugin, release, or credential
+boundaries.
+
+Examples likely to be treated as high severity include:
+
+- executing an unapproved command or plugin despite policy denial;
+- bypassing reviewed-plan digest checks;
+- silently weakening signed plugin acquisition, trust, or revocation;
+- publishing or accepting release assets with incorrect provenance;
+- leaking secrets through logs, support bundles, artifacts, or machine output.
+
+Examples usually treated below high severity include documentation ambiguity,
+denial of service limited to a local command invocation, and behavior that
+requires intentionally running an already untrusted command outside Vigil's
+documented threat model.
+
+## Coordinated Disclosure
+
+Please give maintainers a reasonable opportunity to investigate and release a
+fix before public disclosure. The default disclosure target is 90 days after
+validation, or sooner by mutual agreement when a fix is available and users have
+had time to upgrade. Maintainers may ask for an extension when the issue
+requires external coordination, release infrastructure changes, or third-party
+review.
+
+Public advisories, CVEs, and release notes will credit reporters who want
+credit and will avoid publishing exploit details that would create unnecessary
+user risk before a fix is available.
 
 ## Safe Harbour
 
-Good-faith research is welcome when it avoids privacy violations, data
-destruction, persistence, lateral movement, denial of service, and access to
-systems or accounts you do not own or have permission to test. Keep testing to
-your own repositories, local machines, and disposable credentials. Stop and
-report promptly if you encounter sensitive data or a boundary you did not
-intend to cross.
+Good-faith research is welcome when it:
+
+- avoids privacy violations, data destruction, persistence, or service
+  disruption;
+- uses only accounts, repositories, systems, and data you own or are authorized
+  to test;
+- does not attempt extortion, lateral movement, or secret extraction beyond what
+  is necessary to demonstrate impact;
+- reports findings promptly and privately.
+
+Good-faith reports following this policy will not be treated as hostile solely
+because they reveal a vulnerability.
+
+## GitHub Private Vulnerability Reporting
+
+If GitHub private vulnerability reporting is enabled for this repository, you
+may use it instead of email. If it is not available, use
+`info@paycaltech.com`.
+
+Do not open public issues for vulnerabilities until a maintainer has reviewed
+the report.

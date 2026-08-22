@@ -5,105 +5,48 @@
 [![GitHub release](https://img.shields.io/github/v/release/PayCal-Technologies/vigil-public?include_prereleases)](https://github.com/PayCal-Technologies/vigil-public/releases)
 [![License: 0BSD](https://img.shields.io/badge/license-0BSD-blue.svg)](LICENSE)
 
-Vigil is a local-first repository preflight engine. It helps developers,
-maintainers, and coding agents understand what automation will run, what it can
-access or change, and what evidence it produced before a project is pushed,
-published, or handed off.
+Vigil is a command-line tool that checks project automation before it changes a
+repository. It helps people and coding agents see what a command will do, decide
+whether it is allowed, run it, and review the result.
+
+In plain terms, Vigil helps answer:
+
+1. What will run?
+2. Why will it run?
+3. What is it allowed to access or change?
+4. What result did it produce?
+5. Did a command change the repository when it said it would not?
+
+Vigil does not replace CI, deployment tooling, a secrets manager, or an
+operating-system sandbox. It is a local safety and evidence layer around the
+commands you already run.
 
 - Official homepage: [paycaltech.com/vigil](https://paycaltech.com/vigil/)
 - Command help: [paycaltech.com/vigil/help](https://paycaltech.com/vigil/help/)
 - Source repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
 - Created by [PayCal Technologies](https://paycaltech.com/)
 
-Vigil is not a hosted CI service, deployment orchestrator, secrets manager, or
-operating-system sandbox. It is a policy, review, and evidence layer around
-local commands that still run as the current user.
+> `main` documents the upcoming v0.2 beta. Some commands, archive contents,
+> release guarantees, and plugin/distribution workflows are not available in
+> the current `v0.1.0` release.
 
-> `main` documents the upcoming v0.2 beta. The legacy `v0.1.0` release remains
-> available, but the expanded beginner command surface, generated help site,
-> pack commands, and release-contract work described here track `main` and the
-> next beta candidate.
+## What Vigil Includes
 
-## What Vigil Answers
+The standalone `vigil` binary includes:
 
-1. What command will run?
-2. Why is it part of the active command list?
-3. What can it read, write, or access?
-4. Which files, tools, network access, or secrets does it declare?
-5. Did a read-only command change tracked project files?
-6. What evidence, logs, exit code, or machine output did it produce?
-
-These answers are exposed through human help, structured JSON, command
-contracts, shell completions, manpages, and the generated HTML help set in
-[`help/`](help/).
-
-## Install
-
-Install the current tagged release:
-
-```bash
-go install github.com/PayCal-Technologies/vigil-public/cmd/vigil@v0.1.0
-```
-
-Install the development preview from `main`:
-
-```bash
-go install github.com/PayCal-Technologies/vigil-public/cmd/vigil@main
-```
-
-Or build the current checkout:
-
-```bash
-go build -trimpath -o bin/vigil ./cmd/vigil
-```
-
-`v0.1.0` is a legacy bootstrap release. The current release workflow is designed
-to publish macOS and Linux archives with checksums, SBOMs, Sigstore bundles,
-GitHub build-provenance attestations, and the v1 acceptance gate once the beta
-release environment is fully configured.
-
-## Quick Start
-
-```bash
-vigil
-vigil setup
-vigil explain
-vigil check
-vigil status
-vigil learn hooks
-```
-
-For reviewed plans and CI-oriented workflows:
-
-```bash
-vigil config:validate
-vigil --allow-mutation plan --output .vigil/plans/reviewed.json
-vigil --allow-mutation apply .vigil/plans/reviewed.json
-vigil workflow:local --dry-run
-vigil verify --json
-```
-
-Browse the full command reference locally at [`help/index.html`](help/index.html)
-or on the official site at
-[paycaltech.com/vigil/help](https://paycaltech.com/vigil/help/).
-
-## Current Public Surface
-
-The standalone binary provides:
-
-- versioned JSON configuration and migration;
-- beginner commands such as `vigil check`, `vigil setup`, `vigil explain`,
-  `vigil status`, and `vigil learn`;
-- a typed command registry used by help, command discovery, completions,
-  manpages, and the generated HTML command reference;
-- direct argv execution by default, with explicit shell opt-in;
-- process timeouts, cancellation, signal handling, and stable execution states;
-- detection when read-only checks change tracked project files;
-- reviewed plans that stop when the project or setup changed after review;
-- structured machine output plus JSONL, JUnit, SARIF, and GitHub adapters;
-- safe setup, hook, support-bundle, and workflow commands;
-- embedded official feature collections that work without a source checkout;
-- locked executable extensions with explicit local access approval.
+- versioned JSON config files and migration commands;
+- searchable command help, shell completions, and manpages;
+- direct command execution by default, with shell execution only when requested;
+- timeouts, cancellation, signal handling, and clear run states;
+- detection when a read-only command changes tracked repository files;
+- reviewed plans that stop running if the inputs changed after approval;
+- machine-readable output, including JSON, JSONL, JUnit, SARIF, and GitHub
+  annotations;
+- setup, Git hook, support bundle, and local workflow commands;
+- built-in packs that work without checking out the Vigil source code;
+- repository boundary checks for packs and configuration;
+- executable plugins that are pinned by digest and require explicit capability
+  approval.
 
 <!-- scribe:begin -->
 ## Repository Snapshot
@@ -113,27 +56,315 @@ The standalone binary provides:
 | Repository | vigil-public |
 | Dependency manifests | go.mod |
 | Test paths | Go *_test.go (35) |
-| Vigil commands | 84 |
+| Vigil commands | 87 |
 
 Generated by Vigil Scribe from local repository facts.
 <!-- scribe:end -->
 
-## Configuration
+## Install
 
-Vigil searches upward for `vigil.config.json`. Use `--config PATH` to select a
-different file.
+Install the current tagged release with Go:
 
 ```bash
-vigil config:schema
-vigil config:template --profile=go-tool
-vigil config:init --profile=go-tool --write
-vigil --config ./candidate.vigil.config.json config:validate --json
+go install github.com/PayCal-Technologies/vigil-public/cmd/vigil@v0.1.0
+```
+
+To try the latest development version:
+
+```bash
+go install github.com/PayCal-Technologies/vigil-public/cmd/vigil@main
+```
+
+Or build this checkout locally:
+
+```bash
+go build -trimpath -o bin/vigil ./cmd/vigil
+```
+
+`v0.1.0` is the current public release. It is an early bootstrap release with
+platform binaries, completions, a manpage, and `SHA256SUMS`. It came before the
+newer archive, signing, SBOM, Sigstore, attestation, and v1 gate contract work.
+
+The newer release workflow is designed to publish static macOS and Linux
+archives for amd64 and arm64. macOS binaries are Developer ID-signed and
+notarized before final checksums are created. Each archive includes
+`README.md`, `LICENSE`, the manpage, and Bash, Zsh, and Fish completions, plus
+the public configuration, output, pack, plan, plugin protocol, index,
+publisher, lock, and trust schemas. New release-workflow candidates also include
+checksums, an SPDX SBOM, a Sigstore bundle, GitHub build-provenance
+attestations, and `v1-acceptance-gate.json`.
+
+Homebrew packaging automation exists, but it is not listed as an install command
+until the project tap has a public, tested formula. Stable release automation
+install-tests the generated formula before and after publication, then publishes
+the matching formula to the project tap when
+`HOMEBREW_TAP_TOKEN` is configured.
+
+## Release Status
+
+`v0.1.0` is the current public release and only remote tag. GitHub release
+immutability is enabled for future releases, but the existing `v0.1.0` release
+itself is not immutable. The next planned public candidate is
+`v0.2.0-beta.1`, which should exercise the signed archive, checksum, SBOM,
+Sigstore, attestation, native-smoke, and prerelease publication path after the
+release environment tag policy and secrets are configured.
+
+`v1.0.0` is intentionally blocked until the external and operational acceptance
+ledger is complete. In other words, Vigil will not cut a stable v1 release until
+the required evidence is present. The stable v1 release gate fails closed and
+emits `v1-acceptance-gate.json` listing the remaining evidence.
+
+To verify a downloaded release produced by the current release workflow:
+
+```bash
+shasum -a 256 -c SHA256SUMS
+gh attestation verify vigil_0.2.0-beta.1_linux_amd64.tar.gz \
+  --repo PayCal-Technologies/vigil-public
+cosign verify-blob SHA256SUMS \
+  --bundle SHA256SUMS.sigstore.json \
+  --certificate-identity \
+    https://github.com/PayCal-Technologies/vigil-public/.github/workflows/release.yml@refs/tags/v0.2.0-beta.1 \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+```
+
+For `v0.1.0`, verify only the published legacy checksums:
+
+```bash
+shasum -a 256 -c SHA256SUMS
+```
+
+## Quick Start
+
+This quick start requires `main` or `v0.2.0-beta.1+`. The current `v0.1.0`
+release does not include every command shown here.
+
+```bash
+vigil init
+vigil config:validate
+vigil --allow-mutation plan --output .vigil/plans/reviewed.json
+vigil --allow-mutation apply .vigil/plans/reviewed.json
+vigil --allow-mutation sentry
+vigil sentry:apply .vigil/plans/sentry-reviewed.json
+vigil workflow:local --dry-run
+vigil workflow:local
+vigil verify --json
+```
+
+Running `vigil` without a command prints help. In an interactive terminal, it
+also offers guided setup.
+
+Common compatibility aliases remain available:
+
+| Beginner command | What it maps to |
+| --- | --- |
+| `vigil init` | `vigil setup:wizard` |
+| `vigil list` | `vigil commands` |
+| `vigil plan` | digest-bound configured workflow plan |
+| `vigil apply` | execute an unchanged reviewed plan |
+| `vigil sentry` | interactive Sentry Mode plan review |
+| `vigil extensions:list` | list loaded packs |
+| `vigil extensions:doctor` | validate loaded packs |
+| `vigil plugins:list` | list locked executable plugins |
+| `vigil plugins:doctor` | verify plugin identity, trust, and compatibility |
+
+The `extensions:*` names are kept for compatibility. Packs are declarative
+metadata. Plugins are separate executables with their own install and trust
+flow.
+
+## Usage Examples
+
+Most write commands require `--allow-mutation`. If a command is only previewing
+or validating, it usually does not need that approval flag.
+
+### Beginner Examples
+
+#### If I want to see what Vigil can do, I must run:
+
+```bash
+vigil
+vigil list
+```
+
+#### If I want to set up Vigil for a project, I must run:
+
+```bash
+vigil init
+```
+
+#### If I want to check whether my config file is valid, I must run:
+
+```bash
+vigil config:validate
+```
+
+#### If I want to see what local workflow would run without changing anything, I must run:
+
+```bash
+vigil workflow:local --dry-run
+```
+
+#### If I want to run the configured local workflow, I must run:
+
+```bash
+vigil workflow:local
+```
+
+#### If I want to make a local support bundle for troubleshooting, I must run:
+
+```bash
+vigil support:bundle --dry-run
+vigil --allow-mutation support:bundle
+```
+
+#### If I want to check whether Git hooks are ready, I must run:
+
+```bash
+vigil hooks:doctor
+```
+
+### Moderate Examples
+
+#### If I want to review a plan before executing it, I must run:
+
+```bash
+vigil --allow-mutation plan --output .vigil/plans/reviewed.json
+vigil --allow-mutation apply .vigil/plans/reviewed.json
+```
+
+#### If I want an interactive Sentry Mode review before running a workflow, I must run:
+
+```bash
+vigil --allow-mutation sentry
+vigil sentry:apply .vigil/plans/sentry-reviewed.json
+```
+
+#### If I want to save run logs and evidence for a workflow, I must run:
+
+```bash
+vigil --allow-mutation workflow:local --artifacts
+```
+
+#### If I want to run only checks with a specific tag, I must run:
+
+```bash
+vigil workflow:local --dry-run --tag pre-push
+vigil workflow:local --tag pre-push
+```
+
+#### If I want to migrate an older config file, I must run:
+
+```bash
 vigil config:migrate
 vigil --allow-mutation config:migrate --write
 ```
 
-Schema 3 check definitions use direct argv execution unless `shell` is
-explicitly enabled:
+#### If I want to install Vigil Git hooks without overwriting existing hooks, I must run:
+
+```bash
+vigil hooks:install --dry-run
+vigil --allow-mutation hooks:install --chain
+```
+
+#### If I want live progress while creating a support bundle, I must run:
+
+```bash
+vigil --allow-mutation support:bundle --stream=text
+```
+
+#### If I want machine-readable command details for automation, I must run:
+
+```bash
+vigil explain workflow:local --json
+vigil list --json
+```
+
+### Expert Examples
+
+#### If I want JSONL progress events for a long local workflow, I must run:
+
+```bash
+vigil workflow:local --format=jsonl
+```
+
+#### If I want an agent-readable safety summary before an AI agent works, I must run:
+
+```bash
+vigil sentry:state
+vigil sentry:state --json
+```
+
+#### If I want bounded parallel execution for eligible gates, I must run:
+
+```bash
+vigil workflow:local --dry-run --jobs=4
+vigil workflow:local --jobs=4
+```
+
+#### If I want to test a candidate config file without replacing the default one, I must run:
+
+```bash
+vigil --config ./candidate.vigil.config.json config:validate --json
+vigil --config ./candidate.vigil.config.json workflow:local --dry-run
+```
+
+#### If I want to inspect and verify installed packs, I must run:
+
+```bash
+vigil extensions:list --json
+vigil extensions:doctor --json
+```
+
+#### If I want to install a local executable plugin, I must run:
+
+```bash
+vigil plugins:conformance --file ./vigil-plugin-example --json
+vigil --allow-mutation plugins:install \
+  --file ./vigil-plugin-example \
+  --approve filesystem:read
+vigil plugins:doctor --json
+```
+
+#### If I want to trust a publisher and install a plugin from a signed index, I must run:
+
+```bash
+vigil --allow-mutation plugins:trust-publisher \
+  --key ./publisher.pub \
+  --name "Example Publisher"
+vigil plugins:index:verify --index https://example.test/vigil/index-v1.json
+vigil --allow-mutation plugins:install \
+  --index https://example.test/vigil/index-v1.json \
+  --id example \
+  --version 1.2.3 \
+  --approve filesystem:read \
+  --stream=jsonl
+```
+
+#### If I want to make a fuller local support bundle for an internal review, I must run:
+
+```bash
+vigil --allow-mutation support:bundle \
+  --include-config \
+  --include-git-status \
+  --stream=text
+```
+
+#### If I want to verify a release archive from the newer release workflow, I must run:
+
+```bash
+shasum -a 256 -c SHA256SUMS
+gh attestation verify vigil_0.2.0-beta.1_linux_amd64.tar.gz \
+  --repo PayCal-Technologies/vigil-public
+cosign verify-blob SHA256SUMS \
+  --bundle SHA256SUMS.sigstore.json \
+  --certificate-identity \
+    https://github.com/PayCal-Technologies/vigil-public/.github/workflows/release.yml@refs/tags/v0.2.0-beta.1 \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+```
+
+## How Commands Run
+
+A gate is one command that Vigil can run. In schema 3, gates run an executable
+and its arguments directly:
 
 ```json
 {
@@ -146,21 +377,130 @@ explicitly enabled:
 }
 ```
 
-See [config schema](docs/reference/config-schema.md), [workflow graph](docs/concepts/workflow-graph.md),
-and [compatibility policy](docs/compatibility.md).
+If a gate needs shell syntax such as pipes or redirects, opt in with
+`"shell": true`:
+
+```json
+{
+  "name": "report",
+  "command": "go test ./... | tee test.log",
+  "shell": true,
+  "read_only": false,
+  "timeout": "10m"
+}
+```
+
+Gates can depend on other gates and can opt into bounded parallel execution:
+
+```json
+{
+  "name": "integration tests",
+  "command": "go",
+  "args": ["test", "./integration/..."],
+  "read_only": true,
+  "depends_on": ["generated-code check"],
+  "parallel_group": "tests",
+  "continue_on_error": true,
+  "required": true,
+  "retry": {"max_attempts": 2, "delay": "1s", "on": ["failed"]},
+  "cwd": "services/api",
+  "environment": {"CI": "true"},
+  "artifacts": [
+    {"path": "reports/junit.xml", "kind": "junit", "media_type": "application/xml"}
+  ],
+  "tags": ["network", "pre-push"],
+  "timeout": "5m"
+}
+```
+
+Ungrouped gates run one after another. Only explicit read-only groups run at the
+same time, bounded by `--jobs`. Tag filtering also includes required
+dependencies. See the [workflow graph contract](docs/concepts/workflow-graph.md).
+
+Vigil streams command output while it runs and keeps bounded structured
+summaries. Each process has a default or per-gate timeout. Ctrl+C and SIGTERM
+cancel the active process group.
+
+Saved local evidence is opt-in because writing logs changes the repository:
+
+```bash
+vigil --allow-mutation workflow:local --artifacts
+```
+
+The default ignored directory is `.vigil/runs/<run-id>/`. It contains a
+mode-`0600` `manifest.json`, digest-bearing `plan.json`, `result.json`, and
+separate mode-`0600` stdout/stderr logs per gate. The manifest follows
+`schemas/vigil-run-artifact-manifest-v1.schema.json` and records the run ID,
+standard file names, and log budgets. Each stream log is capped at 64 MiB and
+ends with `[truncated]` if that bound is reached. The complete run shares a 512
+MiB log budget; Vigil fails closed before opening a stream when it cannot
+reserve a truncation marker. Structured gate results expose summary and log
+truncation flags. A custom
+in-repository artifact root must be Git-ignored; paths outside the repository
+are allowed explicitly. Symlink redirection and paths inside Git metadata are
+rejected.
+
+To separate review from execution:
+
+```bash
+vigil --allow-mutation plan --output .vigil/plans/reviewed.json
+vigil --allow-mutation apply .vigil/plans/reviewed.json
+```
+
+`apply` refuses to run if the config, repository `HEAD`, Git-visible workspace,
+active registry, packs, or Vigil executable changed after review. See
+[reviewed plans](docs/concepts/plans.md).
+
+Sentry Mode is the interactive review path:
+
+```bash
+vigil --allow-mutation sentry
+vigil sentry:apply .vigil/plans/sentry-reviewed.json
+```
+
+`sentry` opens a terminal review of the planned gates. Read-only gates are shown
+as safe to run. Mutating gates start on hold, and the reviewer can approve them
+one by one before the reviewed plan is written. `sentry:apply` then checks that
+the plan is still fresh and that every mutating gate has a Sentry review
+approval. This gives teams a narrower alternative to approving every mutating
+gate with a broad execution flag.
+
+Execution states are:
+
+```text
+ok
+failed
+skipped
+cancelled
+timed_out
+mutation_detected
+blocked
+tool_missing
+internal_error
+```
 
 ## Safety Model
 
-`read_only` means the command is expected not to alter tracked project files.
-Vigil compares project snapshots before and after execution and reports
-`mutation_detected` when they differ.
+`read_only` means the command is expected not to alter the Git-visible
+repository workspace. Vigil compares repository fingerprints before and after
+the command and reports `mutation_detected` when they differ.
 
-This does not confine the executable at the operating-system level. A command
-may still affect ignored files, files outside the repository, user caches,
-network services, databases, credential stores, or other external systems.
-Capability declarations are review and policy inputs, not kernel enforcement.
+It does **not** provide operating-system sandboxing. A command may still touch
+the network, databases, user caches, ignored files, files outside the
+repository, credential stores, or external services. Inspect command
+capabilities with:
 
-File-changing work is authorized at the CLI boundary:
+```bash
+vigil explain workflow:local --json
+vigil list --json
+```
+
+Every command declares its access level, capabilities, implementation binding,
+host API, timeout, network behavior, required tools, stability, and output
+formats in one registry. Unknown or incomplete executable command definitions
+fail closed.
+
+Commands that can write require explicit approval at the CLI boundary:
 
 ```bash
 vigil github:init-ci
@@ -170,42 +510,70 @@ vigil support:bundle --dry-run
 vigil --allow-mutation support:bundle
 ```
 
-Canonical access values are:
+Access values are:
 
 | Access | Help | Meaning |
 | --- | --- | --- |
-| `read` | `r` | No declared project or external file change. |
+| `read` | `r` | Does not declare repository or external changes. |
 | `write` | `w` | Writes unless an explicit read-only flag is active. |
-| `conditional-write` | `r/w` | Read-only by default; registered flags activate writes. |
+| `conditional-write` | `r/w` | Read-only by default; specific flags turn writing on. |
 
-## Reviewed Plans
+## Configuration
 
-Vigil can separate plan review from execution:
+Vigil looks upward from the current directory for `vigil.config.json`. Use
+`--config PATH` to choose a different file.
 
 ```bash
-vigil --allow-mutation plan --output .vigil/plans/reviewed.json
-vigil --allow-mutation apply .vigil/plans/reviewed.json
+vigil config:schema
+vigil config:template --profile=go-tool
+vigil config:init --profile=go-tool --write
+vigil --config ./candidate.vigil.config.json config:validate --json
+vigil config:migrate
+vigil --allow-mutation config:migrate --write
 ```
 
-`apply` refuses the plan if the setup file, repository `HEAD`, tracked
-workspace, active command list, feature collections, or Vigil executable changed
-after review. See [reviewed plans](docs/concepts/plans.md).
+The current config schema is `3`. Migration keeps unknown top-level and nested
+fields, refuses to downgrade future schemas, converts older command strings to
+argv where safe, and marks shell-dependent older gates explicitly.
 
-## Feature Collections And Plugins
+See [config schema](docs/reference/config-schema.md) and
+[compatibility policy](docs/compatibility.md).
 
-Official feature collections are embedded in the binary and exposed through
-commands such as:
+## Packs
+
+Vigil uses three extension concepts:
+
+- **Built-in module**: Go code compiled into Vigil.
+- **Pack**: metadata that groups and governs built-in or future declarative
+  commands.
+- **Plugin**: a separately installed executable using subprocess protocol `1`,
+  a digest-bound repository lock, and local capability trust.
+
+Official pack manifests are embedded in the binary. If the same thing is defined
+in more than one place, this precedence order applies:
+
+```text
+core < embedded official < user < repository
+```
+
+User packs live under the platform config directory at `vigil/packs`, or at
+`VIGIL_USER_PACK_ROOT`. Repository packs use the configured `manifest_root`.
+`extensions:doctor` reports overrides. Vigil also enforces disabled IDs, kind
+policy, privacy policy, duplicate IDs or commands, traversal checks, and symlink
+escape checks.
 
 ```bash
 vigil extensions:list --json
 vigil extensions:doctor --json
 ```
 
-Feature collections cover accessibility, dependency checks, deployment
-verification, file iteration, GitHub CI generation, release policy, repository
-health, Scribe, security adapters, and test adapters.
+Official packs cover accessibility, dependency checks, deployment verification,
+file iteration, GitHub CI generation, release policy, repository health,
+Scribe, security adapters, and test adapters.
 
-Executable extensions use the `plugins:*` compatibility command surface:
+## Plugins
+
+Plugins can be installed from local executables that you choose explicitly:
 
 ```bash
 vigil --allow-mutation plugins:install \
@@ -214,16 +582,48 @@ vigil --allow-mutation plugins:install \
 vigil plugins:list --json
 vigil plugins:doctor --json
 vigil plugins:conformance --file ./vigil-plugin-example --json
+vigil --allow-mutation plugins:update --file ./vigil-plugin-example --approve-all
+vigil --allow-mutation plugins:remove example
 ```
 
-Only policy-compliant, exact, compatible, collision-free handshakes enter
-Vigil's command list. Access approval still does not sandbox the executable.
-See [pack model](docs/concepts/packs.md), [plugin model](docs/concepts/plugins.md),
-and [plugin authoring](docs/plugin-authoring.md).
+They can also be installed from an exact release in a locally trusted,
+threshold-signed index:
 
-## Hooks And Support Bundles
+```bash
+vigil --allow-mutation plugins:trust-publisher \
+  --key ./publisher.pub \
+  --name "Example Publisher"
+vigil plugins:index:verify --index https://example.test/vigil/index-v1.json
+vigil --allow-mutation plugins:install \
+  --index https://example.test/vigil/index-v1.json \
+  --id example \
+  --version 1.2.3 \
+  --approve filesystem:read
+```
 
-Vigil can inspect and install Git hook shims:
+The repository lock pins the plugin version, executable digest, metadata digest,
+capabilities, commands, protocol, host API, acquisition type, signed index
+digest, signer IDs, and signature threshold. Local trust records capability
+approval, digest revocation, and publisher-key revocation. Only plugins that
+match policy, version, compatibility, and command-collision checks enter the
+typed registry.
+
+Plugin subprocesses receive a cleared minimal environment, bounded JSON I/O,
+timeouts, and cancellation. Capability approval is not an operating-system
+sandbox: an approved executable still runs as the current OS user.
+Repositories can deny local plugins, require signed acquisition, allow specific
+IDs or publishers, and deny capabilities. See
+[plugin model](docs/concepts/plugins.md).
+
+Plugin authors can run repeatable handshake checks without installing the
+plugin, then exercise every declared command in a disposable repository with
+`--allow-mutation plugins:conformance --file PATH --execute`. The
+language-neutral reference fixture is checked on Linux and macOS.
+
+## Hooks
+
+Vigil asks Git for the active hooks directory, including
+`core.hooksPath`, worktrees, and `.git` files.
 
 ```bash
 vigil hooks:doctor --json
@@ -231,9 +631,15 @@ vigil hooks:install --dry-run
 vigil --allow-mutation hooks:install
 vigil --allow-mutation hooks:install --chain
 vigil hooks:uninstall --dry-run
+vigil --allow-mutation hooks:uninstall
 ```
 
-Support bundles are local-only and never upload automatically:
+Existing hooks are never overwritten by default. `--chain` preserves the exact
+existing hook and `hooks:uninstall` restores it.
+
+## Support Bundles
+
+Support bundles are local-only and never upload automatically.
 
 ```bash
 vigil support:bundle --dry-run
@@ -241,13 +647,14 @@ vigil --allow-mutation support:bundle
 vigil --allow-mutation support:bundle --include-config --include-git-status
 ```
 
-By default, bundles redact absolute paths and common secret patterns, omit full
-config, Git status, environment variables, and collected secrets, and are
+By default, bundles omit the full config, Git status, environment variables,
+and collected secrets. They redact absolute paths and common secret patterns in
+diagnostics, include a redaction report, use a content-derived ID, and are
 written atomically with mode `0600`.
 
 ## Automation Contract
 
-The current exit taxonomy is:
+Exit codes are:
 
 | Code | Meaning |
 | ---: | --- |
@@ -260,34 +667,39 @@ The current exit taxonomy is:
 | 6 | Mutation violation |
 | 7 | Internal Vigil failure |
 
-`--json` responses use structured output schema `1`. Workflows and aggregate
-checks also support JSONL, JUnit, and GitHub annotations; file-oriented finding
-checks support SARIF 2.1.0.
-
-See [machine output](docs/reference/json-output.md), [exit codes](docs/reference/exit-codes.md),
+`--json` responses use common envelope schema `1`. Workflows and aggregate
+checks also support JSONL, JUnit, and GitHub annotations. File-oriented finding
+checks support SARIF 2.1.0. See [machine output](docs/reference/json-output.md)
 and the checked-in [schemas](schemas/README.md).
 
 ## Documentation
 
-- [Official Vigil homepage](https://paycaltech.com/vigil/)
-- [Official Vigil command help](https://paycaltech.com/vigil/help/)
-- [Local generated help](help/index.html)
-- [AI video transcript](docs/vigil-ai-video-transcript.md)
 - [Product contract](docs/product-contract.md)
 - [Roadmap and release gates](docs/roadmap.md)
 - [v1 contract freeze](docs/v1-contracts.md)
 - [v1 acceptance matrix](docs/v1-acceptance-matrix.md)
 - [Support policy](docs/support-policy.md)
 - [Architecture](docs/architecture.md)
-- [Safety model](docs/concepts/safety-model.md)
 - [Workflow graph](docs/concepts/workflow-graph.md)
 - [Mutation model](docs/concepts/mutation-model.md)
 - [Reviewed plans](docs/concepts/plans.md)
-- [Acceptance evidence](docs/concepts/evidence.md)
 - [Threat model](docs/concepts/threat-model.md)
+- [Pack model](docs/concepts/packs.md)
 - [Plugin model](docs/concepts/plugins.md)
+- [Plugin authoring](docs/plugin-authoring.md)
+- [Plugin index publishing](docs/plugin-publishing.md)
 - [Config schema](docs/reference/config-schema.md)
+- [Exit codes](docs/reference/exit-codes.md)
+- [Machine output](docs/reference/json-output.md)
+- [Performance methodology](docs/performance.md)
+- [Upgrade and rollback](docs/upgrading.md)
 - [Troubleshooting](docs/troubleshooting.md)
+- [RFC process](docs/rfcs/README.md)
+- [v1 independent review briefs](docs/reviews/README.md)
+- [Deprecation policy](docs/deprecations.md)
+- [Release process](docs/releasing.md)
+- [Release channels](docs/release-channels.md)
+- [GitHub release readiness](docs/github-release-readiness.md)
 - [Changelog](CHANGELOG.md)
 
 Security reports must follow [SECURITY.md](SECURITY.md).

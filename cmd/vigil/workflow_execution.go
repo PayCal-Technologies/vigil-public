@@ -135,15 +135,15 @@ func runGateBatch(
 		}
 	}
 	if len(batch) > 1 && !allReadOnly {
-		return nil, fmt.Errorf("checks that write files cannot run concurrently")
+		return nil, fmt.Errorf("mutating gates cannot execute concurrently")
 	}
-	if !allReadOnly && !allowMutation {
+	if !allReadOnly && !allowMutation && !batchMutationApproved(document, batch) {
 		for batchIndex, gateIndex := range batch {
 			result := newGateResult(gateIndex, document.Gates[gateIndex])
 			result.Status = "fail"
 			result.State = string(runner.StateBlocked)
 			result.ExitCode = vigilcli.ExitPolicyBlocked
-			result.Output = "this check can change files; generate a reviewed plan and apply it with --allow-mutation"
+			result.Output = "mutation approval required for mutating check; use --allow-mutation or apply a Sentry-reviewed plan"
 			results[batchIndex] = result
 		}
 		return results, nil
@@ -159,7 +159,7 @@ func runGateBatch(
 				result.Status = "fail"
 				result.State = string(runner.StateBlocked)
 				result.ExitCode = vigilcli.ExitPolicyBlocked
-				result.Output = "Vigil could not snapshot the repository before this read-only check"
+				result.Output = "read-only mutation fingerprint unavailable before gate"
 				results[batchIndex] = result
 			}
 			return results, nil
@@ -198,7 +198,7 @@ func runGateBatch(
 			results[index].Status = "fail"
 			results[index].State = string(runner.StateBlocked)
 			results[index].ExitCode = vigilcli.ExitPolicyBlocked
-			results[index].Output = appendResultOutput(results[index].Output, "Vigil could not snapshot the repository after this read-only check")
+			results[index].Output = appendResultOutput(results[index].Output, "read-only mutation fingerprint unavailable after gate")
 		}
 		return results, nil
 	}
@@ -214,7 +214,7 @@ func runGateBatch(
 				results[index].Status = "fail"
 				results[index].State = string(runner.StateInternalError)
 				results[index].ExitCode = vigilcli.ExitInternal
-				results[index].Output = appendResultOutput(results[index].Output, "write unexpected-change evidence: "+err.Error())
+				results[index].Output = appendResultOutput(results[index].Output, "write mutation evidence: "+err.Error())
 			}
 			return results, nil
 		}
@@ -225,17 +225,28 @@ func runGateBatch(
 		results[index].State = string(runner.StateMutationDetected)
 		results[index].ExitCode = vigilcli.ExitMutationViolation
 		results[index].MutationDiff = mutationDiff
-		message := "a read-only check changed files in the git workspace"
+		message := "read-only check changed git workspace fingerprint"
 		if len(batch) > 1 {
 			group := strings.TrimSpace(document.Gates[batch[index]].ParallelGroup)
 			if group == "" {
 				group = "unnamed"
 			}
-			message = fmt.Sprintf("a command in parallel group %q changed files in the git workspace; individual attribution is unavailable", group)
+			message = fmt.Sprintf("a command in parallel group %q changed the git workspace fingerprint; individual attribution is unavailable", group)
 		}
 		results[index].Output = appendResultOutput(results[index].Output, message)
 	}
 	return results, nil
+}
+
+func batchMutationApproved(document vigilplan.Document, batch []int) bool {
+	approved := vigilplan.ApprovedMutationGates(document)
+	for _, gateIndex := range batch {
+		gate := document.Gates[gateIndex]
+		if !gate.ReadOnly && !approved[gate.Name] {
+			return false
+		}
+	}
+	return true
 }
 
 func runOneGate(
