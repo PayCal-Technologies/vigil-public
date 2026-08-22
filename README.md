@@ -25,6 +25,10 @@ commands you already run.
 - Command help: [paycaltech.com/vigil/help](https://paycaltech.com/vigil/help/)
 - Source repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
 - Created by [PayCal Technologies](https://paycaltech.com/)
+- Examples: [`examples/`](examples/)
+- Testing guide: [`TESTING.md`](TESTING.md)
+- Contributing: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Security reports: [`SECURITY.md`](SECURITY.md)
 
 ![Vigil terminal showing ready project status and verify JSON evidence](help/assets/vigil-terminal.png)
 
