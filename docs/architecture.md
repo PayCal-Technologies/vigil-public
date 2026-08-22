@@ -23,7 +23,7 @@ internal/buildinfo/       injected and runtime build metadata
 internal/cache/           bounded process-local LRU primitives
 internal/cli/             command contracts and registry validation
 internal/config/          schema, defaults, migration, and validation
-internal/completion/      registry-driven Bash, Zsh, and Fish completions
+internal/completion/      registry-driven shell completions
 internal/contracts/       public schema compatibility gates
 internal/git/             repository discovery and mutation evidence
 internal/hooks/           Git hook plans, atomic apply, and restoration

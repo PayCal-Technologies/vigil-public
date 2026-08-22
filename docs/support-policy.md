@@ -25,18 +25,18 @@ Vigil produces `CGO_ENABLED=0` archives for:
 | Linux | arm64 | Release candidate; native published-asset smoke required |
 | macOS | amd64 | Release candidate; native signed-asset smoke required |
 | macOS | arm64 | Release candidate; native signed-asset smoke required |
+| Windows | amd64 | Release candidate; native published-asset smoke required |
+| Windows | arm64 | Release candidate; native published-asset smoke required |
 
 Source tests are release-blocking on the repository's current Linux and macOS
-GitHub-hosted runner matrix. The release workflow configures native
-downloaded-asset jobs for all four archive targets. Those targets remain
-candidates until the matrix completes against an immutable public release; the
-macOS targets additionally require the configured signing, notarization, and
-Gatekeeper evidence.
-
-Windows has process-control implementations so source builds can be evaluated,
-but no Windows release artifact or v1 support commitment exists. Other
-operating systems and architectures are unsupported unless promoted through an
-RFC with native CI evidence.
+GitHub-hosted runner matrix. The release workflow configures downloaded-asset
+jobs for the archive targets. Those targets remain candidates until the matrix
+completes against an immutable public release; the macOS targets additionally
+require the configured signing, notarization, and Gatekeeper evidence. Windows
+artifacts are cross-built with `.exe` entrypoints and require native smoke
+evidence before promotion beyond release-candidate status. Other operating
+systems and architectures are unsupported unless promoted through an RFC with
+native CI evidence.
 
 ## Toolchain Window
 

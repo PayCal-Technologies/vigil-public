@@ -85,11 +85,12 @@ go build -trimpath -o bin/vigil ./cmd/vigil
 platform binaries, completions, a manpage, and `SHA256SUMS`. It came before the
 newer archive, signing, SBOM, Sigstore, attestation, and v1 gate contract work.
 
-The newer release workflow is designed to publish static macOS and Linux
-archives for amd64 and arm64. macOS binaries are Developer ID-signed and
+The newer release workflow is designed to publish static macOS, Linux, and
+Windows archives for amd64 and arm64. macOS binaries are Developer ID-signed and
 notarized before final checksums are created. Each archive includes
-`README.md`, `LICENSE`, the manpage, and Bash, Zsh, and Fish completions, plus
-the public configuration, output, pack, plan, plugin protocol, index,
+`README.md`, `LICENSE`, the manpage, and completions for Bash, Zsh, Fish,
+PowerShell, Elvish, Nushell, Xonsh, Tcsh, Clink, Yash, and Oil-family shells,
+plus the public configuration, output, pack, plan, plugin protocol, index,
 publisher, lock, and trust schemas. New release-workflow candidates also include
 checksums, an SPDX SBOM, a Sigstore bundle, GitHub build-provenance
 attestations, and `v1-acceptance-gate.json`.

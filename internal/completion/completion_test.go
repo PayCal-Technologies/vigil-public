@@ -38,7 +38,7 @@ func completionFixtures() ([]cli.Command, []cli.Flag, DynamicValues) {
 
 func TestGenerateRichCompletions(t *testing.T) {
 	commands, globals, dynamic := completionFixtures()
-	for _, shell := range []string{"bash", "zsh", "fish"} {
+	for _, shell := range SupportedShells() {
 		t.Run(shell, func(t *testing.T) {
 			result, err := Generate(shell, commands, globals, dynamic)
 			if err != nil {
@@ -54,7 +54,7 @@ func TestGenerateRichCompletions(t *testing.T) {
 }
 
 func TestGenerateRejectsUnknownShell(t *testing.T) {
-	if _, err := Generate("powershell", nil, nil, DynamicValues{}); err == nil {
+	if _, err := Generate("planet9", nil, nil, DynamicValues{}); err == nil {
 		t.Fatal("Generate accepted an unsupported shell")
 	}
 }

@@ -97,30 +97,42 @@ fi
 "$host_binary" completion bash > "$dist/assets/completions/vigil.bash"
 "$host_binary" completion zsh > "$dist/assets/completions/_vigil"
 "$host_binary" completion fish > "$dist/assets/completions/vigil.fish"
+"$host_binary" completion powershell > "$dist/assets/completions/vigil.ps1"
+"$host_binary" completion elvish > "$dist/assets/completions/vigil.elv"
+"$host_binary" completion nushell > "$dist/assets/completions/vigil.nu"
+"$host_binary" completion xonsh > "$dist/assets/completions/vigil.xsh"
+"$host_binary" completion tcsh > "$dist/assets/completions/vigil.tcsh"
+"$host_binary" completion clink > "$dist/assets/completions/vigil.lua"
+"$host_binary" completion yash > "$dist/assets/completions/vigil.yash"
+"$host_binary" completion oil > "$dist/assets/completions/vigil.oil.sh"
 
-for target in darwin/arm64 darwin/amd64 linux/amd64 linux/arm64; do
+for target in darwin/arm64 darwin/amd64 linux/amd64 linux/arm64 windows/amd64 windows/arm64; do
   os="${target%/*}"
   arch="${target#*/}"
   archive_root="vigil_${version}_${os}_${arch}"
   stage="$dist/staging/$archive_root"
   mkdir -p "$stage/completions" "$stage/schemas"
+  binary_suffix=""
+  if [[ "$os" == "windows" ]]; then
+    binary_suffix=".exe"
+  fi
 
   GOOS="$os" GOARCH="$arch" go build \
     -mod=readonly \
     -buildvcs=false \
     -trimpath \
     -ldflags="$ldflags" \
-    -o "$stage/vigil" \
+    -o "$stage/vigil$binary_suffix" \
     ./cmd/vigil
-  chmod 0755 "$stage/vigil"
+  chmod 0755 "$stage/vigil$binary_suffix"
   GOOS="$os" GOARCH="$arch" go build \
     -mod=readonly \
     -buildvcs=false \
     -trimpath \
     -ldflags="$ldflags" \
-    -o "$stage/vigil-plugin-publisher" \
+    -o "$stage/vigil-plugin-publisher$binary_suffix" \
     ./cmd/vigil-plugin-publisher
-  chmod 0755 "$stage/vigil-plugin-publisher"
+  chmod 0755 "$stage/vigil-plugin-publisher$binary_suffix"
   cp README.md LICENSE "$stage/"
   cp "$dist/assets/vigil.1" "$stage/"
   cp "$dist/v1-acceptance-gate.json" "$stage/"

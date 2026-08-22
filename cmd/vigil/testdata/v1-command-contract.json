@@ -733,7 +733,19 @@
           "values": [
             "bash",
             "zsh",
-            "fish"
+            "fish",
+            "powershell",
+            "pwsh",
+            "elvish",
+            "nushell",
+            "nu",
+            "xonsh",
+            "tcsh",
+            "clink",
+            "yash",
+            "oil",
+            "osh",
+            "ysh"
           ],
           "required": true
         }

@@ -35,6 +35,10 @@ pins its SHA-256 digest, and installs:
 - the manpage;
 - Bash, Zsh, and Fish completions.
 
+Release archives also include generated completions for PowerShell, Elvish,
+Nushell, Xonsh, Tcsh, Clink, Yash, and Oil-family shells. Homebrew installs the
+three completion formats it manages natively.
+
 Its tests exercise injected version metadata, embedded official packs, and the
 publisher companion. The formula is included in `SHA256SUMS`, Sigstore signing,
 and GitHub artifact attestations.

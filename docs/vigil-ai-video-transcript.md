@@ -1143,6 +1143,8 @@ Because Vigil's command registry is typed, completions and manpages are generate
 vigil completion bash
 vigil completion zsh
 vigil completion fish
+vigil completion powershell
+vigil completion nushell
 vigil manpage
 vigil manpage:generate
 vigil manpage:install
@@ -1187,9 +1189,9 @@ go run ./scripts/performance-check.go
 
 Narrator:
 
-Vigil's release workflow is designed for static macOS and Linux archives for amd64 and arm64.
+Vigil's release workflow is designed for static macOS, Linux, and Windows archives for amd64 and arm64.
 
-Release candidates can include the binary, README, license, manpage, Bash completion, Zsh completion, Fish completion, public schemas, checksums, an SPDX SBOM, a Sigstore bundle, GitHub build-provenance attestations, and `v1-acceptance-gate.json`.
+Release candidates can include the binary, README, license, manpage, generated shell completions, public schemas, checksums, an SPDX SBOM, a Sigstore bundle, GitHub build-provenance attestations, and `v1-acceptance-gate.json`.
 
 macOS binaries are Developer ID-signed and notarized before final checksums are created.
 

@@ -15,6 +15,12 @@ type DynamicValues struct {
 	PackIDs  []string
 }
 
+var supportedShells = []string{"bash", "zsh", "fish", "powershell", "pwsh", "elvish", "nushell", "nu", "xonsh", "tcsh", "clink", "yash", "oil", "osh", "ysh"}
+
+func SupportedShells() []string {
+	return append([]string(nil), supportedShells...)
+}
+
 func Generate(shell string, commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) (string, error) {
 	commands = append([]cli.Command(nil), commands...)
 	sort.Slice(commands, func(i, j int) bool {
@@ -27,6 +33,22 @@ func Generate(shell string, commands []cli.Command, globalFlags []cli.Flag, dyna
 		return zsh(commands, globalFlags, dynamic), nil
 	case "fish":
 		return fish(commands, globalFlags, dynamic), nil
+	case "powershell", "pwsh":
+		return powershell(commands, globalFlags, dynamic), nil
+	case "elvish":
+		return elvish(commands, globalFlags, dynamic), nil
+	case "nushell", "nu":
+		return nushell(commands, globalFlags, dynamic), nil
+	case "xonsh":
+		return xonsh(commands, globalFlags, dynamic), nil
+	case "tcsh":
+		return tcsh(commands, globalFlags, dynamic), nil
+	case "clink":
+		return clink(commands, globalFlags, dynamic), nil
+	case "yash":
+		return yash(commands, globalFlags, dynamic), nil
+	case "oil", "osh", "ysh":
+		return oil(commands, globalFlags, dynamic), nil
 	default:
 		return "", fmt.Errorf("unsupported shell %q", shell)
 	}
@@ -171,6 +193,169 @@ func fish(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues)
 	return out.String()
 }
 
+func powershell(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
+	var out strings.Builder
+	fmt.Fprintln(&out, "# PowerShell completion for vigil")
+	writeCommandComments(&out, commands)
+	fmt.Fprintln(&out, "Register-ArgumentCompleter -Native -CommandName vigil -ScriptBlock {")
+	fmt.Fprintln(&out, "  param($wordToComplete, $commandAst, $cursorPosition)")
+	fmt.Fprintf(&out, "  $commands = @(%s)\n", psList(commandNames(commands)))
+	fmt.Fprintf(&out, "  $globalValues = @(%s)\n", psList(flagNames(globalFlags)))
+	fmt.Fprintln(&out, "  $commandDescriptions = @{")
+	for _, command := range commands {
+		fmt.Fprintf(&out, "    %s = %s\n", psQuote(command.Name), psQuote(command.Summary))
+	}
+	fmt.Fprintln(&out, "  }")
+	fmt.Fprintln(&out, "  $commandValues = @{")
+	for _, command := range commands {
+		values := commandCompletionWords(command, commands, dynamic)
+		if len(values) > 0 {
+			fmt.Fprintf(&out, "    %s = @(%s)\n", psQuote(command.Name), psList(values))
+		}
+	}
+	fmt.Fprintln(&out, "  }")
+	fmt.Fprintln(&out, "  $flagValues = @{")
+	for _, command := range commands {
+		for _, flag := range command.Flags {
+			values := dynamicFlagValues(command.Name, flag, dynamic)
+			if len(values) > 0 {
+				fmt.Fprintf(&out, "    %s = @(%s)\n", psQuote(command.Name+" "+flag.Long), psList(values))
+			}
+		}
+	}
+	fmt.Fprintln(&out, "  }")
+	fmt.Fprintln(&out, "  $words = $commandAst.CommandElements | ForEach-Object { $_.ToString() }")
+	fmt.Fprintln(&out, "  $command = $null")
+	fmt.Fprintln(&out, "  foreach ($word in $words[1..($words.Count - 1)]) {")
+	fmt.Fprintln(&out, "    if ($word -and -not $word.StartsWith('-')) { $command = $word; break }")
+	fmt.Fprintln(&out, "  }")
+	fmt.Fprintln(&out, "  $previous = if ($words.Count -gt 1) { $words[$words.Count - 2] } else { '' }")
+	fmt.Fprintln(&out, "  $choices = $commands + $globalValues")
+	fmt.Fprintln(&out, "  if ($command -and $flagValues.ContainsKey(\"$command $previous\")) {")
+	fmt.Fprintln(&out, "    $choices = $flagValues[\"$command $previous\"]")
+	fmt.Fprintln(&out, "  } elseif ($command -and $commandValues.ContainsKey($command)) {")
+	fmt.Fprintln(&out, "    $choices = $commandValues[$command]")
+	fmt.Fprintln(&out, "  }")
+	fmt.Fprintln(&out, "  $choices | Where-Object { $_ -like \"$wordToComplete*\" } | ForEach-Object {")
+	fmt.Fprintln(&out, "    $tooltip = if ($commandDescriptions.ContainsKey($_)) { $commandDescriptions[$_] } else { $_ }")
+	fmt.Fprintln(&out, "    [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $tooltip)")
+	fmt.Fprintln(&out, "  }")
+	fmt.Fprintln(&out, "}")
+	return out.String()
+}
+
+func elvish(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
+	var out strings.Builder
+	fmt.Fprintln(&out, "# Elvish completion for vigil")
+	writeCommandComments(&out, commands)
+	fmt.Fprintln(&out, "edit:completion:arg-completer[vigil] = [@words]{")
+	fmt.Fprintf(&out, "  var commands = [%s]\n", strings.Join(commandNames(commands), " "))
+	fmt.Fprintf(&out, "  var shells = [%s]\n", strings.Join(supportedShells, " "))
+	fmt.Fprintf(&out, "  var globals = [%s]\n", strings.Join(flagNames(globalFlags), " "))
+	fmt.Fprintln(&out, "  var choices = $commands")
+	fmt.Fprintln(&out, "  if (> (count $words) 2) {")
+	fmt.Fprintln(&out, "    if (== $words[1] completion) {")
+	fmt.Fprintln(&out, "      set choices = $shells")
+	fmt.Fprintln(&out, "    } else {")
+	fmt.Fprintf(&out, "      set choices = [%s]\n", strings.Join(allCompletionWords(commands, globalFlags, dynamic), " "))
+	fmt.Fprintln(&out, "    }")
+	fmt.Fprintln(&out, "  } elif (== (count $words) 2) {")
+	fmt.Fprintln(&out, "    set choices = (all $commands $globals)")
+	fmt.Fprintln(&out, "  }")
+	fmt.Fprintln(&out, "  put $@choices")
+	fmt.Fprintln(&out, "}")
+	return out.String()
+}
+
+func nushell(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
+	var out strings.Builder
+	fmt.Fprintln(&out, "# Nushell completion for vigil")
+	writeCommandComments(&out, commands)
+	fmt.Fprintf(&out, "export def \"nu-complete vigil commands\" [] { [%s] }\n", nuList(commandNames(commands)))
+	fmt.Fprintf(&out, "export def \"nu-complete vigil shells\" [] { [%s] }\n", nuList(supportedShells))
+	fmt.Fprintf(&out, "export def \"nu-complete vigil words\" [] { [%s] }\n", nuList(allCompletionWords(commands, globalFlags, dynamic)))
+	fmt.Fprintln(&out, "export extern \"vigil\" [")
+	fmt.Fprintln(&out, "  command?: string@\"nu-complete vigil commands\"")
+	fmt.Fprintln(&out, "  ...args: string@\"nu-complete vigil words\"")
+	for _, flag := range globalFlags {
+		fmt.Fprintf(&out, "  %s\n", nuFlag(flag))
+	}
+	fmt.Fprintln(&out, "]")
+	fmt.Fprintln(&out, "export extern \"vigil completion\" [")
+	fmt.Fprintln(&out, "  shell: string@\"nu-complete vigil shells\"")
+	fmt.Fprintln(&out, "]")
+	return out.String()
+}
+
+func xonsh(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
+	var out strings.Builder
+	fmt.Fprintln(&out, "# Xonsh completion for vigil")
+	writeCommandComments(&out, commands)
+	fmt.Fprintln(&out, "def _vigil_completer(prefix, line, begidx, endidx, ctx):")
+	fmt.Fprintf(&out, "    commands = {%s}\n", pySet(commandNames(commands)))
+	fmt.Fprintf(&out, "    shells = {%s}\n", pySet(supportedShells))
+	fmt.Fprintf(&out, "    words = {%s}\n", pySet(allCompletionWords(commands, globalFlags, dynamic)))
+	fmt.Fprintln(&out, "    parts = line[:begidx].split()")
+	fmt.Fprintln(&out, "    if len(parts) >= 2 and parts[1] == 'completion':")
+	fmt.Fprintln(&out, "        choices = shells")
+	fmt.Fprintln(&out, "    elif len(parts) <= 1:")
+	fmt.Fprintln(&out, "        choices = commands | words")
+	fmt.Fprintln(&out, "    else:")
+	fmt.Fprintln(&out, "        choices = words")
+	fmt.Fprintln(&out, "    return {item for item in choices if item.startswith(prefix)}")
+	fmt.Fprintln(&out, "completer add vigil _vigil_completer")
+	return out.String()
+}
+
+func tcsh(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
+	var out strings.Builder
+	fmt.Fprintln(&out, "# tcsh completion for vigil")
+	writeCommandComments(&out, commands)
+	fmt.Fprintf(&out, `complete vigil \
+  'p/1/(%s)/' \
+  'n/completion/(%s)/' \
+  'p/*/(%s)/'
+`, strings.Join(commandNames(commands), " "), strings.Join(supportedShells, " "), strings.Join(allCompletionWords(commands, globalFlags, dynamic), " "))
+	return out.String()
+}
+
+func clink(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
+	var out strings.Builder
+	fmt.Fprintln(&out, "-- Clink completion for vigil")
+	writeCommandComments(&out, commands)
+	fmt.Fprintf(&out, "local commands = {%s}\n", luaList(commandNames(commands)))
+	fmt.Fprintf(&out, "local shells = {%s}\n", luaList(supportedShells))
+	fmt.Fprintf(&out, "local words = {%s}\n", luaList(allCompletionWords(commands, globalFlags, dynamic)))
+	fmt.Fprintln(&out, "local parser = clink.argmatcher('vigil')")
+	fmt.Fprintln(&out, "parser:addarg(commands)")
+	fmt.Fprintln(&out, "parser:addflags(words)")
+	fmt.Fprintln(&out, "parser:addarg({fromhistory=true})")
+	fmt.Fprintln(&out, "clink.argmatcher('vigil completion'):addarg(shells)")
+	return out.String()
+}
+
+func yash(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
+	var out strings.Builder
+	fmt.Fprintln(&out, "# Yash completion for vigil")
+	writeCommandComments(&out, commands)
+	fmt.Fprintf(&out, `function completion//argument/vigil {
+  typeset word="${COMP_WORDS[COMP_CWORD]}"
+  typeset command="${COMP_WORDS[1]}"
+  typeset candidates
+  case "$command" in
+    completion) candidates="%s" ;;
+    *) candidates="%s" ;;
+  esac
+  COMPREPLY=( $(compgen -W "$candidates" -- "$word") )
+}
+`, strings.Join(supportedShells, " "), strings.Join(allCompletionWords(commands, globalFlags, dynamic), " "))
+	return out.String()
+}
+
+func oil(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
+	return "# Oil/OSH/YSH completion for vigil\n# OSH can consume Bash completion scripts, so Vigil reuses its Bash completer for Oil-family shells.\n" + bash(commands, globalFlags, dynamic)
+}
+
 func dynamicFlagValues(command string, flag cli.Flag, dynamic DynamicValues) []string {
 	if len(flag.Values) > 0 {
 		return append([]string(nil), flag.Values...)
@@ -182,6 +367,12 @@ func dynamicFlagValues(command string, flag cli.Flag, dynamic DynamicValues) []s
 		return append([]string(nil), dynamic.GateTags...)
 	default:
 		return nil
+	}
+}
+
+func writeCommandComments(out *strings.Builder, commands []cli.Command) {
+	for _, command := range commands {
+		fmt.Fprintf(out, "# %s: %s\n", command.Name, strings.ReplaceAll(command.Summary, "\n", " "))
 	}
 }
 
@@ -283,6 +474,29 @@ func fishFlag(flag cli.Flag, values []string) string {
 	return out.String()
 }
 
+func commandCompletionWords(command cli.Command, commands []cli.Command, dynamic DynamicValues) []string {
+	var words []string
+	words = append(words, flagNames(command.Flags)...)
+	for _, flag := range command.Flags {
+		words = append(words, dynamicFlagValues(command.Name, flag, dynamic)...)
+	}
+	for _, argument := range command.Arguments {
+		words = append(words, dynamicArgumentValues(command, argument, commands, dynamic)...)
+	}
+	return uniqueSorted(words)
+}
+
+func allCompletionWords(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) []string {
+	var words []string
+	words = append(words, commandNames(commands)...)
+	words = append(words, flagNames(globalFlags)...)
+	words = append(words, supportedShells...)
+	for _, command := range commands {
+		words = append(words, commandCompletionWords(command, commands, dynamic)...)
+	}
+	return uniqueSorted(words)
+}
+
 func uniqueSorted(values []string) []string {
 	seen := map[string]bool{}
 	var result []string
@@ -311,4 +525,48 @@ func fishQuote(value string) string {
 func zshDescription(value string) string {
 	replacer := strings.NewReplacer("[", "(", "]", ")", ":", " -", "'", "")
 	return replacer.Replace(value)
+}
+
+func psList(values []string) string {
+	quoted := make([]string, 0, len(values))
+	for _, value := range values {
+		quoted = append(quoted, psQuote(value))
+	}
+	return strings.Join(quoted, ", ")
+}
+
+func psQuote(value string) string {
+	return "'" + strings.ReplaceAll(value, "'", "''") + "'"
+}
+
+func nuList(values []string) string {
+	quoted := make([]string, 0, len(values))
+	for _, value := range values {
+		quoted = append(quoted, "\""+strings.ReplaceAll(value, "\"", "\\\"")+"\"")
+	}
+	return strings.Join(quoted, " ")
+}
+
+func nuFlag(flag cli.Flag) string {
+	name := strings.TrimPrefix(flag.Long, "--")
+	if flag.ValueName != "" || flag.File {
+		return "--" + name + ": string"
+	}
+	return "--" + name
+}
+
+func pySet(values []string) string {
+	quoted := make([]string, 0, len(values))
+	for _, value := range values {
+		quoted = append(quoted, strconv.Quote(value))
+	}
+	return strings.Join(quoted, ", ")
+}
+
+func luaList(values []string) string {
+	quoted := make([]string, 0, len(values))
+	for _, value := range values {
+		quoted = append(quoted, strconv.Quote(value))
+	}
+	return strings.Join(quoted, ", ")
 }

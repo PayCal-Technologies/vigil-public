@@ -13,6 +13,7 @@ import (
 	"github.com/PayCal-Technologies/vigil-public/internal/buildinfo"
 	vigilcache "github.com/PayCal-Technologies/vigil-public/internal/cache"
 	vigilcli "github.com/PayCal-Technologies/vigil-public/internal/cli"
+	vigilcompletion "github.com/PayCal-Technologies/vigil-public/internal/completion"
 )
 
 const maxCachedCommandRegistries = 16
@@ -225,7 +226,7 @@ func coreCommandSpecs() []vigilcli.Command {
 		command("support:bundle", "Core", "Write or preview a redacted local diagnostic bundle.", vigilcli.AccessWrite, fsWrite, func(inv vigilcli.Invocation) int {
 			return supportBundle(inv.ConfigPath, inv.Args)
 		}),
-		command("completion", "Packaging", "Generate shell completion for Bash, Zsh, or Fish.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
+		command("completion", "Packaging", "Generate shell completion for Bash, Zsh, Fish, PowerShell, Elvish, Nushell, Xonsh, Tcsh, Clink, Yash, or Oil.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return completion(inv.Args)
 		}),
 		command("manpage", "Packaging", "Generate the vigil(1) manual page.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
@@ -687,7 +688,7 @@ func commandArgumentSpecs(name string) []vigilcli.Argument {
 	case "sentry:apply":
 		return []vigilcli.Argument{{Name: "PLAN_FILE", Description: "Sentry-reviewed Vigil plan file.", File: true, Required: true}}
 	case "completion":
-		return []vigilcli.Argument{{Name: "SHELL", Description: "Target shell.", Values: []string{"bash", "zsh", "fish"}, Required: true}}
+		return []vigilcli.Argument{{Name: "SHELL", Description: "Target shell.", Values: vigilcompletion.SupportedShells(), Required: true}}
 	case "plugins:remove":
 		return []vigilcli.Argument{{Name: "PLUGIN_ID", Description: "Locked plugin identifier.", Required: true}}
 	case "plugins:revoke-publisher":

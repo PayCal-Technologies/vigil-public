@@ -8,6 +8,10 @@ acceptance ledger is complete.
 
 ## Unreleased
 
+- Add command completion generators for PowerShell, Elvish, Nushell, Xonsh,
+  Tcsh, Clink, Yash, and Oil-family shells while preserving Bash, Zsh, and Fish.
+- Expand release cross-build targets to Windows amd64 and arm64 archives with
+  `.exe` entrypoints for both `vigil` and `vigil-plugin-publisher`.
 - Add beginner-facing command aliases and guided language for setup, checks,
   explanation, status, learning, and safe next actions.
 - Add presentation-oriented terminology that describes checks, file changes,

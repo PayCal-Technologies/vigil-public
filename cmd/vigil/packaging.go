@@ -145,7 +145,7 @@ func supportBundle(configPath string, args []string) int {
 
 func completion(args []string) int {
 	if len(args) != 1 {
-		fmt.Fprintln(os.Stderr, "Usage: vigil completion bash|zsh|fish")
+		fmt.Fprintf(os.Stderr, "Usage: vigil completion %s\n", strings.Join(vigilcompletion.SupportedShells(), "|"))
 		return exitUsage
 	}
 	registry, err := newCommandRegistry()
@@ -169,7 +169,7 @@ func completion(args []string) int {
 		PackIDs:  uniqueSortedStrings(packIDs),
 	})
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Usage: vigil completion bash|zsh|fish")
+		fmt.Fprintf(os.Stderr, "Usage: vigil completion %s\n", strings.Join(vigilcompletion.SupportedShells(), "|"))
 		return exitUsage
 	}
 	fmt.Print(content)
