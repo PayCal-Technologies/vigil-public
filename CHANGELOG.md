@@ -8,7 +8,16 @@ acceptance ledger is complete.
 
 ## Unreleased
 
-No unreleased changes.
+### Added
+
+- Add `cleanliness:scan` and guarded `cleanliness:clean` commands for reporting
+  and deleting disposable local artifacts with `--dry-run`, JSON output, and
+  opt-in logs/vendor cleanup.
+
+### Changed
+
+- Reuse the new cleanliness scanner for `checks:workspace-hygiene` so the
+  read-only check and cleanup preview report the same disposable artifact set.
 
 ## v0.2.0-beta.1 - 2026-08-22
 

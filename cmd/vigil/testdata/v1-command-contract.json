@@ -719,6 +719,86 @@
       "auto_enabled": false
     },
     {
+      "name": "cleanliness:clean",
+      "aliases": [],
+      "access": "write",
+      "capabilities": [
+        "filesystem:read",
+        "filesystem:write"
+      ],
+      "args": "[args]",
+      "flags": [
+        {
+          "long": "--json"
+        },
+        {
+          "long": "--dry-run"
+        },
+        {
+          "long": "--include-logs"
+        },
+        {
+          "long": "--include-vendor"
+        }
+      ],
+      "arguments": [],
+      "source": "core",
+      "binding": "builtin:cleanliness:clean",
+      "stability": "stable",
+      "host_api_version": "v1",
+      "timeout": "2m0s",
+      "network": "none",
+      "required_tools": [],
+      "output_formats": [
+        "text",
+        "json"
+      ],
+      "interactive": false,
+      "write_flags": [],
+      "read_only_flags": [
+        "--dry-run"
+      ],
+      "usage": "vigil cleanliness:clean --dry-run [--json] [--include-logs] [--include-vendor]",
+      "auto_enabled": false
+    },
+    {
+      "name": "cleanliness:scan",
+      "aliases": [],
+      "access": "read",
+      "capabilities": [
+        "filesystem:read"
+      ],
+      "args": "[args]",
+      "flags": [
+        {
+          "long": "--json"
+        },
+        {
+          "long": "--include-logs"
+        },
+        {
+          "long": "--include-vendor"
+        }
+      ],
+      "arguments": [],
+      "source": "core",
+      "binding": "builtin:cleanliness:scan",
+      "stability": "stable",
+      "host_api_version": "v1",
+      "timeout": "2m0s",
+      "network": "none",
+      "required_tools": [],
+      "output_formats": [
+        "text",
+        "json"
+      ],
+      "interactive": false,
+      "write_flags": [],
+      "read_only_flags": [],
+      "usage": "vigil cleanliness:scan [--json] [--include-logs] [--include-vendor]",
+      "auto_enabled": false
+    },
+    {
       "name": "completion",
       "aliases": [],
       "access": "read",

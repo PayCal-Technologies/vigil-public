@@ -62,6 +62,8 @@ func TestActiveCommandsIncludePublicCICD(t *testing.T) {
 		"guards:summary",
 		"self-heal:plan",
 		"next",
+		"cleanliness:scan",
+		"cleanliness:clean",
 		"tools:catalog",
 		"resources:catalog",
 		"deploy:verify",
@@ -661,6 +663,64 @@ func TestMutationConfirmationPolicy(t *testing.T) {
 	}
 	if !(confirmationArgs{AllowMutation: true}).Allowed("config:repair") {
 		t.Fatal("--allow-mutation should allow explicit mutating repair")
+	}
+	if !requiresMutationConfirmation("cleanliness:clean", nil) {
+		t.Fatal("cleanliness:clean should require mutation confirmation")
+	}
+	if requiresMutationConfirmation("cleanliness:clean", []string{"--dry-run"}) {
+		t.Fatal("cleanliness:clean --dry-run should not require mutation confirmation")
+	}
+}
+
+func TestCleanlinessCommandsPreviewAndClean(t *testing.T) {
+	temp := t.TempDir()
+	t.Chdir(temp)
+	if err := os.WriteFile(".DS_Store", []byte("metadata"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile("fixture.txt.bak", []byte("backup"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	var previewExit int
+	preview := captureStdout(t, func() {
+		previewExit = cleanlinessClean([]string{"--dry-run", "--json"}, false)
+	})
+	if previewExit != exitSuccess {
+		t.Fatalf("preview exit = %d output=%s", previewExit, preview)
+	}
+	var previewEnvelope struct {
+		Data struct {
+			Status   string `json:"status"`
+			Deleted  bool   `json:"deleted"`
+			Count    int    `json:"count"`
+			Findings []struct {
+				Path string `json:"path"`
+			} `json:"findings"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal([]byte(preview), &previewEnvelope); err != nil {
+		t.Fatalf("decode preview: %v\n%s", err, preview)
+	}
+	if previewEnvelope.Data.Deleted || previewEnvelope.Data.Count != 2 {
+		t.Fatalf("preview data = %#v", previewEnvelope.Data)
+	}
+	if _, err := os.Stat(".DS_Store"); err != nil {
+		t.Fatalf("dry-run removed file: %v", err)
+	}
+
+	var cleanExit int
+	cleanOutput := captureStdout(t, func() {
+		cleanExit = cleanlinessClean([]string{"--json"}, true)
+	})
+	if cleanExit != exitSuccess {
+		t.Fatalf("clean exit = %d output=%s", cleanExit, cleanOutput)
+	}
+	if _, err := os.Stat(".DS_Store"); !os.IsNotExist(err) {
+		t.Fatalf(".DS_Store still exists after clean: %v", err)
+	}
+	if _, err := os.Stat("fixture.txt.bak"); !os.IsNotExist(err) {
+		t.Fatalf("fixture.txt.bak still exists after clean: %v", err)
 	}
 }
 

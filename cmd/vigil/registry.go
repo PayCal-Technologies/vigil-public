@@ -220,6 +220,12 @@ func coreCommandSpecs() []vigilcli.Command {
 		command("checks:tracked-assistant-artifacts", "Checks", "Detect tracked local AI and editor instruction artifacts.", vigilcli.AccessRead, gitRead, func(inv vigilcli.Invocation) int {
 			return checkTrackedAssistantArtifacts(inv.Args)
 		}),
+		command("cleanliness:scan", "Core", "Report disposable local artifacts that Vigil can clean.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
+			return cleanlinessScan(inv.Args)
+		}),
+		command("cleanliness:clean", "Core", "Delete reviewed disposable local artifacts after explicit approval.", vigilcli.AccessWrite, fsWrite, func(inv vigilcli.Invocation) int {
+			return cleanlinessClean(inv.Args, inv.AllowMutation)
+		}),
 		command("deps:inventory", "Checks", "Inventory common dependency manifests and lockfiles.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return depsInventory(inv.Args)
 		}),
@@ -352,6 +358,8 @@ func coreCommandSpecs() []vigilcli.Command {
 			commands[i].WriteFlags = []string{"--write", "--force"}
 		case "support:bundle":
 			commands[i].ReadOnlyFlags = []string{"--dry-run"}
+		case "cleanliness:clean":
+			commands[i].ReadOnlyFlags = []string{"--dry-run"}
 		case "hooks:install", "hooks:uninstall":
 			commands[i].ReadOnlyFlags = []string{"--dry-run"}
 		}
@@ -393,6 +401,18 @@ func coreCommandSpecs() []vigilcli.Command {
 		case "plugins:revoke-publisher":
 			commands[i].Usage = "vigil --allow-mutation plugins:revoke-publisher KEY_ID"
 			commands[i].Examples = []string{"vigil --allow-mutation plugins:revoke-publisher sha256:<digest>"}
+		case "cleanliness:scan":
+			commands[i].Usage = "vigil cleanliness:scan [--json] [--include-logs] [--include-vendor]"
+			commands[i].Examples = []string{
+				"vigil cleanliness:scan",
+				"vigil cleanliness:scan --json",
+			}
+		case "cleanliness:clean":
+			commands[i].Usage = "vigil cleanliness:clean --dry-run [--json] [--include-logs] [--include-vendor]"
+			commands[i].Examples = []string{
+				"vigil cleanliness:clean --dry-run",
+				"vigil --allow-mutation cleanliness:clean",
+			}
 		}
 		switch commands[i].Name {
 		case "plugins:conformance", "plugins:index:verify", "plugins:install", "plugins:update":
@@ -635,6 +655,13 @@ func commandFlagSpecs(command vigilcli.Command) []vigilcli.Flag {
 		add(vigilcli.Flag{Long: "--output", Description: "Choose the bundle output path.", ValueName: "PATH", File: true})
 		add(vigilcli.Flag{Long: "--stream", Description: "Stream phase status as text or JSONL.", ValueName: "FORMAT", Values: []string{"text", "jsonl"}})
 		add(vigilcli.Flag{Long: "--verbose", Description: "Stream additional phase details."})
+	case "cleanliness:scan":
+		add(vigilcli.Flag{Long: "--include-logs", Description: "Include local log directories."})
+		add(vigilcli.Flag{Long: "--include-vendor", Description: "Include dependency directories such as vendor and node_modules."})
+	case "cleanliness:clean":
+		add(vigilcli.Flag{Long: "--dry-run", Description: "Preview cleanup without deleting files."})
+		add(vigilcli.Flag{Long: "--include-logs", Description: "Include local log directories."})
+		add(vigilcli.Flag{Long: "--include-vendor", Description: "Include dependency directories such as vendor and node_modules."})
 	case "manpage", "manpage:generate":
 		add(vigilcli.Flag{Long: "--output", Description: "Write the manpage to a file.", ValueName: "PATH", File: true})
 	case "manpage:install":

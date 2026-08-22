@@ -56,20 +56,21 @@ Current test inventory:
 
 | Area | Count |
 | --- | ---: |
-| Go test files | 35 |
-| `func Test...` tests | 300 |
+| Go test files | 36 |
+| `func Test...` tests | 297 |
 | `func Fuzz...` targets | 7 |
 
 Package-level coverage:
 
 | Package | Test/fuzz functions | Main coverage |
 | --- | ---: | --- |
-| `cmd/vigil` | 105 | CLI dispatch, command registry behavior, mutation confirmation, workflows, hooks, plans, Sentry mode, setup, config commands, plugin CLI, pack commands, beginner-facing output, machine output adapters. |
+| `cmd/vigil` | 106 | CLI dispatch, command registry behavior, mutation confirmation, workflows, hooks, plans, Sentry mode, setup, config commands, plugin CLI, pack commands, cleanliness commands, beginner-facing output, machine output adapters. |
 | `cmd/vigil-plugin-publisher` | 1 | Offline publisher key generation and signed index authoring utility. |
 | `internal/acceptance` | 29 | v1 acceptance ledger, stable gate, repository evidence, operational evidence, external evidence, schema-bound gate reports. |
 | `internal/atomicfile` | 4 | Atomic writes, backup behavior, private mode, symlink rejection, fuzz round trips. |
 | `internal/cache` | 2 | Bounded LRU behavior and concurrent use. |
 | `internal/cli` | 5 | Command registry validation, exit taxonomy, structured flags and arguments, invocation context. |
+| `internal/cleanliness` | 3 | Disposable artifact discovery, protected directory defaults, opt-in logs/vendor cleanup, guarded deletion behavior. |
 | `internal/completion` | 2 | Registry-driven completion generation and unsupported-shell rejection. |
 | `internal/config` | 7 | Config defaults, migration, validation, environment file path confinement, unknown-field preservation, config fuzzing. |
 | `internal/contracts` | 32 | Published JSON schemas, workflow contracts, release workflow policy, acceptance schema compatibility. |

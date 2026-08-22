@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/PayCal-Technologies/vigil-public/internal/buildinfo"
+	vigilcleanliness "github.com/PayCal-Technologies/vigil-public/internal/cleanliness"
 	vigilcli "github.com/PayCal-Technologies/vigil-public/internal/cli"
 	vigiloutput "github.com/PayCal-Technologies/vigil-public/internal/output"
 )
@@ -60,21 +61,58 @@ func checkWorkspaceHygiene(args []string) int {
 		fmt.Fprintln(os.Stderr, err)
 		return vigilcli.ExitUsage
 	}
-	var findings []string
-	badNames := map[string]bool{".DS_Store": true, "Thumbs.db": true}
-	_ = filepath.WalkDir(".", func(path string, entry os.DirEntry, err error) error {
-		if err != nil {
-			return nil
-		}
-		if entry.IsDir() && (entry.Name() == ".git" || entry.Name() == "bin" || entry.Name() == "tmp") {
-			return filepath.SkipDir
-		}
-		if badNames[entry.Name()] || strings.HasSuffix(entry.Name(), "~") || strings.HasSuffix(entry.Name(), ".bak") {
-			findings = append(findings, path)
-		}
-		return nil
-	})
+	report, err := vigilcleanliness.Scan(".", vigilcleanliness.Options{})
+	if err != nil {
+		return findingSourceFailure(format, "workspace_hygiene", err.Error())
+	}
+	findings := make([]string, 0, len(report.Findings))
+	for _, finding := range report.Findings {
+		findings = append(findings, finding.Path)
+	}
 	return findingsOutput(format, "workspace_hygiene", findings)
+}
+
+func cleanlinessScan(args []string) int {
+	options, err := parseCleanlinessOptions("cleanliness:scan", args)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return vigilcli.ExitUsage
+	}
+	report, err := vigilcleanliness.Scan(".", vigilcleanliness.Options{
+		IncludeLogs:   options.includeLogs,
+		IncludeVendor: options.includeVendor,
+	})
+	if err != nil {
+		return cleanlinessFailure(options.jsonOut, err)
+	}
+	return cleanlinessOutput("cleanliness:scan", report, options.jsonOut)
+}
+
+func cleanlinessClean(args []string, allowMutation bool) int {
+	options, err := parseCleanlinessOptions("cleanliness:clean", args)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return vigilcli.ExitUsage
+	}
+	if !options.dryRun && !allowMutation {
+		if options.jsonOut {
+			return printJSON(map[string]any{"status": "fail", "error": "cleanliness:clean requires --allow-mutation unless --dry-run is set"}, vigilcli.ExitPolicyBlocked)
+		}
+		fmt.Fprintln(os.Stderr, "cleanliness:clean deletes local generated artifacts; rerun with --dry-run to preview or --allow-mutation after review")
+		return vigilcli.ExitPolicyBlocked
+	}
+	report, err := vigilcleanliness.Scan(".", vigilcleanliness.Options{
+		Delete:        !options.dryRun,
+		IncludeLogs:   options.includeLogs,
+		IncludeVendor: options.includeVendor,
+	})
+	if err != nil {
+		return cleanlinessFailure(options.jsonOut, err)
+	}
+	if options.dryRun {
+		report.Deleted = false
+	}
+	return cleanlinessOutput("cleanliness:clean", report, options.jsonOut)
 }
 
 func checkTrackedAssistantArtifacts(args []string) int {
@@ -627,6 +665,71 @@ func findingSourceFailure(format vigiloutput.Format, name, detail string) int {
 		fmt.Fprintf(os.Stderr, "unsupported findings output format %q\n", format)
 		return vigilcli.ExitUsage
 	}
+	return vigilcli.ExitInternal
+}
+
+type cleanlinessOptions struct {
+	jsonOut       bool
+	dryRun        bool
+	includeLogs   bool
+	includeVendor bool
+}
+
+func parseCleanlinessOptions(command string, args []string) (cleanlinessOptions, error) {
+	fs := flag.NewFlagSet(command, flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	opts := cleanlinessOptions{}
+	fs.BoolVar(&opts.jsonOut, "json", false, "json output")
+	fs.BoolVar(&opts.dryRun, "dry-run", false, "preview without deleting")
+	fs.BoolVar(&opts.includeLogs, "include-logs", false, "include local log directories")
+	fs.BoolVar(&opts.includeVendor, "include-vendor", false, "include dependency directories")
+	if err := fs.Parse(args); err != nil {
+		return opts, err
+	}
+	if fs.NArg() != 0 {
+		return opts, fmt.Errorf("unexpected arguments: %s", strings.Join(fs.Args(), " "))
+	}
+	if command == "cleanliness:scan" && opts.dryRun {
+		return opts, fmt.Errorf("--dry-run is only supported by cleanliness:clean")
+	}
+	return opts, nil
+}
+
+func cleanlinessOutput(command string, report vigilcleanliness.Report, jsonOut bool) int {
+	exitCode := vigilcli.ExitSuccess
+	if jsonOut {
+		return printJSON(map[string]any{
+			"status":        report.Status,
+			"deleted":       report.Deleted,
+			"findings":      report.Findings,
+			"count":         len(report.Findings),
+			"deleted_count": report.DeletedCount,
+			"deleted_bytes": report.DeletedBytes,
+		}, exitCode)
+	}
+	if command == "cleanliness:clean" && !report.Deleted {
+		fmt.Println("[cleanliness:clean] dry-run: no files deleted")
+	}
+	if len(report.Findings) == 0 {
+		fmt.Printf("%s %s: no disposable artifacts found\n", statusLabel("ok"), command)
+		return exitCode
+	}
+	for _, finding := range report.Findings {
+		fmt.Printf("%s\t%s\t%d bytes\t%s\n", finding.Kind, finding.Path, finding.Bytes, finding.Reason)
+	}
+	if report.Deleted {
+		fmt.Printf("%s %s: deleted %d item(s), %d bytes\n", statusLabel("ok"), command, report.DeletedCount, report.DeletedBytes)
+	} else {
+		fmt.Printf("%s %s: %d disposable item(s) found\n", statusLabel("fail"), command, len(report.Findings))
+	}
+	return exitCode
+}
+
+func cleanlinessFailure(jsonOut bool, err error) int {
+	if jsonOut {
+		return printJSON(map[string]any{"status": "fail", "error": err.Error()}, vigilcli.ExitInternal)
+	}
+	fmt.Fprintln(os.Stderr, err)
 	return vigilcli.ExitInternal
 }
 
