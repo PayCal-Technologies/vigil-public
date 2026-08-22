@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing Guide - Vigil Help</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="docs.js"></script>
+</head>
+<body>
+  <header class="mobile-header"><a href="index.html">Vigil Help</a><button type="button" data-nav-open aria-controls="command-nav" aria-expanded="false">Menu</button></header>
+  <div class="drawer-backdrop" data-nav-close hidden></div>
+  <div class="docs-shell">
+    <nav class="docs-sidebar" id="command-nav" aria-label="Vigil help navigation">
+      <div class="brand"><div><a href="index.html">Vigil Help</a><span>Testing guide</span></div></div>
+      <div class="sidebar-controls">
+        <label><span aria-hidden="true">☀ / ☾</span><select data-theme-select aria-label="Theme"><option value="system">System</option><option value="light">☀ Light</option><option value="dark">☾ Dark</option></select></label>
+        <label><span aria-hidden="true">Aaa</span><select data-font-select aria-label="Text size"><option value="compact">Compact</option><option value="comfortable">Comfortable</option><option value="large">Large</option><option value="extra-large">Extra large</option></select></label>
+      </div>
+      <a class="conventions-link" href="index.html">Command reference</a>
+      <a class="conventions-link" href="command-conventions.html">Command conventions</a>
+      <a class="conventions-link" href="testing.html">Testing guide</a>
+      <a class="conventions-link" href="https://paycaltech.com/vigil/">Official Vigil homepage</a>
+      <a class="conventions-link" href="https://github.com/PayCal-Technologies/vigil-public">Vigil on GitHub</a>
+    </nav>
+    <main class="docs-main">
+      <article class="doc-article">
+        <p class="eyebrow">Testing</p>
+        <h1>Vigil Testing Guide</h1>
+        <p class="summary">How to run Vigil's local, CI, fuzz, performance, release, and acceptance test suites.</p>
+        <div class="meta">
+          <div><strong>Default suite</strong><code>go test ./...</code></div>
+          <div><strong>Test files</strong>35 Go test files</div>
+          <div><strong>Coverage style</strong>Unit, black-box, contract, fuzz, release, performance</div>
+        </div>
+        <h2 id="quick-start">Quick Start<a class="anchor" href="#quick-start" aria-label="Link to Quick Start">#</a></h2>
+        <p>Run the default test suite from the repository root.</p>
+        <pre><code>go test ./...</code></pre>
+        <p>For a normal Go change, format the touched files and run the full package suite.</p>
+        <pre><code>gofmt -w &lt;changed .go files&gt;
+go test ./...</code></pre>
+        <p>For changes touching command execution, plugins, plans, output formats, release tooling, schema files, or safety policy, use the broader local matrix.</p>
+        <pre><code>go test ./...
+go test -race ./...
+go vet ./...
+scripts/run-fuzz-smoke.sh
+scripts/check-performance.sh</code></pre>
+        <h2 id="ci">CI Quality Matrix<a class="anchor" href="#ci" aria-label="Link to CI Quality Matrix">#</a></h2>
+        <p>The main workflow runs on Ubuntu and macOS. It checks formatting, GitHub Actions syntax, shell syntax, unit and black-box tests, race detection, fuzz smoke targets, vet, staticcheck, govulncheck, a release-like build, startup performance budgets, plugin conformance, <code>vigil verify --json</code>, <code>vigil workflow:local --json</code>, release reproducibility, and clean-directory binary behavior.</p>
+        <h2 id="suite-map">Suite Map<a class="anchor" href="#suite-map" aria-label="Link to Suite Map">#</a></h2>
+        <table>
+          <thead><tr><th>Area</th><th>What It Protects</th></tr></thead>
+          <tbody>
+            <tr><td><code>cmd/vigil</code></td><td>CLI dispatch, command registry behavior, mutation confirmation, workflows, plans, hooks, setup, plugins, pack commands, help output, and machine output adapters.</td></tr>
+            <tr><td><code>internal/acceptance</code> and <code>internal/contracts</code></td><td>v1 acceptance ledgers, published schemas, release workflow policy, output contracts, and compatibility fixtures.</td></tr>
+            <tr><td><code>internal/runner</code></td><td>Direct argv execution, explicit shell mode, timeouts, cancellation, process groups, output truncation, and command-line parsing fuzzing.</td></tr>
+            <tr><td><code>internal/plugins</code></td><td>Plugin lifecycle, digest pinning, signed indexes, trust and revocation, HTTPS acquisition, conformance, and strict protocol fuzzing.</td></tr>
+            <tr><td><code>internal/git</code></td><td>Mutation fingerprints, dirty submodules, large dirty repositories, special files, and Git status parsing.</td></tr>
+            <tr><td><code>internal/output</code></td><td>JSON, JSONL, JUnit, SARIF, GitHub annotations, output envelopes, escaping, and status mapping.</td></tr>
+            <tr><td><code>internal/config</code>, <code>internal/plan</code>, <code>internal/support</code></td><td>Config migration, reviewed plan integrity, private file reads/writes, support bundle redaction, and symlink or oversize rejection.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="fuzz">Fuzz Smoke<a class="anchor" href="#fuzz" aria-label="Link to Fuzz Smoke">#</a></h2>
+        <p>Vigil has fuzz targets for config round trips, pack manifest parsing, path confinement, command-line parsing, atomic file writes, plugin handshake JSON, and support bundle redaction.</p>
+        <pre><code>FUZZ_TIME=10s scripts/run-fuzz-smoke.sh</code></pre>
+        <h2 id="performance">Performance<a class="anchor" href="#performance" aria-label="Link to Performance">#</a></h2>
+        <p>Startup latency is a release contract. The performance check builds a release-like binary and measures new-process commands in an empty directory with empty user pack and plugin roots.</p>
+        <pre><code>scripts/check-performance.sh</code></pre>
+        <table>
+          <thead><tr><th>Operation</th><th>Median Budget</th></tr></thead>
+          <tbody>
+            <tr><td><code>vigil version</code></td><td>20 ms</td></tr>
+            <tr><td><code>vigil help</code></td><td>50 ms</td></tr>
+            <tr><td><code>vigil list --json</code></td><td>100 ms</td></tr>
+            <tr><td><code>vigil setup --dry-run --json</code></td><td>500 ms</td></tr>
+          </tbody>
+        </table>
+        <h2 id="release">Release Checks<a class="anchor" href="#release" aria-label="Link to Release Checks">#</a></h2>
+        <p>Release testing covers tag-bound builds, reproducible archives, schema packaging, acceptance gate reports, checksums, native smoke tests, and Homebrew formula generation.</p>
+        <pre><code>RELEASE_TAG=v0.0.0-quality.1 VERSION=0.0.0-quality.1 ALLOW_UNTAGGED_RELEASE=1 scripts/build-release.sh
+scripts/check-release-reproducibility.sh dist</code></pre>
+        <h2 id="failures">Common Failures<a class="anchor" href="#failures" aria-label="Link to Common Failures">#</a></h2>
+        <ul>
+          <li><strong>Golden fixture changed:</strong> regenerate only when the compatibility change is intentional and reviewed.</li>
+          <li><strong>Race detector failed:</strong> treat it as a correctness bug around shared maps, slices, caches, process state, or globals.</li>
+          <li><strong>Mutation violation:</strong> a read-only command changed the Git-visible workspace; either fix the write or change the command contract with explicit approval.</li>
+          <li><strong>Performance regression:</strong> re-run on an idle machine, then separate process startup cost from discovery work.</li>
+        </ul>
+        <h2 id="more">More Detail<a class="anchor" href="#more" aria-label="Link to More Detail">#</a></h2>
+        <ul>
+          <li><a href="https://github.com/PayCal-Technologies/vigil-public/blob/main/TESTING.md">Full TESTING.md on GitHub</a></li>
+          <li><a href="https://paycaltech.com/vigil/help/">Vigil command help</a></li>
+          <li><a href="https://paycaltech.com/vigil/">Official Vigil homepage</a></li>
+          <li><a href="https://paycaltech.com/">Created by PayCal Technologies</a></li>
+        </ul>
+        <div class="footer"><span>Created by <a href="https://paycaltech.com/">PayCal Technologies</a></span><span><a href="https://paycaltech.com/vigil/">Official Vigil homepage</a></span><span><a href="https://github.com/PayCal-Technologies/vigil-public">Vigil on GitHub</a></span></div>
+      </article>
+    </main>
+    <aside class="article-toc" aria-label="On this page">
+      <details open><summary>On this page</summary><ul><li><a href="#quick-start" data-toc-link>Quick Start</a></li><li><a href="#ci" data-toc-link>CI</a></li><li><a href="#suite-map" data-toc-link>Suite Map</a></li><li><a href="#fuzz" data-toc-link>Fuzz</a></li><li><a href="#performance" data-toc-link>Performance</a></li><li><a href="#release" data-toc-link>Release</a></li><li><a href="#failures" data-toc-link>Failures</a></li></ul></details>
+    </aside>
+  </div>
+</body>
+</html>
