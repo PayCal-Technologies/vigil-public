@@ -7,10 +7,11 @@ https://github.com/PayCal-Technologies/vigil-public/issues/2.
 
 ## Verified Repository State
 
-Last verified: 2026-08-01.
+Last verified: 2026-08-22.
 
-- Current public release: `v0.1.0`.
-- Current remote tags: `v0.1.0`.
+- Current public prerelease: `v0.2.0-beta.1`.
+- Current legacy bootstrap release: `v0.1.0`.
+- Current remote tags: `v0.1.0`, `v0.2.0-beta.1`.
 - Latest `main` quality workflow: must be completed successfully for
   `origin/main`; `scripts/check-github-release-readiness.sh` verifies this
   before tagging.

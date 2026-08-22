@@ -8,26 +8,25 @@ acceptance ledger is complete.
 
 ## Unreleased
 
+No unreleased changes.
+
+## v0.2.0-beta.1 - 2026-08-22
+
+This beta validates Vigil's new release and distribution contract before any
+stable v1 claim.
+
+### Added
+
+- Add detailed `TESTING.md` coverage guidance for unit, integration,
+  acceptance, release, completion, schema, Windows, and troubleshooting checks.
+- Add `help/testing.html` to the bundled Vigil help system with direct links to
+  the official Vigil homepage, public help site, and GitHub repository.
 - Add command completion generators for PowerShell, Elvish, Nushell, Xonsh,
   Tcsh, Clink, Yash, and Oil-family shells while preserving Bash, Zsh, and Fish.
 - Expand release cross-build targets to Windows amd64 and arm64 archives with
   `.exe` entrypoints for both `vigil` and `vigil-plugin-publisher`.
 - Add beginner-facing command aliases and guided language for setup, checks,
   explanation, status, learning, and safe next actions.
-- Add presentation-oriented terminology that describes checks, file changes,
-  access, saved reports, reviewed plans, feature collections, and executable
-  extensions in plainer language without changing machine contracts.
-- Clarify README and troubleshooting wording around executable extensions:
-  access approval is not an operating-system sandbox.
-- Polish release, Homebrew, and GitHub repository metadata.
-
-## v0.2.0-beta.1 - Planned
-
-This beta is intended to validate Vigil's new release and distribution contract
-before any stable v1 claim.
-
-### Added
-
 - Typed command registry used by help, command discovery, completions, manpages,
   and machine-readable command metadata.
 - Versioned configuration, output, plan, run-artifact, plugin protocol, plugin
@@ -45,6 +44,13 @@ before any stable v1 claim.
 - v1 acceptance gate reporting through `v1-acceptance-gate.json`.
 
 ### Changed
+
+- Add presentation-oriented terminology that describes checks, file changes,
+  access, saved reports, reviewed plans, feature collections, and executable
+  extensions in plainer language without changing machine contracts.
+- Clarify README and troubleshooting wording around executable extensions:
+  access approval is not an operating-system sandbox.
+- Polish release, Homebrew, and GitHub repository metadata.
 
 - `extensions:*` commands remain as compatibility aliases for declarative packs;
   executable plugins now have their own plugin lifecycle and protocol.
