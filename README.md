@@ -26,6 +26,8 @@ commands you already run.
 - Source repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
 - Created by [PayCal Technologies](https://paycaltech.com/)
 
+![Vigil terminal showing ready project status and verify JSON evidence](help/assets/vigil-terminal.png)
+
 > `v0.2.0-beta.1` is the current public prerelease candidate. `v0.1.0` remains
 > the legacy bootstrap release and does not include every command, help page,
 > completion target, or plugin/distribution workflow documented here.
