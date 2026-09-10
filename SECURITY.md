@@ -12,8 +12,11 @@ Email: info@paycaltech.com
 | Version | Security support |
 | --- | --- |
 | `main` | Supported for coordinated reports against unreleased code. |
-| `v0.2.0-beta.1` | Planned beta; supported after publication for release-workflow and beta-contract issues. |
+| `v0.2.0-beta.1` | Public source prerelease; supported for release-workflow and beta-contract issues. Signed distribution assets are not yet published. |
 | `v0.1.0` | Unsupported legacy bootstrap release; reports are triaged, but fixes target a newer release unless immediate user risk requires otherwise. |
+
+The current release-state record is
+[`docs/release-state.json`](docs/release-state.json).
 
 No stable v1 release exists yet. Stable support windows are defined in
 `docs/support-policy.md` after a supported stable line is published.

@@ -1,0 +1,37 @@
+{
+  "schema_version": "1",
+  "last_verified": "2026-08-22",
+  "repository": "PayCal-Technologies/vigil-public",
+  "current_prerelease": {
+    "tag": "v0.2.0-beta.1",
+    "source_tag_created": true,
+    "github_release_created": true,
+    "github_release_url": "https://github.com/PayCal-Technologies/vigil-public/releases/tag/v0.2.0-beta.1",
+    "github_release_published_at": "2026-08-22T20:30:21Z",
+    "github_release_prerelease": true,
+    "published_asset_count": 0,
+    "signed_assets_published": false,
+    "notarization_verified": false,
+    "checksum_sigstore_verified": false,
+    "github_attestations_verified": false,
+    "native_smoke_complete": false,
+    "homebrew_formula_published": false,
+    "status": "source_prerelease_published_distribution_pending"
+  },
+  "legacy_release": {
+    "tag": "v0.1.0",
+    "github_release_created": true,
+    "github_release_published_at": "2026-08-01T01:46:05Z",
+    "published_asset_count": 9,
+    "status": "legacy_bootstrap_release"
+  },
+  "stable": {
+    "latest": null,
+    "v1_blocked": true,
+    "blocker": "Stable v1 remains blocked until external and operational acceptance evidence is complete."
+  },
+  "notes": [
+    "v0.2.0-beta.1 is a public source prerelease with no GitHub release assets at the time of verification.",
+    "Signed archives, notarization evidence, checksums, Sigstore bundles, GitHub attestations, native smoke results, and Homebrew publication remain pending."
+  ]
+}

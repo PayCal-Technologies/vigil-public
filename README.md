@@ -52,15 +52,16 @@ Run `python3 scripts/test-local-install.py` for isolated installer regression ch
 Private and public Vigil share the command name. Check the installed receipt before replacing one with the other; build the unselected variant with `make compile`.
 
 
-
 ## Watch The Overview
 
 [![Watch the Vigil overview video](https://img.youtube.com/vi/BA4IEErrQ9o/maxresdefault.jpg)](https://www.youtube.com/watch?v=BA4IEErrQ9o)
 
 Video: [Watch Vigil on YouTube](https://www.youtube.com/watch?v=BA4IEErrQ9o)
 
-> `v0.2.0-beta.1` is the current public prerelease candidate. `v0.1.0` remains
-> the legacy bootstrap release and does not include every command, help page,
+> `v0.2.0-beta.1` is the current public source prerelease. Signed release
+> assets and downstream distribution evidence are still pending; see
+> [`docs/release-state.json`](docs/release-state.json). `v0.1.0` remains the
+> legacy bootstrap release and does not include every command, help page,
 > completion target, or plugin/distribution workflow documented here.
 
 ## What Vigil Includes
@@ -115,8 +116,10 @@ Or build this checkout locally:
 go build -trimpath -o bin/vigil ./cmd/vigil
 ```
 
-`v0.2.0-beta.1` is the current public prerelease candidate. `v0.1.0` is an
-early bootstrap release with platform binaries, completions, a manpage, and
+`v0.2.0-beta.1` is the current public source prerelease. At the latest recorded
+verification it has a GitHub prerelease object but no signed release assets; see
+[`docs/release-state.json`](docs/release-state.json). `v0.1.0` is an early
+bootstrap release with platform binaries, completions, a manpage, and
 `SHA256SUMS`. It came before the newer archive, signing, SBOM, Sigstore,
 attestation, Windows cross-build, expanded completion, help, and v1 gate
 contract work.
@@ -139,13 +142,17 @@ the matching formula to the project tap when
 
 ## Release Status
 
-`v0.2.0-beta.1` is the current public prerelease candidate. GitHub release
-immutability is enabled for future releases, but the existing `v0.1.0` release
-itself is not immutable. The beta source release documents and exercises the new
-command surface, help system, expanded completion targets, Windows cross-build
-metadata, schemas, and v1 gate contract. Signed archive, checksum, SBOM,
-Sigstore, attestation, native-smoke, and Homebrew publication remain tied to the
-release environment tag policy and secrets.
+[`docs/release-state.json`](docs/release-state.json) is the authoritative
+release-state record. As of 2026-08-22, `v0.2.0-beta.1` has both a source tag
+and a published GitHub prerelease object, but it has zero release assets.
+Signed archives, notarization evidence, checksums, SBOM, Sigstore bundles,
+GitHub attestations, native-smoke results, and Homebrew publication remain
+pending.
+
+GitHub release immutability is enabled for future releases, but the existing
+`v0.1.0` release itself is not immutable. The beta source release documents and
+exercises the new command surface, help system, expanded completion targets,
+Windows cross-build metadata, schemas, and v1 gate contract.
 
 `v1.0.0` is intentionally blocked until the external and operational acceptance
 ledger is complete. In other words, Vigil will not cut a stable v1 release until

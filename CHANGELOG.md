@@ -21,8 +21,9 @@ acceptance ledger is complete.
 
 ## v0.2.0-beta.1 - 2026-08-22
 
-This beta validates Vigil's new release and distribution contract before any
-stable v1 claim.
+This public source prerelease validates Vigil's new release and distribution
+contract before any stable v1 claim. Its current operational status is recorded
+in [`docs/release-state.json`](docs/release-state.json).
 
 ### Added
 
@@ -72,9 +73,9 @@ stable v1 claim.
 
 - Stable `v1.0.0` remains blocked until external and operational acceptance
   criteria are independently verified.
-- Apple signing/notarization credentials and `RELEASE_ADMIN_READ_TOKEN` still
-  need to be configured in the GitHub `release` environment before the planned
-  beta tag is pushed. Apple setup is intentionally deferred for now.
+- The `v0.2.0-beta.1` source tag and GitHub prerelease exist, but signed
+  archives, notarization evidence, checksums, SBOM, Sigstore bundles, GitHub
+  attestations, native-smoke results, and Homebrew publication remain pending.
 - Public Homebrew install instructions should remain disabled until the project
   tap publishes and validates a formula from public release URLs.
 

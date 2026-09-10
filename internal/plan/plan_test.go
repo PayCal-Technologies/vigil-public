@@ -44,6 +44,106 @@ func TestPlanIDDetectsAnyReviewedActionChange(t *testing.T) {
 	}
 }
 
+func TestReviewAuthorizationDigestDetectsApprovalTampering(t *testing.T) {
+	document := fixtureReviewedMutationDocument(t)
+	originalPlanID := document.PlanID
+	if err := Validate(document); err != nil {
+		t.Fatal(err)
+	}
+	if document.PlanID != originalPlanID {
+		t.Fatalf("review changed plan id: %s != %s", document.PlanID, originalPlanID)
+	}
+
+	tests := []struct {
+		name   string
+		mutate func(*Document)
+		want   string
+	}{
+		{
+			name: "inserted approval",
+			mutate: func(document *Document) {
+				document.Gates = append(document.Gates, config.Gate{Name: "deploy", Command: "make", Args: []string{"deploy"}, ReadOnly: false})
+				document.PlanID, _ = ID(*document)
+				document.Review.MutationApprovals = append(document.Review.MutationApprovals, MutationApproval{
+					Gate:    "deploy",
+					Command: GateDisplayCommand(document.Gates[1]),
+				})
+			},
+			want: "authorization_digest mismatch",
+		},
+		{
+			name: "removed approval",
+			mutate: func(document *Document) {
+				document.Review.MutationApprovals = nil
+			},
+			want: "authorization_digest mismatch",
+		},
+		{
+			name: "modified approval command",
+			mutate: func(document *Document) {
+				document.Review.MutationApprovals[0].Command = "make release"
+			},
+			want: "mutation approval command mismatch",
+		},
+		{
+			name: "modified reviewed timestamp",
+			mutate: func(document *Document) {
+				document.Review.ReviewedAt = time.Unix(300, 0).UTC().Format(time.RFC3339Nano)
+			},
+			want: "authorization_digest mismatch",
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tampered := document
+			tampered.Gates = cloneGates(document.Gates)
+			review := *document.Review
+			review.MutationApprovals = append([]MutationApproval(nil), document.Review.MutationApprovals...)
+			tampered.Review = &review
+			test.mutate(&tampered)
+			if err := Validate(tampered); err == nil || !strings.Contains(err.Error(), test.want) {
+				t.Fatalf("Validate() error = %v, want %q", err, test.want)
+			}
+		})
+	}
+}
+
+func TestReviewAuthorizationDigestDetectsReorderedApprovals(t *testing.T) {
+	document := fixtureReviewedMutationDocument(t)
+	document.Gates = append(document.Gates, config.Gate{Name: "deploy", Command: "make", Args: []string{"deploy"}, ReadOnly: false})
+	document.PlanID, _ = ID(document)
+	document.Review.MutationApprovals = append(document.Review.MutationApprovals, MutationApproval{
+		Gate:    "deploy",
+		Command: GateDisplayCommand(document.Gates[1]),
+	})
+	var err error
+	document, err = AuthorizeReview(document)
+	if err != nil {
+		t.Fatal(err)
+	}
+	document.Review.MutationApprovals[0], document.Review.MutationApprovals[1] = document.Review.MutationApprovals[1], document.Review.MutationApprovals[0]
+	if err := Validate(document); err == nil || !strings.Contains(err.Error(), "authorization_digest mismatch") {
+		t.Fatalf("Validate() error = %v", err)
+	}
+}
+
+func TestReviewRequiresAuthorizationDigest(t *testing.T) {
+	document := fixtureDocument(t)
+	document.Gates[0].ReadOnly = false
+	document.PlanID, _ = ID(document)
+	document.Review = &Review{
+		Mode:       "sentry",
+		ReviewedAt: time.Unix(200, 0).UTC().Format(time.RFC3339Nano),
+		MutationApprovals: []MutationApproval{{
+			Gate:    document.Gates[0].Name,
+			Command: GateDisplayCommand(document.Gates[0]),
+		}},
+	}
+	if err := Validate(document); err == nil || !strings.Contains(err.Error(), "invalid plan review authorization_digest") {
+		t.Fatalf("Validate() error = %v", err)
+	}
+}
+
 func TestPlanDeepCopiesWorkflowGraphControls(t *testing.T) {
 	digest := DigestBytes([]byte("fixture"))
 	required := false
@@ -88,6 +188,26 @@ func TestPlanDeepCopiesWorkflowGraphControls(t *testing.T) {
 		document.Gates[0].Artifacts[0].IsRequired() {
 		t.Fatalf("plan retained mutable gate input: %#v", document.Gates[0])
 	}
+}
+
+func fixtureReviewedMutationDocument(t *testing.T) Document {
+	t.Helper()
+	document := fixtureDocument(t)
+	document.Gates[0].ReadOnly = false
+	document.PlanID, _ = ID(document)
+	document.Review = &Review{
+		Mode:       "sentry",
+		ReviewedAt: time.Unix(200, 0).UTC().Format(time.RFC3339Nano),
+		MutationApprovals: []MutationApproval{{
+			Gate:    document.Gates[0].Name,
+			Command: GateDisplayCommand(document.Gates[0]),
+		}},
+	}
+	authorized, err := AuthorizeReview(document)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return authorized
 }
 
 func TestReadWriteRoundTripIsPrivateAndStrict(t *testing.T) {

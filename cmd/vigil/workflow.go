@@ -596,14 +596,7 @@ func executeWorkflowPlan(ctx context.Context, outputCommand string, document vig
 }
 
 func gateDisplayCommand(gate gateConfig) string {
-	if gate.Shell {
-		return "shell: " + gate.Command
-	}
-	parts := []string{shellQuote(gate.Command)}
-	for _, arg := range gate.Args {
-		parts = append(parts, shellQuote(arg))
-	}
-	return strings.Join(parts, " ")
+	return vigilplan.GateDisplayCommand(gate)
 }
 
 func workflowStateExitCode(state runner.State) int {

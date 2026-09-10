@@ -245,7 +245,7 @@ func runSentryReview(document vigilplan.Document) (vigilplan.Document, error) {
 		switch strings.ToLower(input) {
 		case "", "c", "continue":
 			document.Review = sentryReview(approvals, document.Gates, time.Now().UTC())
-			return document, nil
+			return vigilplan.AuthorizeReview(document)
 		case "a", "all":
 			for _, gate := range document.Gates {
 				if !gate.ReadOnly {
@@ -304,7 +304,7 @@ func sentryReview(approvals map[string]bool, gates []gateConfig, reviewedAt time
 		}
 		review.MutationApprovals = append(review.MutationApprovals, vigilplan.MutationApproval{
 			Gate:    gate.Name,
-			Command: gateDisplayCommand(gate),
+			Command: vigilplan.GateDisplayCommand(gate),
 		})
 	}
 	return review

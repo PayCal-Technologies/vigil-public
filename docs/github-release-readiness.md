@@ -1,9 +1,11 @@
 # GitHub Release Readiness
 
 This checklist covers GitHub repository settings that cannot be proven from the
-source tree alone. Complete it before pushing a beta or stable release tag.
+source tree alone. Complete it before pushing a new beta or stable release tag.
 The active `v0.2.0-beta.1` release tracker is
 https://github.com/PayCal-Technologies/vigil-public/issues/2.
+The authoritative current release status is recorded in
+[`release-state.json`](release-state.json).
 
 ## Verified Repository State
 
@@ -12,6 +14,7 @@ Last verified: 2026-08-22.
 - Current public prerelease: `v0.2.0-beta.1`.
 - Current legacy bootstrap release: `v0.1.0`.
 - Current remote tags: `v0.1.0`, `v0.2.0-beta.1`.
+- Current `v0.2.0-beta.1` GitHub prerelease: published with zero assets.
 - Latest `main` quality workflow: must be completed successfully for
   `origin/main`; `scripts/check-github-release-readiness.sh` verifies this
   before tagging.
@@ -77,30 +80,30 @@ Stable releases also require:
 - Do not advertise Homebrew installation until a stable public release has
   published and validated the project tap formula.
 
-## Maintainer Verification
+## Maintainer Verification For The Next Release
 
-Before tagging:
+Before tagging a new release:
 
 ```bash
-scripts/check-github-release-readiness.sh --tag v0.2.0-beta.1
+scripts/check-github-release-readiness.sh --tag v0.2.0-beta.2
 ```
 
 Also run the manual `Release Readiness` workflow from GitHub Actions against
-`main` with `tag=v0.2.0-beta.1` and `accept_tag_policy=true`. That workflow uses
+`main` with the intended tag and `accept_tag_policy=true`. That workflow uses
 the protected `release` environment and uploads a JSON readiness report without
 exposing secret values.
 
 Then run the local candidate smoke from `main`:
 
 ```bash
-RELEASE_TAG=v0.2.0-beta.1 scripts/build-release.sh
-RELEASE_TAG=v0.2.0-beta.1 scripts/check-release-reproducibility.sh dist
+RELEASE_TAG=v0.2.0-beta.2 scripts/build-release.sh
+RELEASE_TAG=v0.2.0-beta.2 scripts/check-release-reproducibility.sh dist
 shasum -a 256 -c dist/SHA256SUMS
 ```
 
 If those pass and the GitHub settings above are complete:
 
 ```bash
-git tag -a v0.2.0-beta.1 -m "v0.2.0-beta.1"
-git push origin v0.2.0-beta.1
+git tag -a v0.2.0-beta.2 -m "v0.2.0-beta.2"
+git push origin v0.2.0-beta.2
 ```

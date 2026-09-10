@@ -4,6 +4,9 @@ Tagged releases are built by `.github/workflows/release.yml`. Do not upload
 locally built binaries as official assets.
 Before pushing a release tag, complete the repository-side checks in
 [`github-release-readiness.md`](github-release-readiness.md).
+The current source tag, GitHub release, asset, notarization, attestation,
+native-smoke, and Homebrew state is tracked in
+[`release-state.json`](release-state.json).
 
 `v0.1.0` is a legacy bootstrap release. It has raw platform binaries,
 completions, a manpage, and `SHA256SUMS`, but it predates the current archive,

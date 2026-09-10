@@ -1835,6 +1835,10 @@ func TestSentryReviewDoesNotChangePlanID(t *testing.T) {
 	}
 	original := document.PlanID
 	document.Review = sentryReview(map[string]bool{"generate": true}, document.Gates, time.Unix(200, 0))
+	document, err = vigilplan.AuthorizeReview(document)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if document.PlanID != original {
 		t.Fatalf("plan id changed after review: %s != %s", document.PlanID, original)
 	}
@@ -1890,6 +1894,10 @@ func TestSentryApplyRequiresReviewedMutationApproval(t *testing.T) {
 		t.Fatalf("unapproved gates = %#v", blocked.Unapproved)
 	}
 	document.Review = sentryReview(map[string]bool{"generate": true}, document.Gates, time.Unix(200, 0))
+	document, err = vigilplan.AuthorizeReview(document)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if err := vigilplan.Write(planPath, document); err != nil {
 		t.Fatal(err)
 	}

@@ -38,6 +38,9 @@
       "items": {
         "$ref": "#/$defs/gate"
       }
+    },
+    "review": {
+      "$ref": "#/$defs/review"
     }
   },
   "$defs": {
@@ -247,6 +250,52 @@
         },
         "required": {
           "type": "boolean"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "reviewed_at",
+        "authorization_digest"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "authorization_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "mutation_approvals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mutation_approval"
+          }
+        }
+      }
+    },
+    "mutation_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate",
+        "command"
+      ],
+      "properties": {
+        "gate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }

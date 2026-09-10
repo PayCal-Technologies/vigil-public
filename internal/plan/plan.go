@@ -52,9 +52,10 @@ type Document struct {
 }
 
 type Review struct {
-	Mode              string             `json:"mode"`
-	ReviewedAt        string             `json:"reviewed_at"`
-	MutationApprovals []MutationApproval `json:"mutation_approvals,omitempty"`
+	Mode                string             `json:"mode"`
+	ReviewedAt          string             `json:"reviewed_at"`
+	AuthorizationDigest string             `json:"authorization_digest,omitempty"`
+	MutationApprovals   []MutationApproval `json:"mutation_approvals,omitempty"`
 }
 
 type MutationApproval struct {
@@ -135,9 +136,9 @@ func Validate(document Document) error {
 		if _, err := time.Parse(time.RFC3339Nano, document.Review.ReviewedAt); err != nil {
 			return fmt.Errorf("invalid plan review reviewed_at: %w", err)
 		}
-		gateNames := map[string]bool{}
+		gatesByName := map[string]config.Gate{}
 		for _, gate := range document.Gates {
-			gateNames[gate.Name] = true
+			gatesByName[gate.Name] = gate
 		}
 		seenApprovals := map[string]bool{}
 		for _, approval := range document.Review.MutationApprovals {
@@ -145,13 +146,30 @@ func Validate(document Document) error {
 			if name == "" {
 				return errors.New("plan review mutation approval gate is required")
 			}
-			if !gateNames[name] {
+			gate, ok := gatesByName[name]
+			if !ok {
 				return fmt.Errorf("plan review mutation approval references unknown gate %q", name)
+			}
+			if gate.ReadOnly {
+				return fmt.Errorf("plan review mutation approval references read-only gate %q", name)
+			}
+			if approval.Command != GateDisplayCommand(gate) {
+				return fmt.Errorf("plan review mutation approval command mismatch for gate %q", name)
 			}
 			if seenApprovals[name] {
 				return fmt.Errorf("plan review mutation approval duplicates gate %q", name)
 			}
 			seenApprovals[name] = true
+		}
+		if !digestPattern.MatchString(document.Review.AuthorizationDigest) {
+			return fmt.Errorf("invalid plan review authorization_digest %q", document.Review.AuthorizationDigest)
+		}
+		expectedDigest, err := ReviewAuthorizationDigest(document)
+		if err != nil {
+			return err
+		}
+		if document.Review.AuthorizationDigest != expectedDigest {
+			return fmt.Errorf("plan review authorization_digest mismatch: expected %s", expectedDigest)
 		}
 	}
 	expectedID, err := ID(document)
@@ -172,6 +190,93 @@ func ID(document Document) (string, error) {
 		return "", err
 	}
 	return DigestBytes(data), nil
+}
+
+func AuthorizeReview(document Document) (Document, error) {
+	if document.Review == nil {
+		return document, errors.New("plan review is required")
+	}
+	document.Review.AuthorizationDigest = ""
+	digest, err := ReviewAuthorizationDigest(document)
+	if err != nil {
+		return Document{}, err
+	}
+	document.Review.AuthorizationDigest = digest
+	if err := Validate(document); err != nil {
+		return Document{}, err
+	}
+	return document, nil
+}
+
+func ReviewAuthorizationDigest(document Document) (string, error) {
+	if document.Review == nil {
+		return "", errors.New("plan review is required")
+	}
+	if !digestPattern.MatchString(document.PlanID) {
+		return "", fmt.Errorf("invalid plan_id %q", document.PlanID)
+	}
+	review := *document.Review
+	review.AuthorizationDigest = ""
+	gatesByName := map[string]config.Gate{}
+	for _, gate := range document.Gates {
+		gatesByName[gate.Name] = gate
+	}
+	approvals := make([]reviewAuthorizationApproval, 0, len(review.MutationApprovals))
+	for _, approval := range review.MutationApprovals {
+		gate, ok := gatesByName[strings.TrimSpace(approval.Gate)]
+		if !ok {
+			return "", fmt.Errorf("plan review mutation approval references unknown gate %q", strings.TrimSpace(approval.Gate))
+		}
+		approvals = append(approvals, reviewAuthorizationApproval{
+			Gate:       strings.TrimSpace(approval.Gate),
+			Command:    approval.Command,
+			Structured: gate,
+		})
+	}
+	return DigestJSON(reviewAuthorizationPayload{
+		Schema:      "vigil.sentry.authorization.v1",
+		PlanID:      document.PlanID,
+		Mode:        review.Mode,
+		ReviewedAt:  review.ReviewedAt,
+		Approvals:   approvals,
+		Command:     document.Command,
+		CreatedAt:   document.CreatedAt,
+		Inputs:      document.Inputs,
+		Options:     document.Options,
+		GateCount:   len(document.Gates),
+		PlanVersion: document.SchemaVersion,
+	})
+}
+
+type reviewAuthorizationPayload struct {
+	Schema      string                        `json:"schema"`
+	PlanID      string                        `json:"plan_id"`
+	PlanVersion string                        `json:"plan_version"`
+	Command     string                        `json:"command"`
+	CreatedAt   string                        `json:"created_at"`
+	Inputs      Inputs                        `json:"inputs"`
+	Options     Options                       `json:"options"`
+	GateCount   int                           `json:"gate_count"`
+	Mode        string                        `json:"mode"`
+	ReviewedAt  string                        `json:"reviewed_at"`
+	Approvals   []reviewAuthorizationApproval `json:"approvals"`
+}
+
+type reviewAuthorizationApproval struct {
+	Gate       string      `json:"gate"`
+	Command    string      `json:"command"`
+	Structured config.Gate `json:"structured"`
+}
+
+func GateDisplayCommand(gate config.Gate) string {
+	if gate.Shell {
+		return "shell: " + gate.Command
+	}
+	parts := []string{shellQuote(gate.Command)}
+	for _, arg := range gate.Args {
+		parts = append(parts, shellQuote(arg))
+	}
+	return strings.Join(parts, " ")
 }
 
 func ApprovedMutationGates(document Document) map[string]bool {
@@ -315,6 +420,18 @@ func DigestJSON(value any) (string, error) {
 func DigestBytes(data []byte) string {
 	sum := sha256.Sum256(data)
 	return fmt.Sprintf("sha256:%x", sum[:])
+}
+
+func shellQuote(value string) string {
+	if value == "" {
+		return "''"
+	}
+	if strings.IndexFunc(value, func(r rune) bool {
+		return !(r >= 'a' && r <= 'z') && !(r >= 'A' && r <= 'Z') && !(r >= '0' && r <= '9') && !strings.ContainsRune("-_./:", r)
+	}) < 0 {
+		return value
+	}
+	return "'" + strings.ReplaceAll(value, "'", "'\"'\"'") + "'"
 }
 
 func ExecutableDigest() (string, error) {

@@ -9,7 +9,8 @@ Only stable releases publish to `PayCal-Technologies/homebrew-tap`, using a
 separately scoped `HOMEBREW_TAP_TOKEN`. The canonical `vigil-X.Y.Z.tar.gz` name
 preserves Homebrew's version inference.
 
-No public Homebrew install command exists yet. As of 2026-08-01,
+No public Homebrew install command exists yet. As of the release-state record in
+[`release-state.json`](release-state.json),
 `PayCal-Technologies/homebrew-tap` exists, but the release environment has no
 configured secrets and the project tap formula has not been published from a
 stable public release.

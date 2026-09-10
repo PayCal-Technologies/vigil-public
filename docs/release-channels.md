@@ -3,6 +3,10 @@
 Vigil defines three distribution channels with different stability and
 retention contracts.
 
+Current channel state is recorded in [`release-state.json`](release-state.json).
+As of that record, `v0.2.0-beta.1` is a public source prerelease with no signed
+release assets yet.
+
 ## Stable
 
 Tags of the form `vX.Y.Z` produce a normal GitHub release and become the
@@ -27,6 +31,10 @@ publish the same signed artifact and provenance set as stable releases. GitHub
 marks them as prereleases only after the draft assets pass that matrix, and
 they never replace the latest stable release. Public-URL Homebrew audit and tap
 publication jobs are skipped.
+
+The `v0.2.0-beta.1` source prerelease predates a completed signed-asset beta
+run. Treat it as a source prerelease until `release-state.json` records the
+signed assets and verification evidence as complete.
 
 GitHub release immutability is enabled for the repository. Because published
 immutable releases permit only title and note edits, Vigil never relies on
