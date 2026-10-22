@@ -1,0 +1,14 @@
+> vigil --help
+vigil
+Policy-aware repository preflight engine
+
+Usage:
+  vigil [--config PATH] [--allow-mutation|--auto] <command> [args]
+
+core
+  r   advanced                             Show every command and advanced...
+  w   apply                                Verify and execute an unchanged...
+  r/w check                                Run the normal project checks.
+  w   cleanliness:clean                    Delete reviewed disposable local...
+  r   cleanliness:scan                     Report disposable local artifacts...
+  r   doctor                               Check local readiness
