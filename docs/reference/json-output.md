@@ -1,6 +1,6 @@
 # Machine Output
 
-Vigil JSON output uses envelope schema `1`. The published schema is
+vigil JSON output uses envelope schema `1`. The published schema is
 [`schemas/vigil-output-v1.schema.json`](../../schemas/vigil-output-v1.schema.json).
 JSONL streams use event schema `1`, published as
 [`schemas/vigil-jsonl-event-v1.schema.json`](../../schemas/vigil-jsonl-event-v1.schema.json).

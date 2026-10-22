@@ -22,8 +22,8 @@ var beginnerTerminology = []struct {
 	{"gate", "check"},
 	{"packs", "built-in feature collections"},
 	{"pack", "built-in feature collection"},
-	{"plugins", "installed Vigil extensions"},
-	{"plugin", "installed Vigil extension"},
+	{"plugins", "installed vigil extensions"},
+	{"plugin", "installed vigil extension"},
 	{"fail closed", "stop rather than continue unsafely"},
 }
 

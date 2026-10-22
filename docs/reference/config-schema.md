@@ -1,6 +1,6 @@
 # Config Schema
 
-The current configuration schema is `3`. Vigil reads JSON from
+The current configuration schema is `3`. vigil reads JSON from
 `vigil.config.json` unless `--config PATH` selects another file.
 The published machine schema is
 [`schemas/vigil-config-v3.schema.json`](../../schemas/vigil-config-v3.schema.json).

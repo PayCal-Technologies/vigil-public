@@ -1,6 +1,6 @@
 # Governance
 
-Vigil is maintained by PayCal Technologies.
+vigil is maintained by PayCal Technologies.
 
 The public repository accepts issues and pull requests for the open-source CLI,
 documentation, examples, packaging, and public extension manifests. Maintainers

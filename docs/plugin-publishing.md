@@ -3,15 +3,15 @@
 `vigil-plugin-publisher` is the offline companion for plugin index schema `1`.
 It generates Ed25519 publisher keys, appends deterministic partial signatures,
 and independently verifies a completed threshold-signed index. It never changes
-Vigil's local trust store and never uploads an artifact.
+vigil's local trust store and never uploads an artifact.
 
 ## Trust Model
 
 An index signature authenticates an exact JSON payload. It does not grant a
-plugin capability, install a plugin, or make a publisher key trusted. A Vigil
+plugin capability, install a plugin, or make a publisher key trusted. A vigil
 user must explicitly trust each public key and approve plugin capabilities.
 
-Vigil has no silently embedded organization trust root. An index must not be
+vigil has no silently embedded organization trust root. An index must not be
 called official until all of these exist:
 
 1. a reviewed publisher-key policy with named custodial roles;
@@ -133,7 +133,7 @@ A user still bootstraps trust explicitly:
 ```bash
 vigil --allow-mutation plugins:trust-publisher \
   --key custodian-a.pub \
-  --name "Vigil Publisher A"
+  --name "vigil Publisher A"
 ```
 
 The user must trust enough independent keys to satisfy the index threshold.

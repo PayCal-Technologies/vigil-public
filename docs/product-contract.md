@@ -1,12 +1,12 @@
-# Vigil Product Contract
+# vigil Product Contract
 
 ## North Star
 
-Vigil is a policy-aware repository preflight engine. It lets humans and coding
+vigil is a policy-aware repository preflight engine. It lets humans and coding
 agents inspect, approve, run, and verify automation before that automation
 changes a project.
 
-Vigil succeeds when a user can answer five questions before execution:
+vigil succeeds when a user can answer five questions before execution:
 
 1. What will run?
 2. Why will it run?
@@ -16,7 +16,7 @@ Vigil succeeds when a user can answer five questions before execution:
 
 ## Product Boundary
 
-Vigil owns:
+vigil owns:
 
 - repository-local policy and command contracts;
 - deterministic discovery and precedence;
@@ -25,7 +25,7 @@ Vigil owns:
 - mutation detection and policy blocking;
 - machine-readable evidence and local run artifacts.
 
-Vigil does not claim:
+vigil does not claim:
 
 - that `read` execution is an operating-system sandbox;
 - to replace hosted CI, source control, deployment orchestration, or a secrets
@@ -33,7 +33,7 @@ Vigil does not claim:
 - that a JSON manifest alone is an executable plugin;
 - to safely execute an unknown command whose access or binding is missing.
 
-Vigil is primarily designed to reduce accidental and over-broad automation:
+vigil is primarily designed to reduce accidental and over-broad automation:
 commands that run more than expected, write files they were declared not to
 write, or execute after the reviewed repository state has changed. Access and
 capability declarations are contracts for review, policy enforcement, and
@@ -44,10 +44,10 @@ architecture of those boundaries.
 
 ## Runtime Vocabulary
 
-- **Built-in module**: implementation compiled into the Vigil binary.
+- **Built-in module**: implementation compiled into the vigil binary.
 - **Pack**: declarative command metadata and policy that binds to built-in
   modules. Official packs are embedded in release binaries.
-- **Plugin**: separately installed executable that communicates with Vigil
+- **Plugin**: separately installed executable that communicates with vigil
   through a versioned subprocess protocol. Plugin identity, metadata,
   capabilities, and commands are bound to repository lock state and local user
   trust before registration.
@@ -81,7 +81,7 @@ packs, not executable plugins.
 
 ## Stability Promise
 
-Before v1.0, Vigil may evolve config and output schemas through explicit
+Before v1.0, vigil may evolve config and output schemas through explicit
 migrations. At v1.0, command names, config schema behavior, JSON envelopes, exit
 taxonomy, plan integrity rules, plugin protocol, and deprecation policy become
 compatibility commitments.

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report incorrect Vigil behavior
+about: Report incorrect vigil behavior
 labels: bug
 ---
 
@@ -14,7 +14,7 @@ labels: bug
 
 ## Environment
 
-- Vigil version:
+- vigil version:
 - OS:
 - Shell:
 - Go version, if building from source:

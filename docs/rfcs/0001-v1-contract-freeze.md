@@ -1,7 +1,7 @@
-# RFC 0001: Vigil v1 Contract Freeze
+# RFC 0001: vigil v1 Contract Freeze
 
 - Status: proposed
-- Authors: Vigil maintainers
+- Authors: vigil maintainers
 - Opened: pending public discussion
 - Decision deadline: at least 14 calendar days after opening
 - Discussion: pending public URL
@@ -10,12 +10,12 @@
 
 Adopt the candidate command, configuration, reviewed-plan, machine-output, exit,
 pack, plugin, platform-support, and deprecation contracts in
-`docs/v1-contracts.md` as Vigil's v1 baseline. A v1 release remains blocked by
+`docs/v1-contracts.md` as vigil's v1 baseline. A v1 release remains blocked by
 the operational and independent evidence in `docs/v1-acceptance.json`.
 
 ## Motivation
 
-Vigil now has the mechanisms expected of a policy-aware repository preflight
+vigil now has the mechanisms expected of a policy-aware repository preflight
 engine, but a mechanism is not a compatibility promise. Consumers need to know
 which invocations and machine fields remain stable, and maintainers need an
 objective way to distinguish local tests from live distribution or independent
@@ -105,7 +105,7 @@ regenerated after any upgrade or rollback. Plugin rollback restores the exact
 executable, metadata, lock, trust, and publisher state documented in
 `docs/upgrading.md`.
 
-Rejecting this RFC leaves Vigil pre-1.0 and permits explicit migrations under
+Rejecting this RFC leaves vigil pre-1.0 and permits explicit migrations under
 the current compatibility policy; it does not remove existing safety controls.
 
 ## Performance

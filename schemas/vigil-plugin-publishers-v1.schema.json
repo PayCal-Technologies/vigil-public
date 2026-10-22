@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vigil.dev/schemas/vigil-plugin-publishers-v1.schema.json",
-  "title": "Vigil plugin publisher trust store v1",
+  "title": "vigil plugin publisher trust store v1",
   "type": "object",
   "additionalProperties": false,
   "required": [

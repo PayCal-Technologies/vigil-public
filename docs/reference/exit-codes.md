@@ -9,7 +9,7 @@
 | 4 | Required dependency missing | `tool_missing` |
 | 5 | Timeout or cancellation | `timed_out`, `cancelled` |
 | 6 | Mutation violation | `mutation_detected` |
-| 7 | Internal Vigil failure | `internal_error` |
+| 7 | Internal vigil failure | `internal_error` |
 
 Commands that aggregate multiple checks return the most specific applicable
 non-zero code. Structured check results carry their exit class through the

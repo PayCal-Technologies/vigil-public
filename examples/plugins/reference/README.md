@@ -1,7 +1,7 @@
 # Reference Plugin
 
-`vigil-plugin-reference` is a language-neutral subprocess fixture for Vigil
-plugin protocol `1`. It has no dependency on Vigil source or Go packages.
+`vigil-plugin-reference` is a language-neutral subprocess fixture for vigil
+plugin protocol `1`. It has no dependency on vigil source or Go packages.
 
 Run the handshake-only conformance checks:
 

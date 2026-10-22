@@ -1,6 +1,6 @@
 # Plugin Authoring
 
-Vigil plugins are standalone executables. Any language that can read and write
+vigil plugins are standalone executables. Any language that can read and write
 strict JSON over standard streams can implement protocol `1`.
 
 Start from the external
@@ -26,7 +26,7 @@ Changing bytes without changing the semantic version is rejected.
 
 ## Handshake
 
-Vigil invokes:
+vigil invokes:
 
 ```text
 vigil-plugin-example handshake --protocol-version=1
@@ -54,7 +54,7 @@ arrays deterministic across repeated handshakes.
 
 ## Execution
 
-Vigil invokes:
+vigil invokes:
 
 ```text
 vigil-plugin-example execute \
@@ -67,11 +67,11 @@ object to standard output. Echo the exact request ID. The request includes
 repository root, selected config, output format, arguments, and mutation
 authorization.
 
-The response contains an exit code from Vigil's public taxonomy, bounded human
+The response contains an exit code from vigil's public taxonomy, bounded human
 output, JSON data, diagnostics, and artifacts. Artifact paths must resolve to
 regular non-symlink files inside the repository, and must be normalized
 repository-relative strings without leading or trailing whitespace, absolute
-paths, or traversal segments. Vigil rejects request-ID
+paths, or traversal segments. vigil rejects request-ID
 mismatches, trailing JSON, malformed diagnostics, path escapes, unknown fields,
 and output above 8 MiB.
 

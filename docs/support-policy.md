@@ -1,6 +1,6 @@
 # Support Policy
 
-This policy separates artifacts Vigil can build from platforms Vigil has
+This policy separates artifacts vigil can build from platforms vigil has
 actually exercised. A cross-compiled archive is not called supported merely
 because compilation succeeded.
 
@@ -17,7 +17,7 @@ because compilation succeeded.
 
 ## Platform Evidence
 
-Vigil produces `CGO_ENABLED=0` archives for:
+vigil produces `CGO_ENABLED=0` archives for:
 
 | Operating system | Architecture | Artifact status |
 | --- | --- | --- |
@@ -46,13 +46,13 @@ unsupported; newer toolchains are accepted only after the full quality and
 reproducibility matrix passes.
 
 External tools invoked by configured gates or packs keep their own support
-policies. Vigil reports required tools but does not extend their vendor support
+policies. vigil reports required tools but does not extend their vendor support
 windows.
 
 ## What Support Means
 
 A supported-platform report must reproduce on an unmodified, vendor-supported
-operating system using an official Vigil archive. Maintainers will triage:
+operating system using an official vigil archive. Maintainers will triage:
 
 - contract, safety, cancellation, and release-provenance regressions as release
   blockers;

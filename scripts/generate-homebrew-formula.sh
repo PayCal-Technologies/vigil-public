@@ -46,8 +46,8 @@ cat > "$temporary" <<EOF
 # typed: strict
 # frozen_string_literal: true
 
-# Vigil is a policy-aware repository preflight engine.
-class Vigil < Formula
+# vigil is a policy-aware repository preflight engine.
+class vigil < Formula
   desc "Policy-aware repository preflight engine"
   homepage "https://github.com/PayCal-Technologies/vigil-public"
   license "0BSD"

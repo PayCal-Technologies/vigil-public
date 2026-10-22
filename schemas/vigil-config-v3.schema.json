@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vigil.dev/schemas/vigil-config-v3.schema.json",
-  "title": "Vigil configuration v3",
+  "title": "vigil configuration v3",
   "type": "object",
   "required": [
     "schema_version",

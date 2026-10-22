@@ -1,6 +1,6 @@
 # Release Channels
 
-Vigil defines three distribution channels with different stability and
+vigil defines three distribution channels with different stability and
 retention contracts.
 
 Current channel state is recorded in [`release-state.json`](release-state.json).
@@ -37,7 +37,7 @@ run. Treat it as a source prerelease until `release-state.json` records the
 signed assets and verification evidence as complete.
 
 GitHub release immutability is enabled for the repository. Because published
-immutable releases permit only title and note edits, Vigil never relies on
+immutable releases permit only title and note edits, vigil never relies on
 changing a published prerelease into a stable release.
 
 Beta releases may change experimental contracts before the final stable

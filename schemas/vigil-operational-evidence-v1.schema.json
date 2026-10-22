@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vigil.dev/schemas/vigil-operational-evidence-v1.schema.json",
-  "title": "Vigil v1 operational evidence report",
+  "title": "vigil v1 operational evidence report",
   "type": "object",
   "additionalProperties": false,
   "required": [

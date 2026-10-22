@@ -1,15 +1,15 @@
 # External Integration Report
 
-Use this report for VIGIL-AC-16. The integrator must be independent of Vigil's
+Use this report for VIGIL-AC-16. The integrator must be independent of vigil's
 implementation and must test a plugin or machine-output consumer they control,
 not only the checked-in fixture.
 
 ## Identity
 
 - Integrator and organization:
-- Relationship to Vigil:
+- Relationship to vigil:
 - Report date:
-- Vigil version, commit, and binary digest:
+- vigil version, commit, and binary digest:
 - Host operating system and architecture:
 - Integration repository and immutable commit URL:
 

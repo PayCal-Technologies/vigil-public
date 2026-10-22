@@ -22,16 +22,16 @@ Migration and repair create exact timestamped `.bak-*` files. Follow
 
 ## Reviewed Plan No Longer Matches
 
-`apply` checks that the Vigil binary, setup file, repository, command list, and
+`apply` checks that the vigil binary, setup file, repository, command list, and
 built-in feature collections still match what you reviewed. If any of those
-changed, Vigil stops on purpose. Restore the reviewed state or generate and
+changed, vigil stops on purpose. Restore the reviewed state or generate and
 review a new plan; never patch `plan_id`.
 
 ## Read-Only Check Changed Files
 
 Inspect `manifest.json`, the check's stdout/stderr logs, and the optional file
 change diff under the private run directory. Parallel batches mark every peer
-because Vigil cannot safely tell which one made the change. Generated JUnit or
+because vigil cannot safely tell which one made the change. Generated JUnit or
 SARIF files must be intentionally ignored, or the check must be marked as a
 file-changing check.
 

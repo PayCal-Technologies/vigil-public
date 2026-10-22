@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vigil.dev/schemas/vigil-plan-v1.schema.json",
-  "title": "Vigil reviewed execution plan v1",
+  "title": "vigil reviewed execution plan v1",
   "type": "object",
   "additionalProperties": false,
   "required": [

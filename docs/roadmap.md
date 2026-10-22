@@ -1,4 +1,4 @@
-# Vigil Roadmap
+# vigil Roadmap
 
 This roadmap turns the world-class audit into release gates. A stage is complete
 only when its acceptance criteria are automated where practical.
@@ -88,7 +88,7 @@ Exit gate:
 
 ## Stage 3: Extension Runtime Release (v0.4)
 
-Target outcome: third parties can add behavior without sharing Vigil's process.
+Target outcome: third parties can add behavior without sharing vigil's process.
 
 - Define a versioned subprocess handshake and capability negotiation.
 - Add install, update, remove, list, doctor, and lockfile workflows.
@@ -152,7 +152,7 @@ Exit gate:
 
 ## Stage 5: Scale and Adoption (v0.6-v0.9)
 
-Target outcome: Vigil handles real repository workflows without losing
+Target outcome: vigil handles real repository workflows without losing
 predictability.
 
 - Preserve the implemented dependency graphs, explicit parallel groups, retry,
@@ -177,7 +177,7 @@ Exit gate:
 
 ## Stage 6: Stability Release (v1.0)
 
-Target outcome: Vigil's safety and automation contracts are durable.
+Target outcome: vigil's safety and automation contracts are durable.
 
 - Freeze the v1 command, config, plan, output, exit, plugin, and deprecation
   contracts.

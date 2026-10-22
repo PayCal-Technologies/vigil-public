@@ -378,7 +378,7 @@ func writeEnvelope(command string, exitCode int, data any) int {
 }
 
 func printUsage(destination *os.File) {
-	fmt.Fprintln(destination, "Vigil offline plugin-index publisher")
+	fmt.Fprintln(destination, "vigil offline plugin-index publisher")
 	fmt.Fprintln(destination)
 	fmt.Fprintln(destination, "Usage:")
 	fmt.Fprintln(destination, "  vigil-plugin-publisher version")

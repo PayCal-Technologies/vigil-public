@@ -1,6 +1,6 @@
 # Architecture
 
-Vigil is organized around a small policy and execution kernel. The command
+vigil is organized around a small policy and execution kernel. The command
 binary should parse input, resolve a registered command, and delegate domain
 work; it should not be the owner of persistence, process, or pack semantics.
 

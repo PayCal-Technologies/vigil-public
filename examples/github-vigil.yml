@@ -1,4 +1,4 @@
-name: Vigil
+name: vigil
 
 on:
   pull_request:
@@ -14,12 +14,12 @@ jobs:
         with:
           go-version: '1.26.5'
           cache: false
-      - name: Install Vigil
+      - name: Install vigil
         run: |
           mkdir -p bin
           GOBIN="$PWD/bin" go install github.com/PayCal-Technologies/vigil-public/cmd/vigil@${{ github.sha }}
           echo "$PWD/bin" >> "$GITHUB_PATH"
-      - name: Verify Vigil
+      - name: Verify vigil
         run: vigil verify --json
-      - name: Run Vigil Gates
+      - name: Run vigil Gates
         run: vigil workflow:local --json

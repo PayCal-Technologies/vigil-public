@@ -1,6 +1,6 @@
-# Vigil Schemas
+# vigil Schemas
 
-These files define the compatibility surfaces shipped by Vigil:
+These files define the compatibility surfaces shipped by vigil:
 
 - `vigil-config-v3.schema.json`: repository configuration;
 - `vigil-external-evidence-v1.schema.json`: independent integration, RFC,

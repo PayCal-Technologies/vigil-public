@@ -1,16 +1,16 @@
-# Vigil AI Video Transcript
+# vigil AI Video Transcript
 
 ## Production Notes
 
 Internal direction: Use this transcript as the source for an AI-generated explainer and product walkthrough video. Treat bracketed `Direction` notes as scene, pacing, screen-capture, animation, and emphasis guidance. Treat fenced code blocks as on-screen terminal, editor, or overlay snippets. The narrator text can be read directly.
 
-Internal direction: Visual style should feel like a focused developer tool walkthrough: terminal, editor, repository graph, policy gates, structured JSON output, and concise callouts. Avoid implying that Vigil is a hosted CI system, deployment orchestrator, secrets manager, or operating-system sandbox. Repeatedly distinguish visibility, policy, approval, and evidence from confinement.
+Internal direction: Visual style should feel like a focused developer tool walkthrough: terminal, editor, repository graph, policy gates, structured JSON output, and concise callouts. Avoid implying that vigil is a hosted CI system, deployment orchestrator, secrets manager, or operating-system sandbox. Repeatedly distinguish visibility, policy, approval, and evidence from confinement.
 
 Internal direction: Suggested runtime is 10 to 14 minutes for a complete feature video, or 4 to 6 minutes if edited down. Keep the full transcript available for long-form documentation, launch pages, demos, and agent-generated chaptered videos.
 
 ## Title Card
 
-[Direction: Fade in on a repository opened in an editor. Show `vigil.config.json`, a terminal prompt, and a clean Git status. Overlay the title: "Vigil: Policy-Aware Preflight for Software Projects."]
+[Direction: Fade in on a repository opened in an editor. Show `vigil.config.json`, a terminal prompt, and a clean Git status. Overlay the title: "vigil: Policy-Aware Preflight for Software Projects."]
 
 Narrator:
 
@@ -26,7 +26,7 @@ What evidence will it produce?
 
 And can the exact reviewed plan run later without being reinterpreted?
 
-Vigil is a policy-aware repository preflight engine built to answer those questions.
+vigil is a policy-aware repository preflight engine built to answer those questions.
 
 It makes local automation visible, reviewable, executable, and verifiable.
 
@@ -40,9 +40,9 @@ Modern projects have more automation than ever. Test runners, linters, security 
 
 That automation is useful, but it also creates risk. A command can run more than intended. A read-only check can quietly write files. A setup script can run after the project changed. A plugin can request broad local access without a clear review trail.
 
-Vigil's job is to reduce accidental and over-broad automation.
+vigil's job is to reduce accidental and over-broad automation.
 
-It does not pretend to be a kernel sandbox. Approved commands still run as the user. Instead, Vigil makes the boundaries explicit: the command contract, the requested access, the mutation approval path, the repository fingerprint, the plan digest, and the final machine-readable evidence.
+It does not pretend to be a kernel sandbox. Approved commands still run as the user. Instead, vigil makes the boundaries explicit: the command contract, the requested access, the mutation approval path, the repository fingerprint, the plan digest, and the final machine-readable evidence.
 
 [Direction: Animate a simple pipeline.]
 
@@ -64,13 +64,13 @@ Narrator:
 
 The result is a local command surface that humans, agents, and CI systems can inspect and trust at the policy level.
 
-## What Vigil Is
+## What vigil Is
 
 [Direction: Show a plain definition card. Keep it restrained and technical.]
 
 Narrator:
 
-Vigil is a standalone CLI for repository-local preflight checks.
+vigil is a standalone CLI for repository-local preflight checks.
 
 It owns repository policy, deterministic command discovery, preflight planning, approval, process execution, cancellation, result classification, mutation detection, machine-readable evidence, and local run artifacts.
 
@@ -80,7 +80,7 @@ It is designed for teams and coding agents that need to know which automation is
 
 Narrator:
 
-Vigil is not a hosted CI service.
+vigil is not a hosted CI service.
 
 It is not a deployment orchestrator.
 
@@ -88,11 +88,11 @@ It is not a secrets manager.
 
 And it is not an operating-system sandbox.
 
-That boundary matters. Vigil focuses on review, policy, verification, and evidence. It helps you catch unexpected Git-visible project changes and stale reviewed plans. It does not claim to contain every possible side effect of an approved process.
+That boundary matters. vigil focuses on review, policy, verification, and evidence. It helps you catch unexpected Git-visible project changes and stale reviewed plans. It does not claim to contain every possible side effect of an approved process.
 
 ## Installation And First Run
 
-[Direction: Show a terminal building Vigil from source, then running the beginner command surface.]
+[Direction: Show a terminal building vigil from source, then running the beginner command surface.]
 
 Narrator:
 
@@ -129,7 +129,7 @@ Running `vigil` with no command introduces the project and, on an interactive te
 
 Narrator:
 
-Vigil reads a versioned JSON configuration, normally named `vigil.config.json`.
+vigil reads a versioned JSON configuration, normally named `vigil.config.json`.
 
 The current schema is `3`. A basic gate names an executable, passes arguments as an argv array, declares whether the gate is read-only, assigns tags, and can set a timeout.
 
@@ -146,7 +146,7 @@ The current schema is `3`. A basic gate names an executable, passes arguments as
 
 Narrator:
 
-By default, Vigil executes commands directly with argv. Shell behavior is explicit. If a check needs shell syntax, the config says so.
+By default, vigil executes commands directly with argv. Shell behavior is explicit. If a check needs shell syntax, the config says so.
 
 ```json
 {
@@ -168,7 +168,7 @@ This distinction prevents accidental shell interpretation and makes the command 
 
 Narrator:
 
-A typical Vigil config identifies the project, describes coordination policy, lists ordered workflow gates, and controls built-in feature collections and executable plugins.
+A typical vigil config identifies the project, describes coordination policy, lists ordered workflow gates, and controls built-in feature collections and executable plugins.
 
 ```json
 {
@@ -234,7 +234,7 @@ The configuration is bounded and validated. It must be a regular, non-symlink JS
 
 Narrator:
 
-Vigil's command registry is the authoritative source of command identity.
+vigil's command registry is the authoritative source of command identity.
 
 Every command has a typed contract: name, aliases, access class, capabilities, binding, stability, timeout, tools, network behavior, and supported output formats.
 
@@ -259,7 +259,7 @@ Unknown access values, missing handlers, duplicate names, invalid aliases, unsup
 
 Narrator:
 
-Vigil includes a beginner command surface:
+vigil includes a beginner command surface:
 
 ```bash
 vigil check
@@ -297,7 +297,7 @@ Compatibility aliases remain available. For example, `vigil init` maps to the se
 
 Narrator:
 
-Vigil separates declared access from observed evidence.
+vigil separates declared access from observed evidence.
 
 Commands declare one of three access classes.
 
@@ -324,11 +324,11 @@ The second command writes a plan file. Writing evidence is itself a filesystem m
 
 Narrator:
 
-For read-only workflow gates, Vigil fingerprints the Git-visible repository before and after execution.
+For read-only workflow gates, vigil fingerprints the Git-visible repository before and after execution.
 
 It records Git porcelain status, unstaged binary diff, staged binary diff, and names and content digests of untracked, non-ignored files.
 
-If the fingerprint changes, Vigil reports `mutation_detected` and exits with code `6`, even if the underlying command exited successfully.
+If the fingerprint changes, vigil reports `mutation_detected` and exits with code `6`, even if the underlying command exited successfully.
 
 ```text
 before fingerprint
@@ -343,7 +343,7 @@ different? mutation_detected
 
 Narrator:
 
-Fingerprinting fails closed. If Vigil cannot safely collect complete Git-visible evidence, it blocks the read-only gate instead of pretending the workspace is clean.
+Fingerprinting fails closed. If vigil cannot safely collect complete Git-visible evidence, it blocks the read-only gate instead of pretending the workspace is clean.
 
 [Direction: Add a boundary callout.]
 
@@ -357,7 +357,7 @@ This is repository verification, not an operating-system sandbox. Ignored files,
 
 Narrator:
 
-Vigil schema `3` gates form a validated directed acyclic graph.
+vigil schema `3` gates form a validated directed acyclic graph.
 
 Gates can depend on other gates, run in deterministic order, opt into bounded parallelism, continue after ordinary failures, declare artifacts, and retry carefully selected network checks.
 
@@ -404,7 +404,7 @@ vigil workflow:local --jobs 4
 
 Narrator:
 
-If a parallel read-only batch changes the workspace, Vigil marks every gate in the batch as `mutation_detected`. That is deliberate. Assigning the mutation to one process would be guesswork, so Vigil reports group-level evidence.
+If a parallel read-only batch changes the workspace, vigil marks every gate in the batch as `mutation_detected`. That is deliberate. Assigning the mutation to one process would be guesswork, so vigil reports group-level evidence.
 
 ## Reviewed Plans
 
@@ -412,7 +412,7 @@ If a parallel read-only batch changes the workspace, Vigil marks every gate in t
 
 Narrator:
 
-Reviewed plans are one of Vigil's most important features.
+Reviewed plans are one of vigil's most important features.
 
 A plan is a complete, versioned description of the configured gates and the evidence that makes those gates safe to execute without reinterpretation.
 
@@ -436,9 +436,9 @@ vigil --allow-mutation apply .vigil/plans/reviewed.json
 
 Narrator:
 
-When applying a plan, Vigil validates the plan schema and plan ID, then recomputes every reviewed input.
+When applying a plan, vigil validates the plan schema and plan ID, then recomputes every reviewed input.
 
-The apply is blocked if any of these changed: the Vigil executable digest, config path, config content digest, repository root, `HEAD`, Git-visible workspace digest, active command-registry digest, or active pack-registry digest.
+The apply is blocked if any of these changed: the vigil executable digest, config path, config content digest, repository root, `HEAD`, Git-visible workspace digest, active command-registry digest, or active pack-registry digest.
 
 There is intentionally no stale-plan override. If the reviewed inputs changed, generate and review a new plan.
 
@@ -454,7 +454,7 @@ That means an approved plan is not silently reinterpreted against a different re
 
 Narrator:
 
-Vigil is built for humans and automation.
+vigil is built for humans and automation.
 
 Human-facing commands stream useful terminal output. Machine-facing commands can emit stable JSON envelopes, JSONL event streams, JUnit XML, SARIF, and GitHub Actions annotations.
 
@@ -498,7 +498,7 @@ Programs should branch on `exit_code` and use `status` for display.
 
 Narrator:
 
-Vigil has a stable exit taxonomy.
+vigil has a stable exit taxonomy.
 
 ```text
 0  success
@@ -508,7 +508,7 @@ Vigil has a stable exit taxonomy.
 4  required dependency missing
 5  timeout or cancellation
 6  mutation violation
-7  internal Vigil failure
+7  internal vigil failure
 ```
 
 Narrator:
@@ -529,7 +529,7 @@ vigil --allow-mutation workflow:local --artifacts
 
 Narrator:
 
-Run artifact directories start with a private manifest. Logs are bounded. Artifact paths are checked. In-repository plan and artifact paths are expected to be ignored so Vigil's own evidence does not invalidate a read-only check.
+Run artifact directories start with a private manifest. Logs are bounded. Artifact paths are checked. In-repository plan and artifact paths are expected to be ignored so vigil's own evidence does not invalidate a read-only check.
 
 Declared artifacts are verified after execution. They do not authorize mutation.
 
@@ -541,7 +541,7 @@ If a read-only gate writes a Git-visible JUnit file, that gate still fails mutat
 
 Narrator:
 
-Vigil includes commands for setup, validation, migration, repair, templates, and redacted reports.
+vigil includes commands for setup, validation, migration, repair, templates, and redacted reports.
 
 ```bash
 vigil setup
@@ -557,15 +557,15 @@ vigil config:report --json
 
 Narrator:
 
-Migration previews changes by default. Writing a migrated config requires mutation authorization. Vigil preserves unknown document fields, converts legacy authority policy into the current coordination model, converts simple legacy command strings into argv, marks shell-dependent command strings explicitly, and refuses to downgrade a future schema.
+Migration previews changes by default. Writing a migrated config requires mutation authorization. vigil preserves unknown document fields, converts legacy authority policy into the current coordination model, converts simple legacy command strings into argv, marks shell-dependent command strings explicitly, and refuses to downgrade a future schema.
 
 ## Git Hooks
 
-[Direction: Show a repository installing hooks. Show pre-commit and pre-push checks running through Vigil.]
+[Direction: Show a repository installing hooks. Show pre-commit and pre-push checks running through vigil.]
 
 Narrator:
 
-Vigil can install safe Git hook shims, inspect hook state, run hook checks from config, and uninstall while restoring chained hooks.
+vigil can install safe Git hook shims, inspect hook state, run hook checks from config, and uninstall while restoring chained hooks.
 
 ```bash
 vigil hooks:doctor
@@ -585,7 +585,7 @@ Hook installation and removal are file-changing operations, so they use the same
 
 Narrator:
 
-For day-to-day readiness, Vigil provides status, doctor, verification, dependency inventory, public-boundary checks, workspace hygiene checks, and redacted support bundles.
+For day-to-day readiness, vigil provides status, doctor, verification, dependency inventory, public-boundary checks, workspace hygiene checks, and redacted support bundles.
 
 ```bash
 vigil status --json
@@ -608,7 +608,7 @@ Support bundles are local-only by default, redacted, written atomically, and pri
 
 Narrator:
 
-Vigil ships embedded official feature collections. These are declarative packs: command and policy metadata bound to built-in implementations.
+vigil ships embedded official feature collections. These are declarative packs: command and policy metadata bound to built-in implementations.
 
 They are not arbitrary code loaded from JSON.
 
@@ -744,9 +744,9 @@ Packs and plugins are different.
 
 Packs are declarative metadata.
 
-Plugins are separately installed executables that communicate with Vigil through a strict subprocess protocol.
+Plugins are separately installed executables that communicate with vigil through a strict subprocess protocol.
 
-Plugins do not run inside the Vigil process, and a JSON manifest alone is not an executable plugin.
+Plugins do not run inside the vigil process, and a JSON manifest alone is not an executable plugin.
 
 ## Plugin Lifecycle
 
@@ -825,7 +825,7 @@ Narrator:
 
 Local approvals and revocations live outside the repository in the platform user configuration directory. Repository lock state is shareable. User trust state is local and private.
 
-During discovery, Vigil verifies strict lock and trust documents, revocation state, repository policy, publisher threshold, installed path, executable digest, bounded handshake, lock agreement, trust agreement, and command-name collisions.
+During discovery, vigil verifies strict lock and trust documents, revocation state, repository policy, publisher threshold, installed path, executable digest, bounded handshake, lock agreement, trust agreement, and command-name collisions.
 
 Only plugins that pass every check enter the typed command registry.
 
@@ -889,11 +889,11 @@ Policy is enforced during installation and every discovery. Tightening repositor
 
 ## GitHub Actions And CI Use Case
 
-[Direction: Show a repository adding a CI workflow generated by Vigil, then a GitHub Actions run executing `vigil verify` and `vigil workflow:local`.]
+[Direction: Show a repository adding a CI workflow generated by vigil, then a GitHub Actions run executing `vigil verify` and `vigil workflow:local`.]
 
 Narrator:
 
-Vigil can help bridge local preflight and CI.
+vigil can help bridge local preflight and CI.
 
 Use the GitHub helper to generate workflow scaffolding:
 
@@ -902,10 +902,10 @@ vigil github:init-ci
 vigil github:init-ci --write
 ```
 
-Or run Vigil directly in CI:
+Or run vigil directly in CI:
 
 ```yaml
-name: Vigil
+name: vigil
 
 on:
   pull_request:
@@ -927,15 +927,15 @@ jobs:
 
 Narrator:
 
-In CI, Vigil's structured output, fixed exit taxonomy, and repository policy make it easier to distinguish ordinary check failures from blocked policy, missing dependencies, interrupted runs, mutation violations, and internal failures.
+In CI, vigil's structured output, fixed exit taxonomy, and repository policy make it easier to distinguish ordinary check failures from blocked policy, missing dependencies, interrupted runs, mutation violations, and internal failures.
 
 ## Example Use Case: AI Coding Agent Handoff
 
-[Direction: Show an AI agent completing code, then running Vigil before handing back to a human reviewer.]
+[Direction: Show an AI agent completing code, then running vigil before handing back to a human reviewer.]
 
 Narrator:
 
-In an AI-assisted coding workflow, a coding agent can run Vigil before handoff.
+In an AI-assisted coding workflow, a coding agent can run vigil before handoff.
 
 ```bash
 vigil status
@@ -960,7 +960,7 @@ The human can later apply that exact plan:
 vigil --allow-mutation apply .vigil/plans/agent-handoff.json
 ```
 
-If the repository changed after review, Vigil blocks the apply and asks for a new plan.
+If the repository changed after review, vigil blocks the apply and asks for a new plan.
 
 ## Example Use Case: Pre-Push Local Gate
 
@@ -996,7 +996,7 @@ If the test command writes unexpected Git-visible files, the gate fails with a m
 
 Narrator:
 
-For release preparation, Vigil combines local readiness checks, release policy checks, signed release archive tooling, checksums, SBOM support, Sigstore bundles, GitHub attestations, and v1 acceptance evidence.
+For release preparation, vigil combines local readiness checks, release policy checks, signed release archive tooling, checksums, SBOM support, Sigstore bundles, GitHub attestations, and v1 acceptance evidence.
 
 ```bash
 vigil verify --json
@@ -1009,7 +1009,7 @@ shasum -a 256 -c dist/SHA256SUMS
 
 Narrator:
 
-Vigil's stable `v1.0.0` gate is intentionally blocked until the checked-in acceptance ledger has verified evidence for every required safety invariant and acceptance criterion.
+vigil's stable `v1.0.0` gate is intentionally blocked until the checked-in acceptance ledger has verified evidence for every required safety invariant and acceptance criterion.
 
 ## Example Use Case: Dependency And Security Checks
 
@@ -1017,7 +1017,7 @@ Vigil's stable `v1.0.0` gate is intentionally blocked until the checked-in accep
 
 Narrator:
 
-Vigil can inventory common dependency manifests and run local dependency or scanner adapters.
+vigil can inventory common dependency manifests and run local dependency or scanner adapters.
 
 ```bash
 vigil deps:inventory
@@ -1031,7 +1031,7 @@ vigil security:gitleaks
 
 Narrator:
 
-If a required tool is unavailable, Vigil reports dependency missing with exit code `4` instead of hiding the problem.
+If a required tool is unavailable, vigil reports dependency missing with exit code `4` instead of hiding the problem.
 
 ## Example Use Case: Accessibility Checks
 
@@ -1059,7 +1059,7 @@ These are public command contracts around local tools. Missing tools report clea
 
 Narrator:
 
-Vigil can help keep repository metadata current.
+vigil can help keep repository metadata current.
 
 Scribe manages a README snapshot block without taking ownership of the rest of the file.
 
@@ -1083,7 +1083,7 @@ vigil history:diagnose --json
 
 Narrator:
 
-Vigil includes public-boundary and workspace hygiene checks.
+vigil includes public-boundary and workspace hygiene checks.
 
 ```bash
 vigil checks:public-assumptions
@@ -1137,7 +1137,7 @@ Conformance checks repeated handshake determinism, command contracts, acquisitio
 
 Narrator:
 
-Because Vigil's command registry is typed, completions and manpages are generated from the same source of truth.
+Because vigil's command registry is typed, completions and manpages are generated from the same source of truth.
 
 ```bash
 vigil completion bash
@@ -1160,7 +1160,7 @@ That keeps help, command listing, completion, documentation, and execution polic
 
 Narrator:
 
-Vigil runs commands through a bounded process runner.
+vigil runs commands through a bounded process runner.
 
 Each process has a default or per-check timeout. Ctrl+C and SIGTERM cancel the active process group. Plugin handshakes time out. Plugin command timeouts are capped. Output and artifact sizes are bounded.
 
@@ -1176,7 +1176,7 @@ Each process has a default or per-check timeout. Ctrl+C and SIGTERM cancel the a
 
 Narrator:
 
-Vigil also includes performance scripts for startup and release checks.
+vigil also includes performance scripts for startup and release checks.
 
 ```bash
 scripts/check-performance.sh
@@ -1189,7 +1189,7 @@ go run ./scripts/performance-check.go
 
 Narrator:
 
-Vigil's release workflow is designed for static macOS, Linux, and Windows archives for amd64 and arm64.
+vigil's release workflow is designed for static macOS, Linux, and Windows archives for amd64 and arm64.
 
 Release candidates can include the binary, README, license, manpage, generated shell completions, public schemas, checksums, an SPDX SBOM, a Sigstore bundle, GitHub build-provenance attestations, and `v1-acceptance-gate.json`.
 
@@ -1218,7 +1218,7 @@ Homebrew packaging automation exists, but the project does not advertise Homebre
 
 Narrator:
 
-Vigil's v1 release gate is evidence-backed.
+vigil's v1 release gate is evidence-backed.
 
 The canonical ledger is `docs/v1-acceptance.json`. It records required safety invariants and acceptance criteria, and each verified item must cite real evidence.
 
@@ -1275,7 +1275,7 @@ If a plugin is blocked, inspect the plugin list, doctor output, publisher state,
 
 Narrator:
 
-Vigil provides a versioned JSON configuration model with validation, migration, repair, templates, and redacted reporting.
+vigil provides a versioned JSON configuration model with validation, migration, repair, templates, and redacted reporting.
 
 It provides beginner commands for setup, checking, status, learning, and explanation.
 
@@ -1309,7 +1309,7 @@ It includes release tooling for deterministic archives, checksums, macOS signing
 
 It maintains public schemas for configuration, output, JSONL events, plans, packs, run artifact manifests, plugin protocol, plugin conformance, plugin indexes, publisher trust, plugin locks, external evidence, operational evidence, acceptance ledgers, and release gates.
 
-And throughout all of those features, it preserves the central boundary: Vigil is a policy and evidence layer. It makes automation reviewable and verifiable. It does not claim to sandbox approved processes.
+And throughout all of those features, it preserves the central boundary: vigil is a policy and evidence layer. It makes automation reviewable and verifiable. It does not claim to sandbox approved processes.
 
 ## Closing
 
@@ -1317,23 +1317,23 @@ And throughout all of those features, it preserves the central boundary: Vigil i
 
 Narrator:
 
-Vigil helps people and coding agents run repository automation with clearer contracts.
+vigil helps people and coding agents run repository automation with clearer contracts.
 
-Before a command runs, Vigil can show what it is, where it came from, what it can access, whether it may write, what policy applies, and what evidence it should produce.
+Before a command runs, vigil can show what it is, where it came from, what it can access, whether it may write, what policy applies, and what evidence it should produce.
 
-During execution, Vigil bounds the process, handles cancellation, and checks read-only gates against Git-visible mutation evidence.
+During execution, vigil bounds the process, handles cancellation, and checks read-only gates against Git-visible mutation evidence.
 
-After execution, Vigil returns stable human and machine-readable results.
+After execution, vigil returns stable human and machine-readable results.
 
-And when a plan has been reviewed, Vigil can apply that exact plan later only if the binary, config, repository, command registry, pack registry, and workspace state still match.
+And when a plan has been reviewed, vigil can apply that exact plan later only if the binary, config, repository, command registry, pack registry, and workspace state still match.
 
-That is Vigil's promise: not invisible trust, not a sandbox claim, and not another opaque automation layer.
+That is vigil's promise: not invisible trust, not a sandbox claim, and not another opaque automation layer.
 
-Vigil gives local project automation a reviewable contract, an approval path, and evidence you can inspect.
+vigil gives local project automation a reviewable contract, an approval path, and evidence you can inspect.
 
 ## Optional Short Video Cutdown
 
-Internal direction: For a shorter video, keep only these sections: Title Card, Introduction, What Vigil Is, The Core Workflow, Access Classes And Mutation Approval, Repository Mutation Detection, Reviewed Plans, Structured Output, Built-In Feature Collections, Executable Plugins, Example Use Case: AI Coding Agent Handoff, Full Feature Summary, Closing.
+Internal direction: For a shorter video, keep only these sections: Title Card, Introduction, What vigil Is, The Core Workflow, Access Classes And Mutation Approval, Repository Mutation Detection, Reviewed Plans, Structured Output, Built-In Feature Collections, Executable Plugins, Example Use Case: AI Coding Agent Handoff, Full Feature Summary, Closing.
 
 Internal direction: In the short version, show only these code snippets:
 
@@ -1372,4 +1372,4 @@ vigil verify --json
 6 mutation violation
 ```
 
-Internal direction: End the short video with the phrase: "Vigil gives local project automation a reviewable contract, an approval path, and evidence you can inspect."
+Internal direction: End the short video with the phrase: "vigil gives local project automation a reviewable contract, an approval path, and evidence you can inspect."

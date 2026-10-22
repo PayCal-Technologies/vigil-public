@@ -15,19 +15,19 @@ func beginnerCheckContext(ctx context.Context, configPath string, args []string,
 		if wantsJSONEnvelope(args) {
 			return printJSON(map[string]any{
 				"status":          "fail",
-				"what_happened":   "Vigil is not set up for this project yet.",
-				"what_it_means":   "There is no readable Vigil configuration file.",
-				"next_step":       "Run vigil setup to review the file Vigil wants to create.",
+				"what_happened":   "vigil is not set up for this project yet.",
+				"what_it_means":   "There is no readable vigil configuration file.",
+				"next_step":       "Run vigil setup to review the file vigil wants to create.",
 				"technical_error": err.Error(),
 			}, vigilcli.ExitUsage)
 		}
-		fmt.Println("Vigil is not set up for this project yet.")
+		fmt.Println("vigil is not set up for this project yet.")
 		fmt.Println()
 		fmt.Println("What this means:")
-		fmt.Println("Vigil needs a configuration file before it can run project checks.")
+		fmt.Println("vigil needs a configuration file before it can run project checks.")
 		fmt.Println()
 		fmt.Println("Suggested next step:")
-		fmt.Println("Run `vigil setup` to review the file Vigil wants to create.")
+		fmt.Println("Run `vigil setup` to review the file vigil wants to create.")
 		return exitUsage
 	}
 	if !wantsMachineOutput(args) {
@@ -121,8 +121,8 @@ func explainProject(jsonOut bool) int {
 	if err != nil {
 		payload := map[string]any{
 			"status":          "fail",
-			"what_happened":   "Vigil configuration is not ready.",
-			"what_it_means":   "Vigil cannot explain project checks until it can read the configuration.",
+			"what_happened":   "vigil configuration is not ready.",
+			"what_it_means":   "vigil cannot explain project checks until it can read the configuration.",
 			"next_step":       "Run vigil setup or vigil config:validate.",
 			"technical_error": err.Error(),
 		}
@@ -153,7 +153,7 @@ func explainProject(jsonOut bool) int {
 	if jsonOut {
 		return printJSON(payload)
 	}
-	fmt.Println("Vigil will run these project checks:")
+	fmt.Println("vigil will run these project checks:")
 	fmt.Println()
 	for index, check := range checks {
 		fmt.Printf("  %d. %s\n", index+1, check["name"])
@@ -173,9 +173,9 @@ type beginnerLesson struct {
 func beginnerLessons() map[string]beginnerLesson {
 	return map[string]beginnerLesson{
 		"overview": {
-			Title: "What Vigil Does",
+			Title: "What vigil Does",
 			Lines: []string{
-				"Vigil checks your project before you publish or share it.",
+				"vigil checks your project before you publish or share it.",
 				"It runs checks your project already uses and reports what passed or failed.",
 				"It warns when a check changes files unexpectedly.",
 			},
@@ -184,7 +184,7 @@ func beginnerLessons() map[string]beginnerLesson {
 		"hooks": {
 			Title: "Git Hooks",
 			Lines: []string{
-				"A Git hook can run Vigil before you push code.",
+				"A Git hook can run vigil before you push code.",
 				"This helps catch failures before they reach GitHub.",
 				"Installing hooks writes files inside .git/hooks only after you approve it.",
 			},
@@ -193,15 +193,15 @@ func beginnerLessons() map[string]beginnerLesson {
 		"plans": {
 			Title: "Reviewed Plans",
 			Lines: []string{
-				"A reviewed plan records exactly which checks Vigil intends to run.",
-				"Vigil refuses to run that plan if the project or setup changed after review.",
+				"A reviewed plan records exactly which checks vigil intends to run.",
+				"vigil refuses to run that plan if the project or setup changed after review.",
 			},
 			Try: "vigil plan --json",
 		},
 		"ci": {
 			Title: "CI Output",
 			Lines: []string{
-				"Vigil can produce JSON, JSONL, JUnit, and GitHub-friendly output.",
+				"vigil can produce JSON, JSONL, JUnit, and GitHub-friendly output.",
 				"These formats let CI systems read results without parsing human text.",
 			},
 			Try: "vigil check --json",
@@ -209,9 +209,9 @@ func beginnerLessons() map[string]beginnerLesson {
 		"ai": {
 			Title: "AI-Assisted Development",
 			Lines: []string{
-				"Vigil does not replace code review.",
+				"vigil does not replace code review.",
 				"It helps verify that selected checks ran and that commands did not change files beyond what they said they would do.",
-				"Run Vigil before and after agent work when you want a clear project check record.",
+				"Run vigil before and after agent work when you want a clear project check record.",
 			},
 			Try: "vigil check",
 		},
@@ -271,7 +271,7 @@ func beginnerAccessDescription(access string) string {
 	case "write":
 		return "Can change files after explicit approval."
 	default:
-		return "Vigil does not know whether this changes files, so it stops rather than guessing."
+		return "vigil does not know whether this changes files, so it stops rather than guessing."
 	}
 }
 

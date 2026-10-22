@@ -229,10 +229,10 @@ func manpageInstall(args []string) int {
 func generateManpage() string {
 	var b strings.Builder
 	info := buildinfo.Current()
-	b.WriteString(".TH VIGIL 1 \"" + buildinfo.ReproducibleDate() + "\" \"vigil " + info.Version + "\" \"User Commands\"\n")
+	b.WriteString(".TH vigil 1 \"" + buildinfo.ReproducibleDate() + "\" \"vigil " + info.Version + "\" \"User Commands\"\n")
 	b.WriteString(".SH NAME\nvigil \\- check a project before publishing or sharing it\n")
 	b.WriteString(".SH SYNOPSIS\n.B vigil\n[--config PATH] [--allow-mutation|--auto] <command> [args]\n")
-	b.WriteString(".SH DESCRIPTION\nVigil helps people and coding agents see what will run, approve file-changing work, and verify the result before publishing or sharing a project. Read-only checks cover tracked project files and are not an operating-system sandbox.\n")
+	b.WriteString(".SH DESCRIPTION\nvigil helps people and coding agents see what will run, approve file-changing work, and verify the result before publishing or sharing a project. Read-only checks cover tracked project files and are not an operating-system sandbox.\n")
 	b.WriteString(".SH COMMANDS\n")
 	for _, command := range activeCommands() {
 		b.WriteString(".TP\n.B " + roffEscape(command.Command) + "\n")

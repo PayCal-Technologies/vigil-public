@@ -43,7 +43,7 @@ func ClassifyExit(code int) ExitClass {
 
 func ValidateExit(code int) error {
 	if _, ok := exitClasses[code]; !ok {
-		return fmt.Errorf("unsupported Vigil exit code %d", code)
+		return fmt.Errorf("unsupported vigil exit code %d", code)
 	}
 	return nil
 }

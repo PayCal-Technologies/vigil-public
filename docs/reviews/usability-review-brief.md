@@ -10,12 +10,12 @@ automation or coding-agent integrator.
 - Do not coach participants beyond the public README and command help.
 - Capture commands, completion state, errors, time, confidence, and unexpected
   mutations without collecting repository secrets.
-- Ask participants to explain what Vigil will and will not protect before they
+- Ask participants to explain what vigil will and will not protect before they
   authorize mutation.
 
 ## Required Scenarios
 
-1. Run Vigil from an empty directory and identify available official packs.
+1. Run vigil from an empty directory and identify available official packs.
 2. Configure a fresh repository using dry-run before write.
 3. Explain a read-only gate's process, network, and mutation contract.
 4. Produce, review, and apply a plan.

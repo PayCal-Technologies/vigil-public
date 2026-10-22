@@ -1,6 +1,6 @@
 # Workflow Graph
 
-Vigil schema 3 gates form a validated directed acyclic graph. Reviewed plans
+vigil schema 3 gates form a validated directed acyclic graph. Reviewed plans
 copy the complete graph and bind it into the plan digest.
 
 For the full safety flow, including command access, mutation confirmation, and
@@ -27,7 +27,7 @@ gates to continue after an ordinary failure, missing required tool, or timeout.
 Dependents of a failed gate are reported as `skipped`; unrelated ready gates
 can still run. Policy blocks, cancellation, internal failures, and mutation
 violations always halt scheduling.
-If Vigil detects an impossible scheduler transition, it returns an internal
+If vigil detects an impossible scheduler transition, it returns an internal
 failure instead of panicking.
 
 `required` defaults to `true`. Setting it to `false` changes only missing-tool
@@ -53,17 +53,17 @@ expose truncation flags rather than implying that bounded evidence is complete.
 
 ## Execution Context
 
-`cwd` is relative to the repository root. Vigil resolves symlinks before
+`cwd` is relative to the repository root. vigil resolves symlinks before
 execution and blocks a directory that escapes the repository.
 
-In-repository plan and run-artifact paths must be Git-ignored. Vigil resolves
+In-repository plan and run-artifact paths must be Git-ignored. vigil resolves
 their nearest existing ancestor, rejects symlink redirection outside the
 repository, and never writes inside Git metadata. Explicit paths that are
 already outside the repository remain supported.
 
 `environment` contains literal repository-owned values. Variable names use the
 portable `[A-Za-z_][A-Za-z0-9_]*` form. Repository configuration cannot
-override `VIGIL_*`; Vigil supplies:
+override `VIGIL_*`; vigil supplies:
 
 ```text
 VIGIL_GATE_NAME
@@ -79,7 +79,7 @@ stored in repository configuration.
 
 Each artifact declaration has a repository-confined path relative to the gate
 `cwd`, an optional kind and media type, and `required` semantics that default to
-true. After execution Vigil requires each mandatory artifact to be a regular,
+true. After execution vigil requires each mandatory artifact to be a regular,
 non-symlink file beneath the repository, computes its SHA-256 digest, and adds
 it to the common output envelope. Missing optional artifacts become warnings.
 
@@ -88,9 +88,9 @@ read-only gate that changes Git-visible files still fails mutation detection.
 
 ## Parallel Mutation Evidence
 
-Vigil fingerprints the Git-visible workspace once before and once after an
+vigil fingerprints the Git-visible workspace once before and once after an
 explicit parallel batch. If the fingerprint changes, every gate in that batch
-is marked `mutation_detected` because Vigil cannot safely attribute the change
+is marked `mutation_detected` because vigil cannot safely attribute the change
 to one process. The diagnostic reports that a command in the named parallel
 group changed the fingerprint and that individual attribution is unavailable.
 This is fail-closed and preserves exit code `6`.

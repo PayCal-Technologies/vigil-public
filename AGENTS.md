@@ -1,4 +1,4 @@
-# Vigil repository instructions
+# vigil repository instructions
 
 Read `README.md` and the relevant docs/source before changing behavior. Preserve
 pre-existing working-tree changes. This repo may contain another task's edits.
@@ -27,7 +27,7 @@ pre-existing working-tree changes. This repo may contain another task's edits.
 - Source dumps use the global `sourcedump` command; do not upload or publish source
   as part of building or installing.
 
-Multiple Vigil source variants can provide the same command.
+Multiple vigil source variants can provide the same command.
 The installed receipt identifies which one was selected; the most recent explicit
 `make build` wins. Use `make compile` to inspect the other variant without replacing
 it. Do not merge private source into the public repo or publish from this workflow.

@@ -1,4 +1,4 @@
-# Vigil Extensions
+# vigil Extensions
 
 This directory is the public extension contract.
 

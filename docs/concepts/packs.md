@@ -5,7 +5,7 @@ loaded Go code and are not, by themselves, executable plugins.
 
 ## Layers
 
-Vigil loads layers in increasing precedence:
+vigil loads layers in increasing precedence:
 
 ```text
 embedded official < user < repository
@@ -54,7 +54,7 @@ the network capability.
 
 ## Plugins Are Separate
 
-A plugin is a separately installed executable, not a pack. Vigil locates it
+A plugin is a separately installed executable, not a pack. vigil locates it
 through a digest-bound repository lock, verifies a local trust record, performs
 a versioned handshake, and then registers its namespaced commands. Plugin
 processes exchange strict JSON over standard input and output; Go's native

@@ -31,7 +31,7 @@ Status meanings:
 | VIGIL-AC-19 through VIGIL-AC-21 | Independent security/usability review and P0/P1 disposition | external_pending |
 | VIGIL-AC-22 | Stable v1 release fail-closed gate | verified |
 
-Vigil must not report Stage 6 complete or publish a stable `v1.0` tag while any
+vigil must not report Stage 6 complete or publish a stable `v1.0` tag while any
 criterion remains pending. A criterion moves to `verified` only when its
 evidence is committed or points to an immutable public release record.
 Committed Go-test evidence must name a `*_test.go` file and a valid

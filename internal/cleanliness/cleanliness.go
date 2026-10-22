@@ -128,12 +128,12 @@ func specs(opts Options) []cleanupSpec {
 		{Pattern: "npm-debug.log*", Reason: "npm debug log", FileOnly: true},
 		{Pattern: "yarn-error.log*", Reason: "package manager debug log", FileOnly: true},
 		{Pattern: "pnpm-debug.log*", Reason: "package manager debug log", FileOnly: true},
-		{Pattern: "tmp/vigil-gates.*", Reason: "Vigil parallel gate scratch output", DirOnly: true},
-		{Pattern: "tmp/vigil-cache", Reason: "Vigil local cache", DirOnly: true},
-		{Pattern: "tmp/vigil-stamps", Reason: "Vigil local stamps", DirOnly: true},
-		{Pattern: "tmp/vigil-a11y", Reason: "Vigil accessibility scratch output", DirOnly: true},
-		{Pattern: "tmp/ci-timings", Reason: "Vigil timing scratch output", DirOnly: true},
-		{Pattern: "tmp/test-history", Reason: "Vigil test history scratch output", DirOnly: true},
+		{Pattern: "tmp/vigil-gates.*", Reason: "vigil parallel gate scratch output", DirOnly: true},
+		{Pattern: "tmp/vigil-cache", Reason: "vigil local cache", DirOnly: true},
+		{Pattern: "tmp/vigil-stamps", Reason: "vigil local stamps", DirOnly: true},
+		{Pattern: "tmp/vigil-a11y", Reason: "vigil accessibility scratch output", DirOnly: true},
+		{Pattern: "tmp/ci-timings", Reason: "vigil timing scratch output", DirOnly: true},
+		{Pattern: "tmp/test-history", Reason: "vigil test history scratch output", DirOnly: true},
 		{Pattern: "test-results", Reason: "local test result directory", DirOnly: true},
 	}
 	if opts.IncludeLogs {

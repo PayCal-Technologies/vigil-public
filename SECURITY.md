@@ -1,6 +1,6 @@
 # Security Policy
 
-Please report suspected security issues privately. Vigil executes local
+Please report suspected security issues privately. vigil executes local
 commands, evaluates repository mutation policy, and can run digest-bound
 plugins, so security reports should assume command execution and supply-chain
 impact are in scope when supported by a concrete path.
@@ -61,7 +61,7 @@ Examples likely to be treated as high severity include:
 
 Examples usually treated below high severity include documentation ambiguity,
 denial of service limited to a local command invocation, and behavior that
-requires intentionally running an already untrusted command outside Vigil's
+requires intentionally running an already untrusted command outside vigil's
 documented threat model.
 
 ## Coordinated Disclosure

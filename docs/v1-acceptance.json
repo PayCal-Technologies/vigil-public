@@ -447,7 +447,7 @@
     {
       "id": "VIGIL-AC-14",
       "domain": "installation",
-      "statement": "A compiled Vigil binary exposes embedded official packs from an empty directory without a source checkout.",
+      "statement": "A compiled vigil binary exposes embedded official packs from an empty directory without a source checkout.",
       "status": "verified",
       "evidence": [
         {

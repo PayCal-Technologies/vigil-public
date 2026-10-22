@@ -1,6 +1,6 @@
 # Mutation Model
 
-Vigil separates a command's declared access from the evidence observed after it
+vigil separates a command's declared access from the evidence observed after it
 runs.
 
 For the full safety flow, including command registration, reviewed plans,
@@ -17,7 +17,7 @@ Read-only overrides such as `--dry-run` are part of the command contract, not
 inferred from flag names.
 
 Workflow artifacts are opt-in with `--artifacts` because evidence files are
-writes. In-repository artifact roots must be Git-ignored so Vigil's own logs do
+writes. In-repository artifact roots must be Git-ignored so vigil's own logs do
 not invalidate a read-only gate fingerprint. Each run directory starts with a
 private `manifest.json` that records the run ID, standard artifact file names,
 and enforced log budgets. Run IDs are generated as single path-safe segments;
@@ -26,7 +26,7 @@ characters before creating a run directory.
 
 ## Repository Verification
 
-Before a read-only workflow gate, Vigil fingerprints:
+Before a read-only workflow gate, vigil fingerprints:
 
 - Git porcelain status;
 - unstaged binary diff;
@@ -38,7 +38,7 @@ It repeats the fingerprint afterward. A difference becomes
 successfully.
 
 Ready read-only gates may execute concurrently only when they share an explicit
-`parallel_group`. Vigil fingerprints once around the whole batch. If the
+`parallel_group`. vigil fingerprints once around the whole batch. If the
 workspace changes, every gate in that batch receives `mutation_detected`
 because attribution to one process would be unsafe. The result diagnostic names
 the parallel group and states that individual attribution is unavailable.
@@ -50,7 +50,7 @@ makes the fingerprint unavailable and blocks a read-only gate rather than
 silently omitting state.
 
 Git helper output is bounded at 32 MiB per command. The runner reports
-truncation separately from process success, and Vigil converts truncated Git
+truncation separately from process success, and vigil converts truncated Git
 output into an internal failure. An oversized status or diff therefore cannot
 be hashed as if it were complete.
 

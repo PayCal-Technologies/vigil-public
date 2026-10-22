@@ -950,7 +950,7 @@ func TestUpgradeGuideRetainsFailClosedRollbackProcedure(t *testing.T) {
 	for _, required := range []string{
 		"vigil config:migrate --json",
 		"vigil.config.json.bak-*",
-		"Plans bind the exact Vigil",
+		"Plans bind the exact vigil",
 		"executable digest",
 		"plugins:index:verify",
 		"Do not weaken plugin policy",

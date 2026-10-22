@@ -146,7 +146,7 @@ func TestWriteSARIFProducesVersionedLocationsAndRules(t *testing.T) {
 		Line:    4,
 		Column:  2,
 	}}
-	if err := WriteSARIF(&output, "Vigil", "0.3.0", findings); err != nil {
+	if err := WriteSARIF(&output, "vigil", "0.3.0", findings); err != nil {
 		t.Fatal(err)
 	}
 	var decoded map[string]any

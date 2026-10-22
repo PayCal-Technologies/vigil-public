@@ -1,6 +1,6 @@
 # Feedback
 
-Vigil benefits from practical reports:
+vigil benefits from practical reports:
 
 - confusing setup wizard prompts;
 - missing project profiles;

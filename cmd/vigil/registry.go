@@ -139,10 +139,10 @@ func coreCommandSpecs() []vigilcli.Command {
 		command("list", "Core", "List core and loaded pack commands.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return listCommands(inv.Args)
 		}),
-		command("version", "Core", "Print Vigil version and build metadata.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
+		command("version", "Core", "Print vigil version and build metadata.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return versionCommand(inv.Args)
 		}),
-		command("doctor", "Core", "Check local readiness for using Vigil.", vigilcli.AccessRead, process, func(inv vigilcli.Invocation) int {
+		command("doctor", "Core", "Check local readiness for using vigil.", vigilcli.AccessRead, process, func(inv vigilcli.Invocation) int {
 			return doctorContext(inv.Context, inv.ConfigPath, inv.Args)
 		}),
 		command("status", "Core", "Summarize config, pack, Git, and command readiness.", vigilcli.AccessRead, process, func(inv vigilcli.Invocation) int {
@@ -154,7 +154,7 @@ func coreCommandSpecs() []vigilcli.Command {
 		command("fix", "Core", "Suggest safe next actions.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return beginnerFix(inv.ConfigPath, inv.Args)
 		}),
-		command("learn", "Core", "Learn one Vigil feature at a time.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
+		command("learn", "Core", "Learn one vigil feature at a time.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return beginnerLearn(inv.Args)
 		}),
 		command("advanced", "Core", "Show every command and advanced option.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
@@ -187,19 +187,19 @@ func coreCommandSpecs() []vigilcli.Command {
 		command("verify", "Checks", "Run the public readiness proof set.", vigilcli.AccessRead, process, func(inv vigilcli.Invocation) int {
 			return verifyContext(inv.Context, inv.ConfigPath, inv.Args)
 		}),
-		command("hooks:install", "Automation", "Install Vigil Git hook shims into the current repository.", vigilcli.AccessWrite, gitWrite, func(inv vigilcli.Invocation) int {
+		command("hooks:install", "Automation", "Install vigil Git hook shims into the current repository.", vigilcli.AccessWrite, gitWrite, func(inv vigilcli.Invocation) int {
 			return hooksInstall(inv.Args)
 		}),
-		command("hooks:doctor", "Automation", "Inspect Vigil hook paths, ownership, and backups.", vigilcli.AccessRead, gitRead, func(inv vigilcli.Invocation) int {
+		command("hooks:doctor", "Automation", "Inspect vigil hook paths, ownership, and backups.", vigilcli.AccessRead, gitRead, func(inv vigilcli.Invocation) int {
 			return hooksDoctor(inv.Args)
 		}),
-		command("hooks:uninstall", "Automation", "Restore chained hooks or remove Vigil-managed hooks.", vigilcli.AccessWrite, gitWrite, func(inv vigilcli.Invocation) int {
+		command("hooks:uninstall", "Automation", "Restore chained hooks or remove vigil-managed hooks.", vigilcli.AccessWrite, gitWrite, func(inv vigilcli.Invocation) int {
 			return hooksUninstall(inv.Args)
 		}),
-		command("hooks:pre-commit", "Automation", "Run pre-commit checks from Vigil config.", vigilcli.AccessRead, process, func(inv vigilcli.Invocation) int {
+		command("hooks:pre-commit", "Automation", "Run pre-commit checks from vigil config.", vigilcli.AccessRead, process, func(inv vigilcli.Invocation) int {
 			return hookRunContext(inv.Context, inv.ConfigPath, "pre-commit", inv.Args)
 		}),
-		command("hooks:pre-push", "Automation", "Run pre-push checks from Vigil config.", vigilcli.AccessRead, process, func(inv vigilcli.Invocation) int {
+		command("hooks:pre-push", "Automation", "Run pre-push checks from vigil config.", vigilcli.AccessRead, process, func(inv vigilcli.Invocation) int {
 			return hookRunContext(inv.Context, inv.ConfigPath, "pre-push", inv.Args)
 		}),
 		command("checks:staged-sensitive", "Checks", "Scan staged files for common secret patterns before commit.", vigilcli.AccessRead, gitRead, func(inv vigilcli.Invocation) int {
@@ -211,7 +211,7 @@ func coreCommandSpecs() []vigilcli.Command {
 		command("checks:command-catalog", "Checks", "Audit the active command catalog for malformed entries.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return checkCommandCatalog(inv.Args)
 		}),
-		command("checks:public-assumptions", "Checks", "Scan public Vigil source for product-specific assumptions.", vigilcli.AccessRead, gitRead, func(inv vigilcli.Invocation) int {
+		command("checks:public-assumptions", "Checks", "Scan public vigil source for product-specific assumptions.", vigilcli.AccessRead, gitRead, func(inv vigilcli.Invocation) int {
 			return checkPublicAssumptions(inv.ConfigPath, inv.Args)
 		}),
 		command("checks:public-parity", "Checks", "Check public source stays inside configured public boundaries.", vigilcli.AccessRead, gitRead, func(inv vigilcli.Invocation) int {
@@ -220,7 +220,7 @@ func coreCommandSpecs() []vigilcli.Command {
 		command("checks:tracked-assistant-artifacts", "Checks", "Detect tracked local AI and editor instruction artifacts.", vigilcli.AccessRead, gitRead, func(inv vigilcli.Invocation) int {
 			return checkTrackedAssistantArtifacts(inv.Args)
 		}),
-		command("cleanliness:scan", "Core", "Report disposable local artifacts that Vigil can clean.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
+		command("cleanliness:scan", "Core", "Report disposable local artifacts that vigil can clean.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return cleanlinessScan(inv.Args)
 		}),
 		command("cleanliness:clean", "Core", "Delete reviewed disposable local artifacts after explicit approval.", vigilcli.AccessWrite, fsWrite, func(inv vigilcli.Invocation) int {
@@ -272,7 +272,7 @@ func coreCommandSpecs() []vigilcli.Command {
 			return configTemplate(inv.Args)
 		}),
 		command("init", "Setup", "Alias for setup:wizard.", vigilcli.AccessConditionalWrite, interactiveWrite, setupCommand),
-		command("setup", "Setup", "Plan or apply first-run Vigil configuration setup.", vigilcli.AccessConditionalWrite, interactiveWrite, setupCommand),
+		command("setup", "Setup", "Plan or apply first-run vigil configuration setup.", vigilcli.AccessConditionalWrite, interactiveWrite, setupCommand),
 		command("setup:wizard", "Setup", "Run the interactive setup wizard.", vigilcli.AccessConditionalWrite, interactiveWrite, setupCommand),
 		command("guards:summary", "Core", "Summarize read-only and mutating command coverage.", vigilcli.AccessRead, fsRead, func(inv vigilcli.Invocation) int {
 			return guardsSummary(inv.Args)
@@ -711,9 +711,9 @@ func commandArgumentSpecs(name string) []vigilcli.Argument {
 	case "help", "explain":
 		return []vigilcli.Argument{{Name: "COMMAND", Description: "Registered command name.", Required: true}}
 	case "apply":
-		return []vigilcli.Argument{{Name: "PLAN_FILE", Description: "Reviewed Vigil plan file.", File: true, Required: true}}
+		return []vigilcli.Argument{{Name: "PLAN_FILE", Description: "Reviewed vigil plan file.", File: true, Required: true}}
 	case "sentry:apply":
-		return []vigilcli.Argument{{Name: "PLAN_FILE", Description: "Sentry-reviewed Vigil plan file.", File: true, Required: true}}
+		return []vigilcli.Argument{{Name: "PLAN_FILE", Description: "Sentry-reviewed vigil plan file.", File: true, Required: true}}
 	case "completion":
 		return []vigilcli.Argument{{Name: "SHELL", Description: "Target shell.", Values: vigilcompletion.SupportedShells(), Required: true}}
 	case "plugins:remove":
@@ -788,7 +788,7 @@ func profileNames() []string {
 
 func globalFlagSpecs() []vigilcli.Flag {
 	return []vigilcli.Flag{
-		{Long: "--config", Description: "Use a specific Vigil configuration file.", ValueName: "PATH", File: true},
+		{Long: "--config", Description: "Use a specific vigil configuration file.", ValueName: "PATH", File: true},
 		{Long: "--help", Short: "-h", Description: "Show command help."},
 		{Long: "--version", Description: "Show build and compatibility metadata."},
 		{Long: "--allow-mutation", Description: "Authorize the reviewed mutation path."},

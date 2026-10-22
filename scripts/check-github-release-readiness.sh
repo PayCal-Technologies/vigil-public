@@ -7,7 +7,7 @@ environment="release"
 tag="v0.2.0-beta.1"
 tag_pattern="v*"
 branch="main"
-workflow="Vigil"
+workflow="vigil"
 stable="0"
 
 usage() {

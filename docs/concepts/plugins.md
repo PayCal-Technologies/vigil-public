@@ -1,7 +1,7 @@
 # Plugins
 
-Vigil plugins are separately installed executables that contribute namespaced
-commands through subprocess protocol `1`. They do not run inside the Vigil
+vigil plugins are separately installed executables that contribute namespaced
+commands through subprocess protocol `1`. They do not run inside the vigil
 process and they do not replace declarative packs.
 
 For the full safety flow, including command access, mutation confirmation, and
@@ -131,7 +131,7 @@ with mode `0600`. A lock alone never authorizes execution.
 
 ## Discovery
 
-For each locked plugin, Vigil verifies:
+For each locked plugin, vigil verifies:
 
 1. strict lock and trust documents;
 2. absence of local digest revocation;
@@ -152,7 +152,7 @@ as an unknown command. `doctor`, `status`, and `verify` include plugin health.
 
 ## Protocol
 
-Vigil invokes:
+vigil invokes:
 
 ```text
 <plugin> handshake --protocol-version=1
@@ -167,7 +167,7 @@ request-ID mismatches fail closed.
 
 The host supplies repository root, resolved config path, requested output
 format, mutation authorization, command arguments, and a request ID. Responses
-use Vigil's exit taxonomy and may include diagnostics and repository-relative
+use vigil's exit taxonomy and may include diagnostics and repository-relative
 artifacts. Reported artifacts must exist as regular non-symlink files inside
 the repository. Artifact paths must be normalized repository-relative strings;
 leading or trailing whitespace, absolute paths, and traversal segments are
@@ -177,7 +177,7 @@ The public wire contract is
 [`vigil-plugin-protocol-v1.schema.json`](../../schemas/vigil-plugin-protocol-v1.schema.json).
 Conformance output uses the
 [`vigil-plugin-conformance-v1.schema.json`](../../schemas/vigil-plugin-conformance-v1.schema.json)
-report inside Vigil's common output envelope.
+report inside vigil's common output envelope.
 Repository and local state use the
 [`lock`](../../schemas/vigil-plugin-lock-v1.schema.json) and
 [`trust`](../../schemas/vigil-plugin-trust-v1.schema.json) schemas. Signed
@@ -200,7 +200,7 @@ without rewriting the lock.
 
 - Handshakes time out after 3 seconds.
 - Commands use their declared timeout, capped at 30 minutes.
-- Cancellation propagates through Vigil's process runner.
+- Cancellation propagates through vigil's process runner.
 - Child environments are cleared and rebuilt with only a minimal `PATH`,
   temporary directory, C locale, an empty `HOME`, and protocol version.
 - Executable, handshake, and response sizes are bounded.
@@ -219,14 +219,14 @@ without rewriting the lock.
 Capability approval is a trust decision and command contract, not an
 operating-system sandbox. Once approved, a malicious executable still runs
 with the user's OS identity and may attempt operations beyond its declaration.
-The more common risk Vigil is designed to reduce is accidental and over-broad
+The more common risk vigil is designed to reduce is accidental and over-broad
 automation: a plugin command that runs too much, changes files unexpectedly, or
-no longer matches the reviewed lock and policy state. Vigil limits inherited
+no longer matches the reviewed lock and policy state. vigil limits inherited
 environment data, enforces its mutation activation boundary, verifies identity
 and response integrity, and bounds process life, but it cannot confine
 arbitrary system calls.
 
-Vigil supports local and HTTPS signed indexes, but no organization-wide
+vigil supports local and HTTPS signed indexes, but no organization-wide
 "official" publisher key is silently trusted. A publisher key becomes a trust
 anchor only through explicit local mutation authorization. Local-file
 installation has no publisher identity; repositories that require publisher

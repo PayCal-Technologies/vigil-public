@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vigil.dev/schemas/vigil-plugin-protocol-v1.schema.json",
-  "title": "Vigil plugin handshake protocol v1",
+  "title": "vigil plugin handshake protocol v1",
   "description": "The executable handshake document. Request and response contracts are published in $defs.",
   "type": "object",
   "additionalProperties": false,

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vigil.dev/schemas/vigil-run-artifact-manifest-v1.schema.json",
-  "title": "Vigil private run artifact manifest v1",
+  "title": "vigil private run artifact manifest v1",
   "type": "object",
   "additionalProperties": false,
   "required": [

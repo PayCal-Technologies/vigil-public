@@ -176,7 +176,7 @@ func validateCommand(pluginID string, command Command) error {
 	}
 	for _, flag := range command.Flags {
 		if reservedFlags[flag.Long] {
-			return fmt.Errorf("flag %q is reserved by the Vigil host", flag.Long)
+			return fmt.Errorf("flag %q is reserved by the vigil host", flag.Long)
 		}
 		declaredFlags[flag.Long] = true
 	}

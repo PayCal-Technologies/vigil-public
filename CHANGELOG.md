@@ -21,7 +21,7 @@ acceptance ledger is complete.
 
 ## v0.2.0-beta.1 - 2026-08-22
 
-This public source prerelease validates Vigil's new release and distribution
+This public source prerelease validates vigil's new release and distribution
 contract before any stable v1 claim. Its current operational status is recorded
 in [`docs/release-state.json`](docs/release-state.json).
 
@@ -29,8 +29,8 @@ in [`docs/release-state.json`](docs/release-state.json).
 
 - Add detailed `TESTING.md` coverage guidance for unit, integration,
   acceptance, release, completion, schema, Windows, and troubleshooting checks.
-- Add `help/testing.html` to the bundled Vigil help system with direct links to
-  the official Vigil homepage, public help site, and GitHub repository.
+- Add `help/testing.html` to the bundled vigil help system with direct links to
+  the official vigil homepage, public help site, and GitHub repository.
 - Add command completion generators for PowerShell, Elvish, Nushell, Xonsh,
   Tcsh, Clink, Yash, and Oil-family shells while preserving Bash, Zsh, and Fish.
 - Expand release cross-build targets to Windows amd64 and arm64 archives with
@@ -45,7 +45,7 @@ in [`docs/release-state.json`](docs/release-state.json).
 - Cancellable direct-argv command execution with explicit shell opt-in.
 - Git-visible mutation detection for read-only gates, including workflow graph
   execution with bounded parallel read-only groups.
-- Embedded official packs that work without a Vigil source checkout.
+- Embedded official packs that work without a vigil source checkout.
 - Digest-bound subprocess plugin execution with explicit local capability
   approval and conformance testing.
 - Release automation for signed macOS archives, Linux archives, checksums, SPDX

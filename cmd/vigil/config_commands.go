@@ -63,7 +63,7 @@ func printConfigSchema(args []string) int {
 	if jsonOut {
 		return printJSON(schema)
 	}
-	fmt.Println("Vigil config format: JSON")
+	fmt.Println("vigil config format: JSON")
 	fmt.Println("Schema version: " + configSchemaVersion)
 	fmt.Println("Required: schema_version, profile, project, coordination, gates, extensions")
 	return exitSuccess

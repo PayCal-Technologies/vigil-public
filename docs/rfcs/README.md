@@ -1,4 +1,4 @@
-# Vigil RFC Process
+# vigil RFC Process
 
 An RFC is required for changes to product scope, safety invariants, command or
 schema compatibility, plugin trust, mutation policy, distribution channels, or

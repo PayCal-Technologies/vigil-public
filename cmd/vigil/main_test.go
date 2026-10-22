@@ -1019,7 +1019,7 @@ func TestHooksInstallHonorsCoreHooksPath(t *testing.T) {
 			t.Fatal(err)
 		}
 		if !isVigilManagedHook(data) {
-			t.Fatalf("%s is not Vigil-managed:\n%s", hook, data)
+			t.Fatalf("%s is not vigil-managed:\n%s", hook, data)
 		}
 		if fileExists(filepath.Join(temp, ".git", "hooks", hook)) {
 			t.Fatalf("%s was incorrectly installed in .git/hooks", hook)
@@ -1082,7 +1082,7 @@ func TestHooksChainAndUninstallRestoreExistingHook(t *testing.T) {
 		t.Fatal("chain backup remains after successful restoration")
 	}
 	if fileExists(filepath.Join(temp, ".git", "hooks", "pre-push")) {
-		t.Fatal("Vigil-only pre-push hook remains after uninstall")
+		t.Fatal("vigil-only pre-push hook remains after uninstall")
 	}
 }
 
@@ -1946,7 +1946,7 @@ func TestWorkflowMachineFormatAdaptersUseOneResultModel(t *testing.T) {
 			t.Fatalf("JUnit workflow exit = %d", code)
 		}
 	})
-	for _, want := range []string{`<testsuites name="Vigil" tests="1" failures="0"`, `<testcase name="status" classname="workflow:local"`} {
+	for _, want := range []string{`<testsuites name="vigil" tests="1" failures="0"`, `<testcase name="status" classname="workflow:local"`} {
 		if !strings.Contains(junit, want) {
 			t.Fatalf("JUnit output missing %q:\n%s", want, junit)
 		}
@@ -2819,7 +2819,7 @@ func TestInteractiveSetupWizardDryRunUsesInjectedInput(t *testing.T) {
 			t.Fatalf("wizard dry-run exit = %d", code)
 		}
 	})
-	if !strings.Contains(output, "Vigil Setup Wizard") || !strings.Contains(output, "Review Vigil setup") {
+	if !strings.Contains(output, "vigil Setup Wizard") || !strings.Contains(output, "Review vigil setup") {
 		t.Fatalf("wizard output missing expected sections:\n%s", output)
 	}
 	if fileExists(defaultConfigName) {
@@ -2958,7 +2958,7 @@ func TestCheckWithoutConfigExplainsSetup(t *testing.T) {
 			t.Fatalf("check exit = %d", code)
 		}
 	})
-	for _, want := range []string{"Vigil is not set up", "What this means:", "vigil setup"} {
+	for _, want := range []string{"vigil is not set up", "What this means:", "vigil setup"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("check guidance missing %q:\n%s", want, output)
 		}
@@ -3004,7 +3004,7 @@ func TestExplainWithoutCommandSummarizesConfiguredChecks(t *testing.T) {
 			t.Fatalf("explain exit = %d", code)
 		}
 	})
-	for _, want := range []string{"Vigil will run these project checks:", "Changes:", "Command:"} {
+	for _, want := range []string{"vigil will run these project checks:", "Changes:", "Command:"} {
 		if !strings.Contains(output, want) {
 			t.Fatalf("explain output missing %q:\n%s", want, output)
 		}
@@ -3013,7 +3013,7 @@ func TestExplainWithoutCommandSummarizesConfiguredChecks(t *testing.T) {
 
 func TestManpageIncludesSetupAndLicense(t *testing.T) {
 	page := generateManpage()
-	for _, want := range []string{".TH VIGIL", "setup:wizard", "0BSD"} {
+	for _, want := range []string{".TH vigil", "setup:wizard", "0BSD"} {
 		if !strings.Contains(page, want) {
 			t.Fatalf("manpage missing %q:\n%s", want, page)
 		}

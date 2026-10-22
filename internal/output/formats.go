@@ -147,7 +147,7 @@ func WriteJUnit(writer io.Writer, command string, checks []Check) error {
 		suite.Cases = append(suite.Cases, testCase)
 	}
 	document := junitSuites{
-		Name:     "Vigil",
+		Name:     "vigil",
 		Tests:    suite.Tests,
 		Failures: suite.Failures,
 		Skipped:  suite.Skipped,
@@ -218,7 +218,7 @@ func WriteSARIF(writer io.Writer, toolName, toolVersion string, findings []Findi
 		Schema:  "https://json.schemastore.org/sarif-2.1.0.json",
 		Runs: []sarifRun{{
 			Tool: sarifTool{Driver: sarifDriver{
-				Name:           firstNonEmpty(toolName, "Vigil"),
+				Name:           firstNonEmpty(toolName, "vigil"),
 				Version:        toolVersion,
 				InformationURI: "https://github.com/PayCal-Technologies/vigil-public",
 				Rules:          rules,

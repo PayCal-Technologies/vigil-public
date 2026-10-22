@@ -273,7 +273,7 @@ func printHelp() {
 			width = len(command.Command)
 		}
 	}
-	fmt.Println("Vigil")
+	fmt.Println("vigil")
 	fmt.Println("Policy-aware repository preflight engine")
 	fmt.Println()
 	fmt.Println("Usage:")
@@ -296,9 +296,9 @@ func printHelp() {
 }
 
 func printBeginnerWelcome() {
-	fmt.Println("Welcome to Vigil")
+	fmt.Println("Welcome to vigil")
 	fmt.Println()
-	fmt.Println("Vigil checks your project before you publish or share it.")
+	fmt.Println("vigil checks your project before you publish or share it.")
 	fmt.Println()
 	fmt.Println("It can:")
 	fmt.Println("  [OK] detect the kind of project you have")
@@ -310,19 +310,19 @@ func printBeginnerWelcome() {
 	fmt.Println("What would you like to do?")
 	fmt.Println()
 	fmt.Println("  1. Check this project       vigil check")
-	fmt.Println("  2. Set up Vigil             vigil setup")
-	fmt.Println("  3. Learn what Vigil does    vigil learn")
+	fmt.Println("  2. Set up vigil             vigil setup")
+	fmt.Println("  3. Learn what vigil does    vigil learn")
 	fmt.Println("  4. Show advanced commands   vigil advanced")
 }
 
 func printBeginnerHelp() {
-	fmt.Println("Vigil")
+	fmt.Println("vigil")
 	fmt.Println("Checks a software project before you publish, push, or release it.")
 	fmt.Println()
 	fmt.Println("Common commands:")
 	fmt.Println("  vigil check      Run the normal project checks")
-	fmt.Println("  vigil setup      Set up Vigil with guided questions")
-	fmt.Println("  vigil explain    Show what Vigil will do")
+	fmt.Println("  vigil setup      Set up vigil with guided questions")
+	fmt.Println("  vigil explain    Show what vigil will do")
 	fmt.Println("  vigil status     Show whether the project appears ready")
 	fmt.Println("  vigil fix        Suggest safe next actions")
 	fmt.Println("  vigil learn      Learn one feature at a time")
@@ -481,7 +481,7 @@ func mutationRequirementsSatisfied(configPath string, command string, confirmati
 
 		case "clean-tree":
 			if snapshot, ok := gitMutationFingerprint(); !ok {
-				fmt.Fprintf(os.Stderr, "%s a clean Git tree is required, but Vigil could not inspect Git state\n", statusLabel("fail"))
+				fmt.Fprintf(os.Stderr, "%s a clean Git tree is required, but vigil could not inspect Git state\n", statusLabel("fail"))
 				return false
 			} else if !snapshot.Clean {
 				fmt.Fprintf(os.Stderr, "%s a clean Git tree is required before this command can write files\n", statusLabel("fail"))
@@ -828,7 +828,7 @@ func extensionCommandDescription(command, fallback string) string {
 		"composer:validate":          "Run Composer manifest validation.",
 		"deploy:verify":              "Verify a configured public endpoint.",
 		"deps:why":                   "Find package references in known manifests.",
-		"github:init-ci":             "Generate GitHub Actions helper workflow from Vigil checks.",
+		"github:init-ci":             "Generate GitHub Actions helper workflow from vigil checks.",
 		"history:diagnose":           "Alias for repo:health.",
 		"javascript:quality":         "Run public JavaScript quality adapters.",
 		"npm:audit":                  "Run npm audit.",

@@ -7,7 +7,7 @@
   "status": "public",
   "private": false,
   "public_core": true,
-  "description": "Canonical public GitHub Actions extension for running Vigil preflight checks.",
+  "description": "Canonical public GitHub Actions extension for running vigil preflight checks.",
   "source_root": "extensions/github-cicd",
   "packages": [],
   "commands": [
@@ -36,7 +36,7 @@
         "--write"
       ],
       "usage": "vigil github:init-ci [--write] [--json]",
-      "description": "Generate a GitHub Actions workflow from Vigil preflight checks.",
+      "description": "Generate a GitHub Actions workflow from vigil preflight checks.",
       "examples": [
         "vigil github:init-ci",
         "vigil github:init-ci --write"

@@ -215,7 +215,7 @@ func commandInfoCanMutate(command commandInfo) bool {
 
 func renderSentryStateMarkdown(payload map[string]any) string {
 	var b strings.Builder
-	b.WriteString("## Vigil Sentry State\n\n")
+	b.WriteString("## vigil Sentry State\n\n")
 	b.WriteString("- Status: " + fmt.Sprint(payload["status"]) + "\n")
 	b.WriteString("- Project: " + fmt.Sprint(payload["project"]) + "\n")
 	b.WriteString("- Config: " + fmt.Sprint(payload["config_path"]) + "\n")
@@ -274,7 +274,7 @@ func runSentryReview(document vigilplan.Document) (vigilplan.Document, error) {
 
 func renderSentryReview(document vigilplan.Document, approvals map[string]bool) {
 	fmt.Println()
-	fmt.Println("Vigil Sentry Mode")
+	fmt.Println("vigil Sentry Mode")
 	fmt.Printf("Plan: %s\n", document.PlanID)
 	fmt.Printf("Repository: %s @ %s\n", document.Inputs.RepositoryRoot, document.Inputs.RepositoryHead)
 	fmt.Println()

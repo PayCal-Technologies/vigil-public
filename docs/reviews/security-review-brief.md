@@ -21,7 +21,7 @@ Review:
 - upgrade, rollback, deprecation, and incident procedures.
 
 Explicitly assess the documented non-sandbox boundary and whether any UI or
-machine output implies stronger isolation than Vigil provides.
+machine output implies stronger isolation than vigil provides.
 
 ## Required Methods
 

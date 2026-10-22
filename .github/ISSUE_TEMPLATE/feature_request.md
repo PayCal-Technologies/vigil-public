@@ -10,6 +10,6 @@ labels: enhancement
 
 ## Alternatives Considered
 
-## Why This Belongs in Vigil
+## Why This Belongs in vigil
 
 ## Additional Context

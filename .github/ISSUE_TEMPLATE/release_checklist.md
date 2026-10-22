@@ -1,6 +1,6 @@
 ---
 name: Release checklist
-about: Track a Vigil beta or stable release
+about: Track a vigil beta or stable release
 labels: release
 ---
 

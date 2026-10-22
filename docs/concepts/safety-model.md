@@ -1,6 +1,6 @@
 # Safety Model
 
-Vigil is a policy and evidence layer for local automation. It helps a person or
+vigil is a policy and evidence layer for local automation. It helps a person or
 agent see what a command is allowed to do, confirm file-changing work, and catch
 unexpected Git-visible changes. It is not an operating-system sandbox.
 
@@ -52,7 +52,7 @@ Commands declare one of three access classes:
 
 Write and conditional-write paths require explicit authorization such as
 `--allow-mutation`. Read-only overrides are explicit command contract fields;
-Vigil does not infer them from flag names. Unknown access is treated as
+vigil does not infer them from flag names. Unknown access is treated as
 mutating.
 
 This is a review contract, not containment. Once a command is approved, the
@@ -61,7 +61,7 @@ subprocess still runs with the user's operating-system identity.
 ## Repository Mutation Detection
 
 Read-only workflow gates are checked against Git-visible workspace evidence.
-Before execution, Vigil fingerprints:
+Before execution, vigil fingerprints:
 
 - `git status --porcelain`;
 - unstaged binary diff;
@@ -72,7 +72,7 @@ The same fingerprint is collected afterward. If it changes, the gate result is
 reported as `mutation_detected` with exit code `6`, even if the process exited
 successfully.
 
-Fingerprinting fails closed. If Vigil cannot find the repository, read Git
+Fingerprinting fails closed. If vigil cannot find the repository, read Git
 state, read a complete bounded diff, or safely account for untracked content,
 the read-only gate is blocked rather than treated as clean. That keeps
 incomplete evidence from becoming a false pass.
@@ -80,10 +80,10 @@ incomplete evidence from becoming a false pass.
 ## Reviewed Plans
 
 Reviewed plans bind execution to the inputs that were reviewed. Applying a plan
-does not reinterpret the current configuration. Vigil validates the plan,
+does not reinterpret the current configuration. vigil validates the plan,
 recomputes the inputs, and blocks execution when any reviewed input changed:
 
-- Vigil executable digest;
+- vigil executable digest;
 - config path and content digest;
 - repository root and `HEAD`;
 - Git-visible workspace digest;
@@ -104,14 +104,14 @@ Workflow execution keeps mutation attribution conservative:
 - Parallel read-only batches fingerprint once around the whole batch.
 
 If a parallel read-only batch mutates the workspace, every gate in the batch is
-marked `mutation_detected`. Vigil reports group-level evidence because assigning
+marked `mutation_detected`. vigil reports group-level evidence because assigning
 the mutation to one process would be guesswork.
 
 Declared artifacts verify files after execution. They do not authorize
 mutation. A read-only gate that produces a Git-visible file still fails mutation
 detection unless the artifact path is outside the repository or otherwise
 outside the Git-visible fingerprint boundary. In-repository plan and artifact
-paths are expected to be ignored so Vigil's own evidence does not invalidate a
+paths are expected to be ignored so vigil's own evidence does not invalidate a
 read-only check.
 
 ## Packs And Plugins
@@ -137,7 +137,7 @@ approved. It does not sandbox the plugin executable.
 
 ## Evidence Outputs
 
-Vigil's safety decisions should be observable in structured output. Workflow
+vigil's safety decisions should be observable in structured output. Workflow
 results, JSON envelopes, JSONL events, mutation evidence, run artifacts, plugin
 diagnostics, and exit codes are part of the public review surface. Shared output
 helpers therefore have high blast radius. Changes to envelope shape, status
@@ -164,7 +164,7 @@ plugin availability, and reviewed-plan compatibility.
 
 ## Known Limits
 
-Vigil detects Git-visible workspace changes. It does not prevent or reliably
+vigil detects Git-visible workspace changes. It does not prevent or reliably
 detect:
 
 - ignored-file changes;

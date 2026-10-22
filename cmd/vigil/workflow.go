@@ -703,7 +703,7 @@ func remainingWorkflowInputs(resolvedConfig, configDigest, repositoryRoot, repos
 	}
 	binaryDigest, err := vigilplan.ExecutableDigest()
 	if err != nil {
-		return vigilplan.Inputs{}, fmt.Errorf("digest Vigil executable: %w", err)
+		return vigilplan.Inputs{}, fmt.Errorf("digest vigil executable: %w", err)
 	}
 	return vigilplan.Inputs{
 		BinaryDigest:          binaryDigest,

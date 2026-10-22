@@ -1,6 +1,6 @@
-# Contributing to Vigil
+# Contributing to vigil
 
-Vigil is an open-source CLI under the 0BSD license. Contributions are welcome
+vigil is an open-source CLI under the 0BSD license. Contributions are welcome
 when they keep the tool local-first, explicit about mutations, and useful for
 both humans and automation.
 

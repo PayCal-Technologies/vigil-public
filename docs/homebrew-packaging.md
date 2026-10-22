@@ -66,7 +66,7 @@ the formula in its ephemeral test tap.
 
 ## Submission Path
 
-Homebrew/core is appropriate only after Vigil has clear public utility, stable
+Homebrew/core is appropriate only after vigil has clear public utility, stable
 versioned releases, and user-visible adoption. Until then, use a project tap or
 recommend `go install`.
 

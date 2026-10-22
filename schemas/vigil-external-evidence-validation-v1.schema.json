@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vigil.dev/schemas/vigil-external-evidence-validation-v1.schema.json",
-  "title": "Vigil v1 external evidence validation report",
+  "title": "vigil v1 external evidence validation report",
   "type": "object",
   "additionalProperties": false,
   "required": [

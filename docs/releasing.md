@@ -1,4 +1,4 @@
-# Releasing Vigil
+# Releasing vigil
 
 Tagged releases are built by `.github/workflows/release.yml`. Do not upload
 locally built binaries as official assets.
@@ -58,13 +58,13 @@ exercising both binaries, the command catalogue, config schema, and all
 embedded official packs from empty user and repository state.
 
 Only after the native matrix and candidate Homebrew formula test pass does
-Vigil publish a beta candidate in its final prerelease state. Beta and stable
+vigil publish a beta candidate in its final prerelease state. Beta and stable
 candidates remain drafts while the workflow styles and audits the exact formula,
 rewrites only the matching archive URL in a temporary copy to the already
 verified local draft asset, then installs and tests it on Intel and Apple
 Silicon macOS. The original formula is never changed.
 
-Vigil first proves through GitHub's repository API that release immutability is
+vigil first proves through GitHub's repository API that release immutability is
 enabled, then publishes a draft exactly once in its final channel state: beta
 as prerelease, stable as latest. The workflow requires the resulting release
 to report `isImmutable=true` and verifies its GitHub release attestation.
@@ -189,7 +189,7 @@ single-publication sequence is designed for that repository policy.
 The certificate and App Store Connect notary key are written only beneath
 `RUNNER_TEMP`; the workflow deletes the ephemeral keychain and key files in an
 `always()` cleanup step. Standalone command-line binaries cannot carry a
-stapled ticket directly, so Vigil submits the containing ZIP and relies on the
+stapled ticket directly, so vigil submits the containing ZIP and relies on the
 notary service ticket plus online Gatekeeper assessment after download.
 
 Stable tags also require `HOMEBREW_TAP_TOKEN`, scoped to update

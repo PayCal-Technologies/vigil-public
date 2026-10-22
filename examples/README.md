@@ -1,6 +1,6 @@
-# Vigil Examples
+# vigil Examples
 
-These examples show common ways to use Vigil as a local safety and evidence
+These examples show common ways to use vigil as a local safety and evidence
 layer before repository automation runs.
 
 ## Starter Config
@@ -20,7 +20,7 @@ vigil config:report --json
 ## GitHub Actions
 
 [`github-vigil.yml`](github-vigil.yml) shows a CI workflow that installs and
-runs Vigil checks.
+runs vigil checks.
 
 Typical local workflow:
 

@@ -1,6 +1,6 @@
 # v1 Contract Freeze
 
-This document defines Vigil's candidate v1 compatibility baseline. It does not
+This document defines vigil's candidate v1 compatibility baseline. It does not
 declare a `v1.0` release. The release may claim v1 only after every criterion in
 the [acceptance matrix](v1-acceptance-matrix.md) is verified.
 

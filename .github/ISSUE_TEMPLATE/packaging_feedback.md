@@ -17,7 +17,7 @@ labels: packaging
 
 ## Environment
 
-- Vigil version:
+- vigil version:
 - OS:
 - CPU architecture:
 - Shell:

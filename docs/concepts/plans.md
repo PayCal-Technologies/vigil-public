@@ -1,6 +1,6 @@
 # Reviewed Plans
 
-A Vigil plan is a complete, versioned description of the configured gates and
+A vigil plan is a complete, versioned description of the configured gates and
 the evidence that makes those gates safe to execute without reinterpretation.
 
 For the full safety flow, including mutation confirmation and repository
@@ -57,7 +57,7 @@ gates are blocked with exit `3`.
 
 The apply is blocked with exit `3` when any of these values changed:
 
-- Vigil executable digest;
+- vigil executable digest;
 - config path or content digest;
 - repository root or `HEAD`;
 - Git-visible workspace digest;

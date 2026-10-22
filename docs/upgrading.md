@@ -1,6 +1,6 @@
 # Upgrade and Rollback
 
-Treat a Vigil upgrade as a contract change review, even within the pre-1.0
+Treat a vigil upgrade as a contract change review, even within the pre-1.0
 series.
 
 ## Before Upgrade
@@ -16,7 +16,7 @@ series.
 vigil config:migrate --json
 ```
 
-Do not reuse a reviewed plan across a binary change. Plans bind the exact Vigil
+Do not reuse a reviewed plan across a binary change. Plans bind the exact vigil
 executable digest and will fail closed after either upgrade or rollback.
 
 ## Upgrade

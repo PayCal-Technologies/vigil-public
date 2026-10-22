@@ -1,6 +1,6 @@
-# Vigil GitHub Visibility Action Plan
+# vigil GitHub Visibility Action Plan
 
-This plan tracks repository changes that make Vigil easier to discover,
+This plan tracks repository changes that make vigil easier to discover,
 evaluate, trust, and share.
 
 ## Current Baseline
@@ -22,7 +22,7 @@ evaluate, trust, and share.
 
 ## Priority Actions
 
-1. Keep the README opening focused on Vigil's value: local preflight checks,
+1. Keep the README opening focused on vigil's value: local preflight checks,
    explicit mutation boundaries, evidence, and agent-safe automation.
 2. Keep release status unambiguous. The current public prerelease, legacy
    bootstrap release, and v1 gate should stay easy to distinguish.

@@ -155,7 +155,7 @@ func TestExternalCheckPreservesInternalFailureClass(t *testing.T) {
 		Output:   "tool-specific failure",
 	})
 	if result.ExitCode != vigilcli.ExitCheckFailed {
-		t.Fatalf("child exit 7 was treated as Vigil internal failure: %#v", result)
+		t.Fatalf("child exit 7 was treated as vigil internal failure: %#v", result)
 	}
 }
 

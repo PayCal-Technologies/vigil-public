@@ -25,7 +25,7 @@ type budget struct {
 }
 
 func main() {
-	binary := flag.String("binary", "", "path to the Vigil binary")
+	binary := flag.String("binary", "", "path to the vigil binary")
 	sampleCount := flag.Int("samples", 21, "number of measured samples")
 	flag.Parse()
 	if strings.TrimSpace(*binary) == "" || *sampleCount < 5 || *sampleCount > 101 {

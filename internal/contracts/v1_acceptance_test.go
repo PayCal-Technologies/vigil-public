@@ -591,8 +591,8 @@ func TestV1ExternalEvidenceBriefsAreActionable(t *testing.T) {
 		{
 			path: "docs/reviews/external-integration-report.md",
 			required: []string{
-				"independent of Vigil's",
-				"Vigil version, commit, and binary digest",
+				"independent of vigil's",
+				"vigil version, commit, and binary digest",
 				"timeout or cancellation",
 				"executable or metadata digest drift rejection",
 				"P0/P1 findings",

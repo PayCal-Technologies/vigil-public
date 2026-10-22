@@ -1,10 +1,10 @@
-# Vigil Testing Guide
+# vigil Testing Guide
 
-This document explains how to test Vigil locally, what each test suite covers,
+This document explains how to test vigil locally, what each test suite covers,
 and which checks are expected before a pull request, release candidate, or
 high-risk change.
 
-Vigil is a local safety and evidence layer around repository automation. Its
+vigil is a local safety and evidence layer around repository automation. Its
 tests therefore cover more than ordinary command success. They verify command
 contracts, mutation guards, output schemas, release artifacts, plugin trust,
 configuration migration, process cancellation, performance budgets, and
@@ -12,8 +12,8 @@ cross-platform behavior.
 
 ## Official Resources
 
-- Vigil homepage: [paycaltech.com/vigil](https://paycaltech.com/vigil/)
-- Vigil help: [paycaltech.com/vigil/help](https://paycaltech.com/vigil/help/)
+- vigil homepage: [paycaltech.com/vigil](https://paycaltech.com/vigil/)
+- vigil help: [paycaltech.com/vigil/help](https://paycaltech.com/vigil/help/)
 - GitHub repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
 - Created by [PayCal Technologies](https://paycaltech.com/)
 
@@ -133,7 +133,7 @@ Use this table to choose the right command.
 | Validate shell scripts parse | `bash -n scripts/*.sh` |
 | Build the main binary | `CGO_ENABLED=0 go build -trimpath -o bin/vigil ./cmd/vigil` |
 | Build the publisher utility | `CGO_ENABLED=0 go build -trimpath -o bin/vigil-plugin-publisher ./cmd/vigil-plugin-publisher` |
-| Run Vigil's self-checks | `bin/vigil verify --json` |
+| Run vigil's self-checks | `bin/vigil verify --json` |
 | Run configured local gates | `bin/vigil workflow:local --json` |
 | Test reference plugin conformance | `bin/vigil --config examples/vigil.config.json --allow-mutation plugins:conformance --file examples/plugins/reference/vigil-plugin-reference --execute --json` |
 
@@ -225,7 +225,7 @@ The smoke script verifies:
 
 ## v1 Acceptance Tests
 
-Vigil has a separate v1 acceptance model because `v1.0.0` must not be claimed
+vigil has a separate v1 acceptance model because `v1.0.0` must not be claimed
 until all required evidence is verified.
 
 Primary files:
@@ -271,7 +271,7 @@ behavior.
 
 ## Cross-Platform Testing
 
-Vigil is built as `CGO_ENABLED=0` Go binaries. The release script currently
+vigil is built as `CGO_ENABLED=0` Go binaries. The release script currently
 cross-builds archives for:
 
 - `darwin/amd64`

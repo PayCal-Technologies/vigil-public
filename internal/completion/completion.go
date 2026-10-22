@@ -353,7 +353,7 @@ func yash(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues)
 }
 
 func oil(commands []cli.Command, globalFlags []cli.Flag, dynamic DynamicValues) string {
-	return "# Oil/OSH/YSH completion for vigil\n# OSH can consume Bash completion scripts, so Vigil reuses its Bash completer for Oil-family shells.\n" + bash(commands, globalFlags, dynamic)
+	return "# Oil/OSH/YSH completion for vigil\n# OSH can consume Bash completion scripts, so vigil reuses its Bash completer for Oil-family shells.\n" + bash(commands, globalFlags, dynamic)
 }
 
 func dynamicFlagValues(command string, flag cli.Flag, dynamic DynamicValues) []string {

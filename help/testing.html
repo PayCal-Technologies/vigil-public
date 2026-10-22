@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Testing Guide - Vigil Help</title>
+  <title>Testing Guide - vigil Help</title>
   <link rel="stylesheet" href="styles.css">
   <script src="docs.js"></script>
 </head>
 <body>
-  <header class="mobile-header"><a href="index.html">Vigil Help</a><button type="button" data-nav-open aria-controls="command-nav" aria-expanded="false">Menu</button></header>
+  <header class="mobile-header"><a href="index.html">vigil Help</a><button type="button" data-nav-open aria-controls="command-nav" aria-expanded="false">Menu</button></header>
   <div class="drawer-backdrop" data-nav-close hidden></div>
   <div class="docs-shell">
-    <nav class="docs-sidebar" id="command-nav" aria-label="Vigil help navigation">
-      <div class="brand"><div><a href="index.html">Vigil Help</a><span>Testing guide</span></div></div>
+    <nav class="docs-sidebar" id="command-nav" aria-label="vigil help navigation">
+      <div class="brand"><div><a href="index.html">vigil Help</a><span>Testing guide</span></div></div>
       <div class="sidebar-controls">
         <label><span aria-hidden="true">☀ / ☾</span><select data-theme-select aria-label="Theme"><option value="system">System</option><option value="light">☀ Light</option><option value="dark">☾ Dark</option></select></label>
         <label><span aria-hidden="true">Aaa</span><select data-font-select aria-label="Text size"><option value="compact">Compact</option><option value="comfortable">Comfortable</option><option value="large">Large</option><option value="extra-large">Extra large</option></select></label>
@@ -20,17 +20,17 @@
       <a class="conventions-link" href="index.html">Command reference</a>
       <a class="conventions-link" href="command-conventions.html">Command conventions</a>
       <a class="conventions-link" href="testing.html">Testing guide</a>
-      <a class="conventions-link" href="https://paycaltech.com/vigil/">Official Vigil homepage</a>
-      <a class="conventions-link" href="https://github.com/PayCal-Technologies/vigil-public">Vigil on GitHub</a>
+      <a class="conventions-link" href="https://paycaltech.com/vigil/">Official vigil homepage</a>
+      <a class="conventions-link" href="https://github.com/PayCal-Technologies/vigil-public">vigil on GitHub</a>
     </nav>
     <main class="docs-main">
       <article class="doc-article">
         <p class="eyebrow">Testing</p>
-        <h1>Vigil Testing Guide</h1>
-        <p class="summary">How to run Vigil's local, CI, fuzz, performance, release, and acceptance test suites.</p>
+        <h1>vigil Testing Guide</h1>
+        <p class="summary">How to run vigil's local, CI, fuzz, performance, release, and acceptance test suites.</p>
 <figure class="terminal-showcase">
-          <img src="assets/vigil-terminal.png" alt="Vigil terminal showing ready project status and verify JSON evidence" width="1292" height="812" loading="eager">
-          <figcaption>Vigil in action: local readiness checks followed by structured verification evidence for release and handoff review.</figcaption>
+          <img src="assets/vigil-terminal.png" alt="vigil terminal showing ready project status and verify JSON evidence" width="1292" height="812" loading="eager">
+          <figcaption>vigil in action: local readiness checks followed by structured verification evidence for release and handoff review.</figcaption>
         </figure>
         <div class="meta">
           <div><strong>Default suite</strong><code>go test ./...</code></div>
@@ -65,7 +65,7 @@ scripts/check-performance.sh</code></pre>
           </tbody>
         </table>
         <h2 id="fuzz">Fuzz Smoke<a class="anchor" href="#fuzz" aria-label="Link to Fuzz Smoke">#</a></h2>
-        <p>Vigil has fuzz targets for config round trips, pack manifest parsing, path confinement, command-line parsing, atomic file writes, plugin handshake JSON, and support bundle redaction.</p>
+        <p>vigil has fuzz targets for config round trips, pack manifest parsing, path confinement, command-line parsing, atomic file writes, plugin handshake JSON, and support bundle redaction.</p>
         <pre><code>FUZZ_TIME=10s scripts/run-fuzz-smoke.sh</code></pre>
         <h2 id="performance">Performance<a class="anchor" href="#performance" aria-label="Link to Performance">#</a></h2>
         <p>Startup latency is a release contract. The performance check builds a release-like binary and measures new-process commands in an empty directory with empty user pack and plugin roots.</p>
@@ -93,11 +93,11 @@ scripts/check-release-reproducibility.sh dist</code></pre>
         <h2 id="more">More Detail<a class="anchor" href="#more" aria-label="Link to More Detail">#</a></h2>
         <ul>
           <li><a href="https://github.com/PayCal-Technologies/vigil-public/blob/main/TESTING.md">Full TESTING.md on GitHub</a></li>
-          <li><a href="https://paycaltech.com/vigil/help/">Vigil command help</a></li>
-          <li><a href="https://paycaltech.com/vigil/">Official Vigil homepage</a></li>
+          <li><a href="https://paycaltech.com/vigil/help/">vigil command help</a></li>
+          <li><a href="https://paycaltech.com/vigil/">Official vigil homepage</a></li>
           <li><a href="https://paycaltech.com/">Created by PayCal Technologies</a></li>
         </ul>
-        <div class="footer"><span>Created by <a href="https://paycaltech.com/">PayCal Technologies</a></span><span><a href="https://paycaltech.com/vigil/">Official Vigil homepage</a></span><span><a href="https://github.com/PayCal-Technologies/vigil-public">Vigil on GitHub</a></span></div>
+        <div class="footer"><span>Created by <a href="https://paycaltech.com/">PayCal Technologies</a></span><span><a href="https://paycaltech.com/vigil/">Official vigil homepage</a></span><span><a href="https://github.com/PayCal-Technologies/vigil-public">vigil on GitHub</a></span></div>
       </article>
     </main>
     <aside class="article-toc" aria-label="On this page">

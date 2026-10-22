@@ -219,7 +219,7 @@ func ApplyUninstall(inspections []Inspection) error {
 func Body(hook, chainedHook string) string {
 	var body strings.Builder
 	body.WriteString("#!/usr/bin/env sh\n")
-	body.WriteString("# Managed by Vigil. Use `vigil hooks:uninstall` to restore or remove.\n")
+	body.WriteString("# Managed by vigil. Use `vigil hooks:uninstall` to restore or remove.\n")
 	if chainedHook != "" {
 		body.WriteString(shellQuote(chainedHook) + " \"$@\" || exit $?\n")
 	}
@@ -228,7 +228,7 @@ func Body(hook, chainedHook string) string {
 }
 
 func IsManaged(data []byte) bool {
-	return bytes.Contains(data, []byte("# Managed by Vigil."))
+	return bytes.Contains(data, []byte("# Managed by vigil."))
 }
 
 func rollbackInstall(plans []InstallPlan) {

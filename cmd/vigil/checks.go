@@ -613,7 +613,7 @@ func findingsOutput(format vigiloutput.Format, name string, findings []string) i
 			return vigilcli.ExitInternal
 		}
 	case vigiloutput.FormatSARIF:
-		if err := vigiloutput.WriteSARIF(os.Stdout, "Vigil", buildinfo.Current().Version, normalized); err != nil {
+		if err := vigiloutput.WriteSARIF(os.Stdout, "vigil", buildinfo.Current().Version, normalized); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return vigilcli.ExitInternal
 		}
@@ -654,7 +654,7 @@ func findingSourceFailure(format vigiloutput.Format, name, detail string) int {
 			fmt.Fprintln(os.Stderr, err)
 		}
 	case vigiloutput.FormatSARIF:
-		if err := vigiloutput.WriteSARIF(os.Stdout, "Vigil", buildinfo.Current().Version, []vigiloutput.Finding{finding}); err != nil {
+		if err := vigiloutput.WriteSARIF(os.Stdout, "vigil", buildinfo.Current().Version, []vigiloutput.Finding{finding}); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
 	case vigiloutput.FormatGitHub:

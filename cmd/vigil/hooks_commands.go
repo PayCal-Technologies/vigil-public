@@ -16,7 +16,7 @@ func hooksInstall(args []string) int {
 	fs.SetOutput(os.Stderr)
 	jsonOut := fs.Bool("json", false, "json output")
 	dryRun := fs.Bool("dry-run", false, "preview hook changes")
-	chain := fs.Bool("chain", false, "preserve and run existing hooks before Vigil")
+	chain := fs.Bool("chain", false, "preserve and run existing hooks before vigil")
 	if err := fs.Parse(args); err != nil {
 		return exitUsage
 	}
@@ -123,7 +123,7 @@ func hooksUninstall(args []string) int {
 	if *jsonOut {
 		return printJSON(map[string]any{"status": "ok", "hook_dir": hookDir, "hooks": inspections})
 	}
-	fmt.Println("Vigil hooks uninstalled")
+	fmt.Println("vigil hooks uninstalled")
 	return exitSuccess
 }
 

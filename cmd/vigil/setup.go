@@ -209,7 +209,7 @@ func runInteractiveSetupWizard(configPath, requestedProfile string, write bool, 
 	}
 	path := resolvedConfigPath(configPath)
 	answers := setupWizardAnswers{Profile: selectedProfile, ConfigPath: path, RunDoctor: true, WorkflowMode: "dry-run"}
-	fmt.Println("Vigil Setup Wizard")
+	fmt.Println("vigil Setup Wizard")
 	const (
 		wizardProfile = iota
 		wizardConfig
@@ -475,9 +475,9 @@ func finishSetupWizard(answers setupWizardAnswers) int {
 	}
 	fmt.Println()
 	if exitCode == exitSuccess {
-		fmt.Println("Vigil setup complete.")
+		fmt.Println("vigil setup complete.")
 	} else {
-		fmt.Println("Vigil setup completed with failures.")
+		fmt.Println("vigil setup completed with failures.")
 	}
 	fmt.Println()
 	fmt.Printf("  Profile:       %s\n", answers.Profile)
@@ -508,7 +508,7 @@ func setupRestartCommand(answers setupWizardAnswers) string {
 }
 
 func renderSetupReview(answers setupWizardAnswers, write bool) {
-	fmt.Println("Review Vigil setup:")
+	fmt.Println("Review vigil setup:")
 	fmt.Println()
 	fmt.Printf("  Profile:            %s\n", answers.Profile)
 	fmt.Printf("  Setup file:         %s\n", answers.ConfigPath)

@@ -1,4 +1,4 @@
-name: Vigil
+name: vigil
 
 on:
   pull_request:
@@ -59,7 +59,7 @@ jobs:
         if: runner.os == 'Linux'
         run: go run golang.org/x/vuln/cmd/govulncheck@v1.6.0 ./...
 
-      - name: Build local Vigil
+      - name: Build local vigil
         run: |
           mkdir -p bin
           CGO_ENABLED=0 go build -trimpath -o bin/vigil ./cmd/vigil
@@ -77,10 +77,10 @@ jobs:
             --execute \
             --json
 
-      - name: Verify Vigil
+      - name: Verify vigil
         run: ./bin/vigil verify --json
 
-      - name: Run Vigil gates
+      - name: Run vigil gates
         run: ./bin/vigil workflow:local --json
 
       - name: Rebuild release evidence

@@ -2,7 +2,7 @@
 
 ## Protected Assets
 
-Vigil primarily protects the integrity of the repository workspace, reviewed
+vigil primarily protects the integrity of the repository workspace, reviewed
 automation intent, configuration, hooks, local diagnostic artifacts, and
 release provenance.
 
@@ -21,7 +21,7 @@ release provenance.
 
 ## Addressed Threats
 
-Vigil is designed to reduce:
+vigil is designed to reduce:
 
 - accidental execution of mutating automation;
 - accidental and over-broad automation whose real behavior exceeds the reviewed
@@ -40,7 +40,7 @@ Vigil is designed to reduce:
 
 ## Out Of Scope
 
-Vigil does not currently claim protection against:
+vigil does not currently claim protection against:
 
 - malicious code with the user's operating-system privileges;
 - network, database, cloud, or external-service mutation;

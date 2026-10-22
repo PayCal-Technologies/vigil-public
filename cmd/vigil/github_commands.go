@@ -60,14 +60,14 @@ func initCI(configPath string, args []string) int {
 func githubWorkflow(cfg config) string {
 	_ = cfg
 	var b strings.Builder
-	b.WriteString("name: Vigil\n\n")
+	b.WriteString("name: vigil\n\n")
 	b.WriteString("on:\n  pull_request:\n  push:\n    branches: [main]\n\n")
 	b.WriteString("jobs:\n  vigil:\n    runs-on: ubuntu-latest\n    steps:\n")
 	b.WriteString("      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5\n")
 	b.WriteString("      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6\n        with:\n          go-version: '" + goVersionForWorkflow() + "'\n          cache: false\n")
-	b.WriteString("      - name: Install Vigil\n        run: |\n          mkdir -p bin\n          GOBIN=\"$PWD/bin\" go install " + vigilCoreModulePath + "@" + vigilCoreInstallRef() + "\n          echo \"$PWD/bin\" >> \"$GITHUB_PATH\"\n")
-	b.WriteString("      - name: Verify Vigil\n        run: vigil verify --json\n")
-	b.WriteString("      - name: Run Vigil Preflight\n        run: vigil workflow:local --json\n")
+	b.WriteString("      - name: Install vigil\n        run: |\n          mkdir -p bin\n          GOBIN=\"$PWD/bin\" go install " + vigilCoreModulePath + "@" + vigilCoreInstallRef() + "\n          echo \"$PWD/bin\" >> \"$GITHUB_PATH\"\n")
+	b.WriteString("      - name: Verify vigil\n        run: vigil verify --json\n")
+	b.WriteString("      - name: Run vigil Preflight\n        run: vigil workflow:local --json\n")
 	return b.String()
 }
 

@@ -1,6 +1,6 @@
 # Performance Methodology
 
-Vigil treats startup latency and bounded discovery as release contracts.
+vigil treats startup latency and bounded discovery as release contracts.
 
 ## Budgets
 

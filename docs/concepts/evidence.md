@@ -1,6 +1,6 @@
 # Acceptance Evidence
 
-Vigil's release gates are backed by a checked-in evidence ledger. The ledger is
+vigil's release gates are backed by a checked-in evidence ledger. The ledger is
 not a changelog and not a marketing checklist. It is a machine-validated record
 of which safety and acceptance criteria have evidence strong enough to support
 a v1 release claim.

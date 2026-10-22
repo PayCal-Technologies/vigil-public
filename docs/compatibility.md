@@ -1,6 +1,6 @@
 # Compatibility Policy
 
-Vigil is pre-1.0. Compatibility changes are allowed only when they include a
+vigil is pre-1.0. Compatibility changes are allowed only when they include a
 migration, compatibility alias, or explicit release-note warning.
 
 ## Current Commitments
@@ -34,7 +34,7 @@ migration, compatibility alias, or explicit release-note warning.
 
 ## v1.0 Gate
 
-Vigil will not claim 1.0 until configuration, JSON envelope, exit taxonomy,
+vigil will not claim 1.0 until configuration, JSON envelope, exit taxonomy,
 plan integrity, plugin protocol, supported platforms, release verification, and
 deprecation periods have stable documented contracts and compatibility
 fixtures.
