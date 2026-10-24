@@ -16,6 +16,14 @@ if [[ ! "$commit" =~ ^[0-9a-f]{40}$ ]] || ! git cat-file -e "${commit}^{commit}"
   printf 'release commit must resolve to a full Git commit: %q\n' "$commit" >&2
   exit 2
 fi
+if [[ "$commit" != "$(git rev-parse HEAD)" ]]; then
+  printf 'release commit must match the source checkout HEAD\n' >&2
+  exit 2
+fi
+if [[ "$version" != *-* && ( "${ALLOW_UNTAGGED_RELEASE:-0}" == "1" || "${ALLOW_DIRTY_RELEASE:-0}" == "1" ) ]]; then
+  printf 'stable releases do not allow untagged or dirty overrides\n' >&2
+  exit 2
+fi
 if [[ "${ALLOW_UNTAGGED_RELEASE:-0}" != "1" ]]; then
   tag_type="$(git cat-file -t "$tag" 2>/dev/null || true)"
   if [[ "$tag_type" != "tag" ]]; then
@@ -59,19 +67,42 @@ if [[ -L "$dist" || ( -e "$dist" && ! -d "$dist" ) ]]; then
   printf 'release directory must be a directory, not a file or symlink: %q\n' "$dist" >&2
   exit 2
 fi
+# Resolve prerequisites before replacing any output directory.
+for tool in go git tar gzip; do
+  command -v "$tool" >/dev/null 2>&1 || { printf 'required release tool is missing: %s\n' "$tool" >&2; exit 4; }
+done
+export GOTOOLCHAIN=local
+export GIT_TERMINAL_PROMPT=0
+build_dirty=false
+if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then build_dirty=true; fi
 buildinfo_package="github.com/PayCal-Technologies/vigil-public/internal/buildinfo"
-ldflags="-s -w -X ${buildinfo_package}.Version=${version} -X ${buildinfo_package}.Commit=${commit} -X ${buildinfo_package}.BuildDate=${build_date} -X ${buildinfo_package}.Dirty=false"
+ldflags="-s -w -X ${buildinfo_package}.Version=${version} -X ${buildinfo_package}.Commit=${commit} -X ${buildinfo_package}.BuildDate=${build_date} -X ${buildinfo_package}.Dirty=${build_dirty}"
 
 export SOURCE_DATE_EPOCH="$source_date_epoch"
 export CGO_ENABLED=0
 
+output_target="$dist"
+output_lock="${output_target}.build.lock"
+if ! mkdir "$output_lock" 2>/dev/null; then
+  printf 'release output is locked: %s\n' "$output_lock" >&2
+  exit 2
+fi
 gate_tmp="$(mktemp -d)"
-trap 'rm -rf "$gate_tmp"' EXIT
+output_stage=""
+cleanup() {
+  rm -rf -- "$gate_tmp"
+  if [[ -n "$output_stage" ]]; then rm -rf -- "$output_stage"; fi
+  rmdir "$output_lock"
+}
+trap cleanup EXIT
+output_stage="$(mktemp -d "$dist_parent/.vigil-release.XXXXXX")"
+dist="$output_stage"
 gate_checker="$gate_tmp/v1-acceptance-check"
 go build -mod=readonly -buildvcs=false -trimpath -o "$gate_checker" ./scripts/v1-acceptance-check.go
 
-rm -rf -- "$dist"
-mkdir -p "$dist"
+# Build in an owned staging directory. Failed builds preserve previous artifacts.
+source_diff="$(git diff --binary HEAD | git hash-object --stdin)"
+source_status="$(git status --porcelain --untracked-files=normal)"
 gate_report="$dist/v1-acceptance-gate.json"
 set +e
 "$gate_checker" --version "$version" --json > "$gate_report"
@@ -151,3 +182,22 @@ if [[ "${SKIP_HOMEBREW_FORMULA:-0}" != "1" ]]; then
   "$repo_root/scripts/generate-homebrew-formula.sh" "$dist"
 fi
 "$repo_root/scripts/release-checksums.sh" "$dist"
+
+if [[ "$commit" != "$(git rev-parse HEAD)" || "$source_diff" != "$(git diff --binary HEAD | git hash-object --stdin)" || "$source_status" != "$(git status --porcelain --untracked-files=normal)" ]]; then
+  printf 'source changed during release build; refusing artifact replacement\n' >&2
+  exit 2
+fi
+if [[ -e "$output_target" ]]; then
+  mkdir -p "$dist_parent/.vigil-release-history"
+  previous="$dist_parent/.vigil-release-history/$(basename "$output_target").$(date -u +%Y%m%dT%H%M%SZ).$$"
+  mv -- "$output_target" "$previous"
+  if ! mv -- "$dist" "$output_target"; then
+    mv -- "$previous" "$output_target"
+    exit 1
+  fi
+  printf 'previous release artifacts retained at %s\n' "$previous"
+else
+  mv -- "$dist" "$output_target"
+fi
+output_stage=""
+printf 'release artifacts ready at %s\n' "$output_target"

@@ -20,6 +20,7 @@ concurrency:
 
 jobs:
   build:
+    timeout-minutes: 45
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -155,6 +156,7 @@ jobs:
           retention-days: 7
 
   sign-macos:
+    timeout-minutes: 45
     needs: build
     runs-on: macos-15
     environment: release
@@ -298,6 +300,7 @@ jobs:
             "${APPLE_NOTARY_KEY_PATH:-$RUNNER_TEMP/vigil-notary-key.p8}"
 
   publish:
+    timeout-minutes: 45
     needs:
       - build
       - sign-macos
@@ -410,6 +413,7 @@ jobs:
           done
 
   native-release-smoke:
+    timeout-minutes: 45
     name: Native release smoke (${{ matrix.target }})
     needs: publish
     permissions:
@@ -482,6 +486,7 @@ jobs:
           scripts/smoke-release-archive.sh "$archive" "$version" "${{ matrix.goos }}" "${{ matrix.goarch }}"
 
   homebrew-candidate-test:
+    timeout-minutes: 45
     name: Homebrew draft install test (${{ matrix.target }})
     needs: native-release-smoke
     env:
@@ -540,6 +545,7 @@ jobs:
           brew test "$tap/vigil"
 
   publish-verified-release:
+    timeout-minutes: 45
     name: Publish verified release
     needs:
       - native-release-smoke
@@ -584,6 +590,7 @@ jobs:
           gh release verify "$GITHUB_REF_NAME"
 
   homebrew-public-test:
+    timeout-minutes: 45
     name: Homebrew public install test (${{ matrix.target }})
     if: ${{ !contains(github.ref_name, '-') }}
     needs: publish-verified-release
@@ -628,6 +635,7 @@ jobs:
           brew test "$tap/vigil"
 
   publish-homebrew:
+    timeout-minutes: 45
     if: ${{ !contains(github.ref_name, '-') }}
     needs: homebrew-public-test
     runs-on: ubuntu-latest
@@ -683,6 +691,7 @@ jobs:
           git -C tap push origin HEAD
 
   collect-v1-operational-evidence:
+    timeout-minutes: 45
     name: Collect v1 operational evidence
     if: ${{ !contains(github.ref_name, '-') }}
     needs: publish-homebrew

@@ -252,3 +252,34 @@ and inside every archive; the release smoke test and operational collector
 verify that it remains present. The collector also parses that report with
 strict unknown-field rejection and requires `not_required` for pre-v1 or
 prerelease artifacts and `satisfied` for stable v1-or-newer artifacts.
+
+## Failure handling and release expectations
+
+The release builder requires `COMMIT` to match checkout HEAD. Stable builds reject
+`ALLOW_DIRTY_RELEASE` and `ALLOW_UNTAGGED_RELEASE`; those overrides are limited to
+local prerelease exercises. The builder selects `GOTOOLCHAIN=local`, so the
+installed toolchain must meet `go.mod` before release work begins. It checks basic
+packaging tools before building and disables interactive Git credential prompts.
+
+Builds use a private staging directory and an exclusive output lock. A failed
+acceptance gate or build preserves previous release artifacts. Successful output
+replacement retains the former directory under `.vigil-release-history` in the
+output parent. Do not remove that history automatically. A terminated build may
+leave its `.build.lock` directory; remove it only after confirming no writer is
+active. The builder rechecks checkout HEAD, tracked changes and working tree
+status before replacing artifacts. Changes invalidate the build.
+
+Every release workflow job has a 45 minute limit, including external signing,
+notarization, artifact transfer and Homebrew work. A timeout is a failed job and
+must not be recorded as completed evidence. Evidence with a generation timestamp
+more than five minutes in the future is invalid. Historical evidence remains
+readable; candidate acceptance still requires matching commit and version.
+
+The stable v1 criteria remain in `docs/v1-acceptance.json`. Native downloaded
+archive tests, notarization, public attestations, Homebrew installation, the key
+ceremony, independent integration and reviews, public RFC review and final
+severity disposition need real evidence before they can become verified. For
+each pending item, record its owner, expected evidence, provider or reviewer
+dependency, and a recovery action in the release issue. A failed provider,
+unavailable credential, skipped check or missing reviewer leaves it pending.
+No source change can substitute for these external results.

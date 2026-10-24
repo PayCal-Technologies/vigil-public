@@ -27,6 +27,7 @@ func TestValidateRejectsInvalidExternalReportFields(t *testing.T) {
 		mutate func(*Report)
 		want   string
 	}{
+		{"future timestamp", func(report *Report) { report.GeneratedAt = time.Now().Add(time.Hour).Format(time.RFC3339Nano) }, "future"},
 		{"schema", func(report *Report) { report.SchemaVersion = "2" }, "schema_version"},
 		{"target", func(report *Report) { report.Target = "v2.0" }, "target"},
 		{"commit", func(report *Report) { report.CandidateCommit = "main" }, "candidate_commit"},

@@ -102,7 +102,7 @@ func Validate(document Document) error {
 		return fmt.Errorf("invalid plan created_at: %w", err)
 	}
 	timeout, err := time.ParseDuration(document.Options.DefaultTimeout)
-	if err != nil || timeout <= 0 {
+	if err != nil || timeout <= 0 || timeout > 24*time.Hour {
 		return fmt.Errorf("invalid plan default_timeout %q", document.Options.DefaultTimeout)
 	}
 	if document.Options.MaxParallel < 0 || document.Options.MaxParallel > 32 {
@@ -451,6 +451,8 @@ func cloneGates(gates []config.Gate) []config.Gate {
 	for index, gate := range gates {
 		cloned[index] = gate
 		cloned[index].Args = append([]string(nil), gate.Args...)
+		cloned[index].RequiredEnv = append([]string(nil), gate.RequiredEnv...)
+		cloned[index].VersionArgs = append([]string(nil), gate.VersionArgs...)
 		cloned[index].Tags = append([]string(nil), gate.Tags...)
 		cloned[index].DependsOn = append([]string(nil), gate.DependsOn...)
 		if gate.Required != nil {

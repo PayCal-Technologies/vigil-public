@@ -11,3 +11,8 @@ graft/
 
 # Local developer compile output
 /.build/
+
+# Owned release staging, retained artifacts and writer lock
+/.vigil-release.*/
+/.vigil-release-history/
+/dist.build.lock/

@@ -70,6 +70,13 @@ func Run(parent context.Context, spec Spec) Result {
 	if parent == nil {
 		parent = context.Background()
 	}
+	if spec.Timeout < 0 || spec.Timeout > 24*time.Hour || spec.CaptureLimit < 0 || spec.CaptureLimit > 64<<20 {
+		result.Error = "execution limits exceed supported bounds"
+		return finish(result, startedAt)
+	}
+	if spec.Timeout == 0 {
+		spec.Timeout = 5 * time.Minute
+	}
 	if spec.CaptureLimit <= 0 {
 		spec.CaptureLimit = 64 * 1024
 	}

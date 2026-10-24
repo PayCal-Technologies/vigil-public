@@ -82,3 +82,17 @@ in [`docs/release-state.json`](docs/release-state.json).
 ## v0.1.0
 
 - Initial public source release.
+
+## Unreleased execution and release hardening
+
+Configuration schema 3 and plan schema 1 gain optional `required_env`,
+`executable_sha256`, `version_args` and `version_pattern` gate fields. This is an
+additive compatibility decision; the command catalogue, output envelope and exit
+code meanings remain unchanged. Plans containing these fields need an updated
+binary and must be reviewed again because their digest includes the requirements.
+
+Skipped optional tools no longer satisfy dependencies. Required blocked
+dependents fail the workflow. A gate timeout now covers retries and backoff as
+one budget. Direct runner calls default to five minutes, with a 24 hour ceiling.
+Release builds enforce checkout identity, reject stable override flags, preserve
+previous artifacts on failure and bound release jobs to 45 minutes.

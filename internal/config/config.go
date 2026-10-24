@@ -43,21 +43,25 @@ type LegacyAuthority struct {
 }
 
 type Gate struct {
-	Name            string            `json:"name"`
-	Command         string            `json:"command"`
-	Args            []string          `json:"args,omitempty"`
-	Shell           bool              `json:"shell,omitempty"`
-	ReadOnly        bool              `json:"read_only"`
-	Tags            []string          `json:"tags,omitempty"`
-	DependsOn       []string          `json:"depends_on,omitempty"`
-	ParallelGroup   string            `json:"parallel_group,omitempty"`
-	ContinueOnError bool              `json:"continue_on_error,omitempty"`
-	Required        *bool             `json:"required,omitempty"`
-	Retry           *GateRetry        `json:"retry,omitempty"`
-	Timeout         string            `json:"timeout,omitempty"`
-	CWD             string            `json:"cwd,omitempty"`
-	Environment     map[string]string `json:"environment,omitempty"`
-	Artifacts       []GateArtifact    `json:"artifacts,omitempty"`
+	RequiredEnv      []string          `json:"required_env,omitempty"`
+	ExecutableSHA256 string            `json:"executable_sha256,omitempty"`
+	VersionArgs      []string          `json:"version_args,omitempty"`
+	VersionPattern   string            `json:"version_pattern,omitempty"`
+	Name             string            `json:"name"`
+	Command          string            `json:"command"`
+	Args             []string          `json:"args,omitempty"`
+	Shell            bool              `json:"shell,omitempty"`
+	ReadOnly         bool              `json:"read_only"`
+	Tags             []string          `json:"tags,omitempty"`
+	DependsOn        []string          `json:"depends_on,omitempty"`
+	ParallelGroup    string            `json:"parallel_group,omitempty"`
+	ContinueOnError  bool              `json:"continue_on_error,omitempty"`
+	Required         *bool             `json:"required,omitempty"`
+	Retry            *GateRetry        `json:"retry,omitempty"`
+	Timeout          string            `json:"timeout,omitempty"`
+	CWD              string            `json:"cwd,omitempty"`
+	Environment      map[string]string `json:"environment,omitempty"`
+	Artifacts        []GateArtifact    `json:"artifacts,omitempty"`
 }
 
 type GateRetry struct {
@@ -483,8 +487,8 @@ func GateIssues(gates []Gate) []Issue {
 		}
 		if strings.TrimSpace(gate.Timeout) != "" {
 			timeout, err := time.ParseDuration(gate.Timeout)
-			if err != nil || timeout <= 0 {
-				add(fmt.Sprintf("gates[%d].timeout", i), "gates.timeout.invalid", fmt.Sprintf("gates[%d].timeout must be a positive Go duration", i))
+			if err != nil || timeout <= 0 || timeout > 24*time.Hour {
+				add(fmt.Sprintf("gates[%d].timeout", i), "gates.timeout.invalid", fmt.Sprintf("gates[%d].timeout must be a positive Go duration no greater than 24h", i))
 			}
 		}
 		for argIndex, arg := range gate.Args {
@@ -612,6 +616,31 @@ func validateGateValues(add func(string, string, string), index int, gate Gate) 
 				add(valueField, code+".duplicate", field(name)+" contains duplicate value: "+trimmed)
 			}
 			seen[trimmed] = true
+		}
+	}
+	validateUniqueTrimmed("required_env", "gates.required_env", gate.RequiredEnv)
+	for _, key := range gate.RequiredEnv {
+		if !regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_]*$`).MatchString(key) {
+			add(field("required_env"), "gates.required_env.invalid", "required_env must contain environment variable names")
+		}
+	}
+	if gate.ExecutableSHA256 != "" && !regexp.MustCompile(`^[0-9a-f]{64}$`).MatchString(gate.ExecutableSHA256) {
+		add(field("executable_sha256"), "gates.executable_sha256.invalid", "executable_sha256 must be 64 lowercase hexadecimal characters")
+	}
+	if (len(gate.VersionArgs) > 0) != (gate.VersionPattern != "") {
+		add(field("version_pattern"), "gates.version.incomplete", "version_args and version_pattern must be declared together")
+	}
+	if gate.VersionPattern != "" {
+		if _, err := regexp.Compile(gate.VersionPattern); err != nil {
+			add(field("version_pattern"), "gates.version.invalid", "invalid tool version regular expression")
+		}
+	}
+	if gate.Shell && (gate.ExecutableSHA256 != "" || gate.VersionPattern != "") {
+		add(field("shell"), "gates.tool.shell", "tool version and digest requirements require argv execution")
+	}
+	for _, arg := range gate.VersionArgs {
+		if strings.ContainsRune(arg, '\x00') {
+			add(field("version_args"), "gates.version.args", "version_args must not contain NUL")
 		}
 	}
 	validateUniqueTrimmed("tags", "gates.tags", gate.Tags)

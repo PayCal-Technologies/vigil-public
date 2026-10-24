@@ -3,15 +3,17 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/PayCal-Technologies/vigil-public/internal/runner"
 	"io"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/PayCal-Technologies/vigil-public/internal/acceptance"
 )
@@ -122,12 +124,11 @@ func writeJSON(report acceptance.GateReport) {
 }
 
 func repositoryHeadCommit(root string) (string, error) {
-	cmd := exec.Command("git", "-C", root, "rev-parse", "--verify", "HEAD")
-	output, err := cmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("resolve repository HEAD commit: %w", err)
+	r := runner.Run(context.Background(), runner.Spec{Executable: "git", Args: []string{"-C", root, "rev-parse", "--verify", "HEAD"}, Timeout: 10 * time.Second, CaptureLimit: 4096})
+	if r.State != runner.StateOK || r.Truncated {
+		return "", fmt.Errorf("resolve repository HEAD commit: %s %s", r.State, r.Error)
 	}
-	return strings.ToLower(strings.TrimSpace(string(output))), nil
+	return strings.ToLower(strings.TrimSpace(r.Output)), nil
 }
 
 func wantsJSON(args []string) bool {

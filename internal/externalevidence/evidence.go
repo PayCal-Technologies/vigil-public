@@ -75,6 +75,9 @@ func Validate(report Report) error {
 	if report.Target != "v1.0" {
 		return fmt.Errorf("unsupported external evidence target %q", report.Target)
 	}
+	if timestamp, err := time.Parse(time.RFC3339Nano, report.GeneratedAt); err == nil && timestamp.After(time.Now().Add(5*time.Minute)) {
+		return fmt.Errorf("generated_at cannot be in the future")
+	}
 	if _, err := time.Parse(time.RFC3339Nano, report.GeneratedAt); err != nil {
 		return fmt.Errorf("invalid generated_at: %w", err)
 	}

@@ -135,6 +135,9 @@ func Validate(report Report) error {
 	if report.SchemaVersion != SchemaVersion {
 		return fmt.Errorf("unsupported operational evidence schema_version %q", report.SchemaVersion)
 	}
+	if timestamp, err := time.Parse(time.RFC3339Nano, report.GeneratedAt); err == nil && timestamp.After(time.Now().Add(5*time.Minute)) {
+		return fmt.Errorf("generated_at cannot be in the future")
+	}
 	if _, err := time.Parse(time.RFC3339Nano, report.GeneratedAt); err != nil {
 		return fmt.Errorf("invalid generated_at: %w", err)
 	}

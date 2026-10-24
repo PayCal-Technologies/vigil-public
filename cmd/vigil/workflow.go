@@ -502,8 +502,15 @@ func executeWorkflowPlan(ctx context.Context, outputCommand string, document vig
 		fmt.Fprintln(os.Stderr, err)
 		return vigilcli.ExitUsage
 	}
+	if len(document.Gates) == 0 {
+		message := "workflow has no selected gates; configure required checks or correct the tag filter"
+		if !options.machineOutput() {
+			fmt.Fprintln(os.Stderr, message)
+		}
+		return writeWorkflowOutput(outputCommand, options.Format, vigilcli.ExitPolicyBlocked, map[string]any{"status": "fail", "error": message, "plan_id": document.PlanID}, []vigiloutput.Check{{Name: "workflow configuration", Status: "fail", Message: message}}, 0)
+	}
 	defaultTimeout, err := time.ParseDuration(document.Options.DefaultTimeout)
-	if err != nil || defaultTimeout <= 0 {
+	if err != nil || defaultTimeout <= 0 || defaultTimeout > 24*time.Hour {
 		if options.Format == vigiloutput.FormatJSON {
 			return printJSON(map[string]any{"error": "reviewed plan has an invalid default timeout"}, vigilcli.ExitUsage)
 		}
@@ -949,9 +956,13 @@ func workflowChecks(results []gateResult) []vigiloutput.Check {
 		if result.Status != "ok" {
 			message = firstNonEmpty(result.Output, result.State, "gate failed")
 		}
+		status := result.Status
+		if result.Required && result.ExitCode != 0 && status == "skipped" {
+			status = "fail"
+		}
 		checks = append(checks, vigiloutput.Check{
 			Name:       result.Name,
-			Status:     result.Status,
+			Status:     status,
 			DurationMS: result.DurationMS,
 			Message:    message,
 			Output:     result.Output,

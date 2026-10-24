@@ -32,7 +32,9 @@ failure instead of panicking.
 
 `required` defaults to `true`. Setting it to `false` changes only missing-tool
 behavior: an unavailable executable becomes a successful `skipped` result so
-dependents may proceed. It does not turn command failures into successes.
+independent work may proceed. Dependents require an actual success; a required
+dependent that cannot run fails the workflow. It does not turn command failures
+into successes.
 
 ## Retry
 
@@ -45,8 +47,8 @@ Retries are intentionally narrow:
 - blocked, cancelled, missing-tool, mutation, and internal states are never
   retried.
 
-The gate timeout applies to each attempt. The reported duration includes retry
-delay. Private stdout and stderr logs retain up to 64 MiB per stream and append
+The gate timeout applies to preflight, all attempts and retry delays as one
+budget. The reported duration includes retry delay. Private stdout and stderr logs retain up to 64 MiB per stream and append
 `[truncated]` when the bound is reached. A run shares a 512 MiB log budget and
 fails closed if another stream cannot reserve its marker; result summaries
 expose truncation flags rather than implying that bounded evidence is complete.
@@ -98,3 +100,50 @@ This is fail-closed and preserves exit code `6`.
 `read_only` remains repository verification, not an operating-system sandbox.
 Ignored files, caches, network state, and external services are outside the
 fingerprint boundary.
+
+
+## Required prerequisites and time budgets
+
+A workflow with no selected gates fails, including a tag filter that matches no
+checks. Missing required dependencies are failures in JUnit reports as well as
+in the command exit status.
+
+An optional gate whose executable is missing remains a successful advisory skip
+when nothing depends on it. A skipped gate cannot satisfy `depends_on`. Its
+transitive dependents are skipped without execution, and an unmet required
+dependent makes the workflow fail. An earlier failure keeps its original exit
+classification. Independent work may continue according to the existing policy.
+
+Gates may declare these optional requirements. They are included in reviewed
+plans and their digests:
+
+```json
+{
+  "name": "remote-check",
+  "command": "audit-tool",
+  "args": ["check"],
+  "read_only": true,
+  "tags": ["network"],
+  "required_env": ["AUDIT_TOKEN"],
+  "version_args": ["--version"],
+  "version_pattern": "^audit-tool 2\\.4\\.[0-9]+\\n?$",
+  "timeout": "60s",
+  "retry": {"max_attempts": 2, "delay": "2s"}
+}
+```
+
+`required_env` checks the effective gate environment for nonempty values without
+printing them. `version_args` and `version_pattern` must be supplied together for
+argv commands. Version probes have a five second limit and at most 64 KiB of
+captured output. `executable_sha256`, when supplied, must contain the exact 64
+lowercase hexadecimal SHA256 characters for the executable on this platform.
+The executable is resolved to a fixed path and checked before execution and
+again before retries. A missing requirement blocks the gate. Vigil does not
+install tools, acquire credentials or update a dependency to satisfy it.
+
+The gate timeout covers preflight, every attempt and retry delays. A retry does
+not reset that budget. Direct runner calls without a timeout use five minutes;
+timeouts over 24 hours and capture limits over 64 MiB are rejected. Output summary
+truncation remains explicitly reported and does not mean the command failed.
+Credential existence is not evidence that a provider is healthy or authorized;
+use a bounded check against the actual service to establish that requirement.

@@ -47,6 +47,9 @@ func runWorkflowGraph(
 		for _, skip := range skipped {
 			result := dependencySkipResult(skip.Index, document.Gates[skip.Index], skip.FailedDependencies)
 			resultSlots[skip.Index] = &result
+			if document.Gates[skip.Index].IsRequired() && workflowExit == vigilcli.ExitSuccess {
+				workflowExit = preferExitCode(workflowExit, vigilcli.ExitDependencyMissing)
+			}
 			if err := emitEvent("gate_skipped", result); err != nil {
 				return nil, vigilcli.ExitInternal, err
 			}
@@ -87,7 +90,7 @@ func runWorkflowGraph(
 			}
 			printFinishedGate(options, len(batch) > 1, result)
 			state := runner.State(result.State)
-			if state == runner.StateOK || state == runner.StateSkipped {
+			if state == runner.StateOK {
 				if err := scheduler.MarkSucceeded(gateIndex); err != nil {
 					return nil, vigilcli.ExitInternal, fmt.Errorf("mark workflow gate %q succeeded: %w", gate.Name, err)
 				}
@@ -96,13 +99,24 @@ func runWorkflowGraph(
 			if err := scheduler.MarkFailed(gateIndex); err != nil {
 				return nil, vigilcli.ExitInternal, fmt.Errorf("mark workflow gate %q failed: %w", gate.Name, err)
 			}
+			// An absent optional tool is an advisory skip, but cannot satisfy a dependency.
+			if state == runner.StateSkipped {
+				continue
+			}
 			workflowExit = preferExitCode(workflowExit, workflowStateExitCode(state))
 			if !gateMayContinue(gate, state) {
 				halt = true
 			}
 		}
 		if halt {
-			scheduler.Halt()
+			for _, skip := range scheduler.Halt() {
+				result := dependencySkipResult(skip.Index, document.Gates[skip.Index], nil)
+				result.Output = "workflow halted before this gate could run"
+				resultSlots[skip.Index] = &result
+				if err := emitEvent("gate_skipped", result); err != nil {
+					return nil, vigilcli.ExitInternal, err
+				}
+			}
 			break
 		}
 	}
@@ -283,6 +297,29 @@ func runOneGate(
 		}
 	}
 
+	if timeout <= 0 {
+		timeout = 5 * time.Minute
+	}
+	gateCtx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+	ctx = gateCtx
+	resolved, checkErr := checkGateRequirements(ctx, gate, gateDir, gateEnvironment(gate, runID, document.PlanID, document.Inputs.RepositoryRoot))
+	if checkErr != nil {
+		result.State = string(runner.StateBlocked)
+		result.ExitCode = vigilcli.ExitPolicyBlocked
+		result.Output = checkErr.Error()
+		if ctx.Err() != nil {
+			result.State = string(runner.StateCancelled)
+			if ctx.Err() == context.DeadlineExceeded {
+				result.State = string(runner.StateTimedOut)
+			}
+			result.ExitCode = vigilcli.ExitInterrupted
+		}
+		return result
+	}
+	if resolved != "" {
+		gate.Command = resolved
+	}
 	var logs *runartifact.GateLogs
 	if artifactRun != nil {
 		logs, err = artifactRun.OpenGate(gateIndex, gate.Name)
@@ -376,6 +413,12 @@ func runOneGate(
 }
 
 func runGateAttempts(ctx context.Context, spec runner.Spec, gate gateConfig) (runner.Result, int, string) {
+	budget := spec.Timeout
+	if budget <= 0 {
+		budget = 5 * time.Minute
+	}
+	ctx, cancel := context.WithTimeout(ctx, budget)
+	defer cancel()
 	startedAt := time.Now()
 	maxAttempts := 1
 	delay := time.Duration(0)
@@ -396,6 +439,11 @@ func runGateAttempts(ctx context.Context, spec runner.Spec, gate gateConfig) (ru
 	var totalDurationMS int64
 	outputs := make([]string, 0, maxAttempts)
 	for attempt := 1; attempt <= maxAttempts; attempt++ {
+		if attempt > 1 {
+			if _, err := checkGateRequirements(ctx, gate, spec.Dir, spec.Env); err != nil {
+				return runner.Result{State: runner.StateBlocked, ExitCode: vigilcli.ExitPolicyBlocked, Error: err.Error()}, attempt - 1, appendResultOutput(strings.Join(outputs, "\n"), err.Error())
+			}
+		}
 		execution = runner.Run(ctx, spec)
 		totalDurationMS += execution.DurationMS
 		attemptOutput := execution.Output
@@ -408,7 +456,7 @@ func runGateAttempts(ctx context.Context, spec runner.Spec, gate gateConfig) (ru
 		if strings.TrimSpace(attemptOutput) != "" {
 			outputs = append(outputs, attemptOutput)
 		}
-		if attempt == maxAttempts || !retryOn[execution.State] {
+		if attempt == maxAttempts || ctx.Err() != nil || !retryOn[execution.State] {
 			execution.DurationMS = maxInt64(totalDurationMS, time.Since(startedAt).Milliseconds())
 			return execution, attempt, strings.Join(outputs, "\n")
 		}
@@ -423,6 +471,9 @@ func runGateAttempts(ctx context.Context, spec runner.Spec, gate gateConfig) (ru
 					}
 				}
 				execution.State = runner.StateCancelled
+				if ctx.Err() == context.DeadlineExceeded {
+					execution.State = runner.StateTimedOut
+				}
 				execution.ExitCode = vigilcli.ExitInterrupted
 				execution.Error = ctx.Err().Error()
 				execution.DurationMS = maxInt64(totalDurationMS, time.Since(startedAt).Milliseconds())
@@ -578,7 +629,10 @@ func dependencySkipResult(index int, gate gateConfig, failedDependencies []strin
 	result.Status = "skipped"
 	result.State = string(runner.StateSkipped)
 	result.ExitCode = vigilcli.ExitSuccess
-	result.Output = "dependency failed: " + strings.Join(failedDependencies, ", ")
+	if gate.IsRequired() {
+		result.ExitCode = vigilcli.ExitDependencyMissing
+	}
+	result.Output = "dependency unavailable or failed: " + strings.Join(failedDependencies, ", ")
 	return result
 }
 

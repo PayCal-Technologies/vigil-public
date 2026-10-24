@@ -1,0 +1,33 @@
+
+
+Tool websites, October 21, 2026
+
+Vigil now lives at https://sltd.ca/vigil/ with an illustrated homepage card,
+project index entry, shared reading preferences and menu, and a terminal frame
+made from actual public CLI help. Full published command references are hosted
+at https://sltd.ca/vigil/help/ and https://sltd.ca/clyde/help/.
+
+PayCal Technologies no longer contains Vigil or Clyde product pages, help,
+terminal images, navigation links, sitemap entries or their two promotional blog
+posts. Remaining accessibility reporting uses generic repository check wording.
+Old tool and promotional URLs return HTTP 404 without Location headers. No
+redirects or forwarding pages were created. PayCal homepage and blog return 200.
+
+The sltd.ca checkout owns the published website files. The PayCal website checkout
+records matching removals. The public Vigil checkout has updated homepage/help
+links and attribution. Clyde has matching README, testing, manual and CLI resource
+links. Its Go module identifier remains unchanged. Native binaries were not
+installed or released, and repositories were not transferred, committed or pushed.
+
+Verification: 154 scoped production files match their source SHA256 hashes.
+Local reference checks and both sitemap XML parsers passed. Five changed PHP
+files passed syntax checks. Browser checks cover Vigil presentation, its menu,
+reading preferences and command search, and the cleaned PayCal menu. No browser
+console errors were observed on the Vigil page or help index. Narrow viewport
+emulation did not apply in this browser session, so no new mobile check is claimed.
+Clyde go test ./... passed; public Vigil make compile passed for help capture.
+
+Deployment backup locations and local verification receipt paths are retained
+in the internal migration archive. This note records checks performed during
+the October 21, 2026 move; it does not claim later release or deployment
+verification.

@@ -27,6 +27,7 @@ func TestValidateRejectsInvalidReportFields(t *testing.T) {
 		mutate func(*Report)
 		want   string
 	}{
+		{"future timestamp", func(report *Report) { report.GeneratedAt = time.Now().Add(time.Hour).Format(time.RFC3339Nano) }, "future"},
 		{"schema", func(report *Report) { report.SchemaVersion = "2" }, "schema_version"},
 		{"tag mismatch", func(report *Report) { report.Version = "0.4.1" }, "does not match tag"},
 		{"blank acceptance ledger", func(report *Report) { report.AcceptanceLedger = " " }, "acceptance_ledger"},
