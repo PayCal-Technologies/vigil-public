@@ -12,10 +12,10 @@ cross-platform behavior.
 
 ## Official Resources
 
-- vigil homepage: [paycaltech.com/vigil](https://paycaltech.com/vigil/)
-- vigil help: [paycaltech.com/vigil/help](https://paycaltech.com/vigil/help/)
+- vigil homepage: [sltd.ca/vigil](https://sltd.ca/vigil/)
+- vigil help: [sltd.ca/vigil/help](https://sltd.ca/vigil/help/)
 - GitHub repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
-- Created by [PayCal Technologies](https://paycaltech.com/)
+- Created by [Starlit Digital](https://sltd.ca/)
 
 ## Quick Start
 

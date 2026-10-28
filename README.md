@@ -21,10 +21,10 @@ vigil does not replace CI, deployment tooling, a secrets manager, or an
 operating-system sandbox. It is a local safety and evidence layer around the
 commands you already run.
 
-- Official homepage: [paycaltech.com/vigil](https://paycaltech.com/vigil/)
-- Command help: [paycaltech.com/vigil/help](https://paycaltech.com/vigil/help/)
+- Official homepage: [sltd.ca/vigil](https://sltd.ca/vigil/)
+- Command help: [sltd.ca/vigil/help](https://sltd.ca/vigil/help/)
 - Source repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
-- Created by [PayCal Technologies](https://paycaltech.com/)
+- Created by [Starlit Digital](https://sltd.ca/)
 - Examples: [`examples/`](examples/)
 - Testing guide: [`TESTING.md`](TESTING.md)
 - Contributing: [`CONTRIBUTING.md`](CONTRIBUTING.md)
@@ -760,3 +760,10 @@ Security reports must follow [SECURITY.md](SECURITY.md).
 ## License
 
 vigil is open source under the 0BSD license. See [LICENSE](LICENSE).
+
+
+## Website, October 21, 2026
+
+vigil now uses https://sltd.ca/vigil/ and its `/help/` command
+reference. Former PayCal Technologies website paths have been removed without
+redirects. This documentation update does not publish or install a native release.
