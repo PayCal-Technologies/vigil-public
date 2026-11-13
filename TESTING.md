@@ -15,7 +15,7 @@ cross-platform behavior.
 - vigil homepage: [sltd.ca/vigil](https://sltd.ca/vigil/)
 - vigil help: [sltd.ca/vigil/help](https://sltd.ca/vigil/help/)
 - GitHub repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
-- Created by [Starlit Digital](https://sltd.ca/)
+- Created by [Starlight Digital](https://sltd.ca/)
 
 ## Quick Start
 

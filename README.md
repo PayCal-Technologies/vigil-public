@@ -24,7 +24,7 @@ commands you already run.
 - Official homepage: [sltd.ca/vigil](https://sltd.ca/vigil/)
 - Command help: [sltd.ca/vigil/help](https://sltd.ca/vigil/help/)
 - Source repository: [github.com/PayCal-Technologies/vigil-public](https://github.com/PayCal-Technologies/vigil-public)
-- Created by [Starlit Digital](https://sltd.ca/)
+- Created by [Starlight Digital](https://sltd.ca/)
 - Examples: [`examples/`](examples/)
 - Testing guide: [`TESTING.md`](TESTING.md)
 - Contributing: [`CONTRIBUTING.md`](CONTRIBUTING.md)
